@@ -1,0 +1,225 @@
+# ============================================================
+# DESIGN_STATE - Single Source of Truth
+# ============================================================
+# Rules:
+#   - Only A Session (Opus) can modify this file
+#   - Must update version and updated_at on every change
+#   - B/C Sessions can only read, not modify
+#   - All design decisions must be recorded here
+# ============================================================
+
+meta:
+  version: "0.1.0"
+  updated_at: "2026-01-14"
+  updated_by: "A Session"
+  project_name: "Your Project Name"
+  description: "Brief project description"
+
+# ============================================================
+# 1. Technical Architecture
+# ============================================================
+architecture:
+  pattern: "Layered Architecture + Modular"
+  
+  backend:
+    language: "TypeScript"
+    framework: "NestJS"
+    database: "PostgreSQL"
+    cache: "Redis"
+    orm: "Prisma"
+    
+  frontend_shared:
+    language: "TypeScript"
+    ui_framework: "React 18"
+    state_management: "Zustand"
+    styling: "Tailwind CSS"
+    api_client: "TanStack Query + Axios"
+    
+  admin_web:
+    base: "frontend_shared"
+    routing: "React Router"
+    ui_library: "Ant Design"
+    
+  user_web:
+    base: "frontend_shared"
+    routing: "React Router"
+    ui_library: "shadcn/ui"
+    responsive: true
+    breakpoints:
+      mobile: "< 768px"
+      tablet: "768px - 1024px"
+      desktop: "> 1024px"
+    
+  mobile:
+    android:
+      language: "Kotlin"
+      ui: "Jetpack Compose"
+      architecture: "MVVM + Clean Architecture"
+      di: "Hilt"
+      networking: "Retrofit + OkHttp"
+    ios:
+      status: "planned"
+      language: "Swift"
+      ui: "SwiftUI"
+
+# ============================================================
+# 2. Business Modules
+# ============================================================
+modules:
+  auth:
+    status: "designing"  # designing | in_progress | done | blocked
+    owner: "A Session"
+    description: "User authentication and authorization"
+    features:
+      - name: "Email/Password Login"
+        priority: "P0"
+        status: "pending"
+      - name: "JWT Token Management"
+        priority: "P0"
+        status: "pending"
+      - name: "OAuth (Google/Apple)"
+        priority: "P1"
+        status: "pending"
+      - name: "Role-Based Access Control (RBAC)"
+        priority: "P0"
+        status: "pending"
+    
+  user:
+    status: "pending"
+    owner: null
+    description: "User management"
+    features:
+      - name: "User CRUD"
+        priority: "P0"
+        status: "pending"
+      - name: "Profile editing"
+        priority: "P1"
+        status: "pending"
+
+# ============================================================
+# 3. API Design Constraints
+# ============================================================
+api_constraints:
+  style: "RESTful"
+  versioning: "URL prefix (/api/v1)"
+  
+  naming:
+    - "Use plural for resource names: /users, /posts"
+    - "Use kebab-case: /user-profiles"
+    - "Max 2 levels of nesting: /users/{id}/posts"
+    
+  response_format:
+    success: |
+      {
+        "success": true,
+        "data": { ... },
+        "meta": { "page": 1, "total": 100 }
+      }
+    error: |
+      {
+        "success": false,
+        "error": {
+          "code": "AUTH_001",
+          "message": "Token expired",
+          "details": { ... }
+        }
+      }
+      
+  authentication:
+    method: "Bearer Token (JWT)"
+    header: "Authorization: Bearer <token>"
+    refresh_strategy: "Refresh Token Rotation"
+
+# ============================================================
+# 4. Code Constraints (For B/C Session validation)
+# ============================================================
+code_constraints:
+  general:
+    - "No `any` type allowed (TypeScript)"
+    - "All functions must have return type declaration"
+    - "Single file < 300 lines"
+    - "Single function < 50 lines"
+    
+  backend:
+    - "Controller only does parameter validation and calls Service"
+    - "Service contains business logic, does not directly access database"
+    - "Repository handles database operations"
+    - "All database operations must be in transactions"
+    - "Sensitive operations must be logged"
+    
+  frontend:
+    - "Use functional components + Hooks"
+    - "Extract business logic to custom hooks"
+    - "Separate UI components from business components"
+    - "All API calls through api-client package"
+    
+  mobile:
+    - "Separate UI from business logic (Compose + ViewModel)"
+    - "Use StateFlow/SharedFlow for state management"
+    - "Network requests through Repository layer"
+
+# ============================================================
+# 5. Current Iteration
+# ============================================================
+current_iteration:
+  id: "iter-001"
+  goal: "Complete user authentication MVP"
+  started_at: "2026-01-14"
+  
+  tasks:
+    - id: "TASK-001"
+      title: "Backend: Auth module base structure"
+      assigned_to: "B Session"
+      status: "pending"  # pending | in_progress | review | done | blocked
+      acceptance_criteria:
+        - "POST /api/v1/auth/register available"
+        - "POST /api/v1/auth/login available"
+        - "Password encrypted with bcrypt"
+      files_to_create:
+        - "apps/backend/src/modules/auth/auth.controller.ts"
+        - "apps/backend/src/modules/auth/auth.service.ts"
+        - "apps/backend/src/modules/auth/auth.repository.ts"
+        - "apps/backend/src/modules/auth/dto/*.ts"
+        
+  blocked_tasks: []
+  completed_tasks: []
+
+# ============================================================
+# 6. Pending Decisions
+# ============================================================
+pending_decisions:
+  - id: "PD-001"
+    topic: "File upload storage solution"
+    options:
+      - "Local storage + Nginx proxy"
+      - "AWS S3"
+      - "Cloudflare R2"
+    deadline: "iter-002"
+
+# ============================================================
+# 7. Architecture Decision Records (ADR Log)
+# ============================================================
+decision_log:
+  - id: "ADR-001"
+    date: "2026-01-14"
+    decision: "Use Monorepo structure"
+    rationale: "Easier type sharing, better AI context understanding"
+    
+  - id: "ADR-002"
+    date: "2026-01-14"
+    decision: "Backend uses NestJS"
+    rationale: "Modular design, native TypeScript support, easy type sharing with frontend"
+
+# ============================================================
+# 8. Review History (Recorded by A Session)
+# ============================================================
+review_history: []
+  # Example:
+  # - iteration: "iter-001"
+  #   task: "TASK-001"
+  #   reviewer: "C Session"
+  #   issues_found:
+  #     - type: "constraint_violation"
+  #       description: "Service directly called Prisma"
+  #       resolution: "Extract to Repository"
+  #   resolved_in_version: "0.1.1"

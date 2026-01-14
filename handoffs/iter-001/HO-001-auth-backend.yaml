@@ -1,0 +1,189 @@
+# Example Task Handoff - HO-001
+# Location: .claude/handoffs/iter-001/HO-001-auth-backend.yaml
+
+handoff_id: "HO-001"
+created_at: "2026-01-14T10:00:00Z"
+design_state_version: "0.1.0"
+
+objective: |
+  Implement user authentication backend with registration and login APIs.
+
+context: |
+  This is the first task of iter-001, establishing the auth module foundation.
+  User Web and Admin Web will depend on these APIs.
+
+tasks:
+  - id: "TASK-001"
+    title: "Backend: Auth module implementation"
+    description: |
+      Fill in the TODO markers in auth module skeleton files.
+      Implement registration, login, and token generation.
+    
+    files_to_create:
+      - path: "apps/backend/src/modules/auth/auth.module.ts"
+        purpose: "NestJS module definition"
+      - path: "apps/backend/src/modules/auth/auth.controller.ts"
+        purpose: "HTTP request handling"
+      - path: "apps/backend/src/modules/auth/auth.service.ts"
+        purpose: "Business logic"
+      - path: "apps/backend/src/modules/auth/auth.repository.ts"
+        purpose: "Database operations"
+      - path: "apps/backend/src/modules/auth/dto/register.dto.ts"
+        purpose: "Registration request validation"
+      - path: "apps/backend/src/modules/auth/dto/login.dto.ts"
+        purpose: "Login request validation"
+    
+    acceptance_criteria:
+      - "POST /api/v1/auth/register accepts email + password"
+      - "POST /api/v1/auth/login returns JWT token"
+      - "Password stored with bcrypt hash (cost factor >= 12)"
+      - "JWT token expires in 15 minutes"
+      - "Refresh token rotation implemented"
+    
+    constraints_to_follow:
+      - "Controller only validates and calls Service"
+      - "Service does not call Prisma directly"
+      - "Repository returns domain objects, not ORM entities"
+      - "All functions under 50 lines"
+      - "All files under 300 lines"
+    
+    reference_files:
+      - path: "packages/types/src/api.ts"
+        note: "API request/response type definitions"
+      - path: "packages/types/src/models.ts"
+        note: "User and AuthTokens types"
+    
+    estimated_effort: "medium"
+
+skeleton_files:
+  - path: "apps/backend/src/modules/auth/auth.service.ts"
+    content: |
+      /**
+       * @file auth.service.ts
+       * @task TASK-001
+       * @design_state_version 0.1.0
+       */
+      import { Injectable } from '@nestjs/common';
+      // TODO(B): Import required dependencies (AuthRepository, JwtService, bcrypt)
+      
+      @Injectable()
+      export class AuthService {
+        constructor(
+          // TODO(B): Inject AuthRepository
+          // TODO(B): Inject JwtService
+        ) {}
+      
+        /**
+         * Register a new user
+         * 
+         * TODO(B): Implement registration
+         * Requirements:
+         * - Check email uniqueness (throw ConflictException if exists)
+         * - Hash password with bcrypt (cost factor 12)
+         * - Create user via repository
+         * - Generate tokens
+         * 
+         * Acceptance: POST /api/v1/auth/register works
+         * Constraints: Under 50 lines, no direct Prisma calls
+         */
+        async register(dto: RegisterDto): Promise<AuthResult> {
+          throw new Error('Not implemented - TODO(B)');
+        }
+      
+        /**
+         * Login user
+         * 
+         * TODO(B): Implement login
+         * Requirements:
+         * - Find user by email
+         * - Verify password with bcrypt.compare
+         * - Generate tokens on success
+         * - Log failed attempts
+         * 
+         * Acceptance: POST /api/v1/auth/login returns JWT
+         */
+        async login(dto: LoginDto): Promise<AuthResult> {
+          throw new Error('Not implemented - TODO(B)');
+        }
+      
+        /**
+         * TODO(B): Implement password hashing
+         * - Use bcrypt
+         * - Cost factor: 12
+         */
+        private async hashPassword(password: string): Promise<string> {
+          throw new Error('Not implemented - TODO(B)');
+        }
+      
+        /**
+         * TODO(B): Implement token generation
+         * - Access token: 15 minutes
+         * - Refresh token: 7 days
+         * - Include user.id and user.role in payload
+         */
+        private async generateTokens(user: User): Promise<AuthTokens> {
+          throw new Error('Not implemented - TODO(B)');
+        }
+      }
+
+out_of_scope:
+  - "OAuth login (Google/Apple)"
+  - "Password reset flow"
+  - "Email verification"
+  - "Rate limiting"
+
+technical_constraints:
+  general:
+    - "No `any` type"
+    - "Single function < 50 lines"
+    - "Single file < 300 lines"
+  specific:
+    - "Use RS256 for JWT signing"
+    - "Store refresh tokens in database"
+
+api_spec:
+  endpoints:
+    - method: "POST"
+      path: "/api/v1/auth/register"
+      request:
+        body:
+          email: "string (required, email format)"
+          password: "string (required, min 8 chars)"
+          name: "string (optional)"
+      response:
+        success: |
+          {
+            "success": true,
+            "data": {
+              "user": { "id": "...", "email": "...", "name": "..." },
+              "tokens": { "accessToken": "...", "refreshToken": "...", "expiresIn": 900 }
+            }
+          }
+        error: |
+          {
+            "success": false,
+            "error": { "code": "AUTH_004", "message": "Email already registered" }
+          }
+    
+    - method: "POST"
+      path: "/api/v1/auth/login"
+      request:
+        body:
+          email: "string (required)"
+          password: "string (required)"
+      response:
+        success: |
+          {
+            "success": true,
+            "data": {
+              "user": { "id": "...", "email": "...", "name": "..." },
+              "tokens": { "accessToken": "...", "refreshToken": "...", "expiresIn": 900 }
+            }
+          }
+
+questions_contact: |
+  Return to A Session if:
+  - Task description unclear
+  - Technically impossible to implement
+  - Design flaw discovered
+  - Need changes beyond specified scope
