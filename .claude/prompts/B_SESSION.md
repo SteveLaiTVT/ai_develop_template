@@ -369,6 +369,420 @@ EOF
 
 ---
 
+## PHASE 5: Create Pull Request
+
+**After self-test passes, create a PR for review.**
+
+### Step 1: Push to Remote
+
+```bash
+# Push current branch to remote
+git push -u origin task-001-auth-service
+```
+
+### Step 2: Create Pull Request
+
+```bash
+gh pr create --title "feat(auth): implement user authentication" --body "$(cat <<'EOF'
+## Summary
+
+Implement user authentication module with the following features:
+- User registration with email/password
+- Login with JWT token generation
+- Password hashing with bcrypt
+
+## Task Reference
+
+- Task: TASK-001
+- Design State: v0.2.0
+- Handoff: HO-001-auth-backend.yaml
+
+## Self-Test Results
+
+### Backend API Tests
+| Endpoint | Status | Notes |
+|----------|--------|-------|
+| POST /api/v1/auth/register | ✅ Pass | Returns 201 with user data |
+| POST /api/v1/auth/login | ✅ Pass | Returns JWT token |
+
+### Frontend Visual Tests (if applicable)
+| Page | Status | Notes |
+|------|--------|-------|
+| /login | ✅ Pass | Form renders correctly |
+| /register | ✅ Pass | Validation works |
+
+### Unit Tests
+- Total: 12
+- Passed: 12
+- Coverage: 85%
+
+## Acceptance Criteria Checklist
+
+- [x] POST /api/v1/auth/register works
+- [x] POST /api/v1/auth/login returns JWT
+- [x] Password hashed with bcrypt (cost 12)
+- [x] No direct Prisma calls in service
+
+## Screenshots (if frontend)
+
+[Add screenshots here if applicable]
+
+## Ready for Review
+
+- [x] Self-test passed
+- [x] Unit tests passed
+- [x] Code follows DESIGN_STATE constraints
+- [ ] C Session review
+- [ ] User acceptance test
+EOF
+)"
+```
+
+### Step 3: Update Workflow State
+
+After creating PR, notify that B Session is entering bugfix mode:
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  ✅ PULL REQUEST CREATED                                         ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  PR URL: https://github.com/user/repo/pull/123                   ║
+║  Branch: task-001-auth-service                                   ║
+║                                                                  ║
+║  Status: Waiting for review                                      ║
+║                                                                  ║
+║  Next Steps:                                                     ║
+║  • C Session: Review code and provide feedback                   ║
+║  • User: Test the feature and report bugs                        ║
+║                                                                  ║
+║  B Session is now in BUGFIX MODE                                 ║
+║  Ready to fix issues reported by C Session or User               ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## PHASE 6: Bugfix Mode
+
+**After PR is created, B Session enters bugfix mode - waiting for feedback and fixing issues.**
+
+### Bugfix Mode State
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  🔧 B SESSION - BUGFIX MODE                                      ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  PR: #123 - feat(auth): implement user authentication            ║
+║  Status: Awaiting Review                                         ║
+║                                                                  ║
+║  Waiting for:                                                    ║
+║  • C Session review report                                       ║
+║  • User test feedback                                            ║
+║                                                                  ║
+║  When issues are reported, I will:                               ║
+║  1. Fix the reported bugs                                        ║
+║  2. Re-run self-test                                             ║
+║  3. Push fixes to the PR branch                                  ║
+║  4. Update the PR description                                    ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+### Bugfix Workflow
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    BUGFIX MODE WORKFLOW                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1. Receive Feedback                                             │
+│     ├── C Session Review Report (issues found)                   │
+│     └── User Bug Report (testing feedback)                       │
+│                                                                  │
+│  2. Analyze & Fix                                                │
+│     ├── Read issue description                                   │
+│     ├── Locate the problematic code                              │
+│     ├── Implement fix                                            │
+│     └── Add regression test if needed                            │
+│                                                                  │
+│  3. Self-Test Again                                              │
+│     ├── Run backend tests (if backend changed)                   │
+│     ├── Run frontend tests (if frontend changed)                 │
+│     └── Verify the fix resolves the issue                        │
+│                                                                  │
+│  4. Commit & Push                                                │
+│     ├── git commit -m "fix(auth): resolve [issue]"               │
+│     └── git push (updates existing PR)                           │
+│                                                                  │
+│  5. Update PR                                                    │
+│     ├── Add comment explaining the fix                           │
+│     └── Update checklist in PR description                       │
+│                                                                  │
+│  6. Repeat until all issues resolved                             │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Handling C Session Review
+
+When C Session provides a review report:
+
+```yaml
+# Example C Session Review Report
+issues:
+  - id: "ISS-001"
+    severity: "error"
+    type: "constraint_violation"
+    title: "Function exceeds 50 line limit"
+    location:
+      file: "auth.service.ts"
+      lines: "23-80"
+    recommendation: "Split into smaller methods"
+```
+
+**B Session Response:**
+
+1. **Acknowledge the issue:**
+```
+Received C Session review with 1 issue:
+- ISS-001: Function exceeds 50 line limit in auth.service.ts
+
+Starting fix...
+```
+
+2. **Fix the code:**
+```typescript
+// Before: 57 lines
+async register(dto: RegisterDto): Promise<AuthResult> {
+  // ... too long
+}
+
+// After: Split into smaller methods
+async register(dto: RegisterDto): Promise<AuthResult> {
+  await this.validateRegistration(dto);
+  const user = await this.createUser(dto);
+  return this.generateAuthResult(user);
+}
+
+private async validateRegistration(dto: RegisterDto): Promise<void> { ... }
+private async createUser(dto: RegisterDto): Promise<User> { ... }
+private generateAuthResult(user: User): AuthResult { ... }
+```
+
+3. **Self-test again:**
+```bash
+# Run tests to ensure fix doesn't break anything
+npm run test
+curl -X POST http://localhost:3000/api/v1/auth/register ...
+```
+
+4. **Commit and push:**
+```bash
+git add .
+git commit -m "$(cat <<'EOF'
+fix(auth): split register() into smaller methods
+
+Fixes ISS-001: Function exceeded 50 line limit
+
+Changes:
+- Split register() into validateRegistration(), createUser(), generateAuthResult()
+- Each method now under 20 lines
+- All tests still passing
+
+Self-test: ✅ Passed
+EOF
+)"
+
+git push
+```
+
+5. **Comment on PR:**
+```bash
+gh pr comment 123 --body "$(cat <<'EOF'
+## Fix for ISS-001
+
+**Issue:** Function exceeds 50 line limit
+**Fix:** Split `register()` into 3 smaller methods
+
+### Changes Made
+- `validateRegistration()` - handles email uniqueness check
+- `createUser()` - handles user creation with hashed password
+- `generateAuthResult()` - handles JWT generation
+
+### Self-Test Results
+- ✅ All unit tests passing (12/12)
+- ✅ API endpoint still works correctly
+- ✅ Each method now under 20 lines
+
+Ready for re-review.
+EOF
+)"
+```
+
+### Handling User Bug Report
+
+When user reports a bug during testing:
+
+```yaml
+# Example User Bug Report
+bug_id: "BUG-001"
+severity: "high"
+title: "Login fails with special characters in password"
+steps_to_reproduce:
+  - "Go to /login"
+  - "Enter email: test@example.com"
+  - "Enter password: Test@123!#"
+  - "Click submit"
+  - "Error: 500 Internal Server Error"
+expected: "Should login successfully"
+actual: "Server error"
+```
+
+**B Session Response:**
+
+1. **Reproduce the issue:**
+```bash
+# Try to reproduce
+curl -X POST http://localhost:3000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@example.com", "password": "Test@123!#"}'
+
+# Confirm: 500 error reproduced
+```
+
+2. **Debug and fix:**
+```typescript
+// Found: Password regex was rejecting special chars
+// Fix: Update validation to allow special characters
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+```
+
+3. **Add regression test:**
+```typescript
+it('should accept passwords with special characters', async () => {
+  const result = await authService.login({
+    email: 'test@example.com',
+    password: 'Test@123!#'
+  });
+  expect(result.token).toBeDefined();
+});
+```
+
+4. **Self-test:**
+```bash
+npm run test
+curl -X POST http://localhost:3000/api/v1/auth/login \
+  -d '{"email": "test@example.com", "password": "Test@123!#"}'
+# ✅ 200 OK
+```
+
+5. **Commit, push, and update PR:**
+```bash
+git add .
+git commit -m "$(cat <<'EOF'
+fix(auth): allow special characters in password
+
+Fixes BUG-001: Login fails with special characters
+
+Root cause: Password validation regex was too restrictive
+Fix: Updated regex to allow @$!%*#?& characters
+
+Added regression test to prevent future breakage.
+
+Self-test: ✅ Passed
+EOF
+)"
+
+git push
+
+gh pr comment 123 --body "Fixed BUG-001: Special characters now allowed in password. Added regression test."
+```
+
+### Bugfix Mode Exit Conditions
+
+B Session exits bugfix mode when:
+
+1. **C Session approves** - Review verdict is `pass`
+2. **User accepts** - No more bugs reported, feature works as expected
+3. **PR is merged** - All issues resolved, PR merged to target branch
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  ✅ BUGFIX MODE COMPLETE                                         ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  PR #123 has been approved and merged!                           ║
+║                                                                  ║
+║  Summary:                                                        ║
+║  • Issues fixed: 3 (ISS-001, ISS-002, BUG-001)                   ║
+║  • Commits pushed: 4                                             ║
+║  • Self-tests run: 4                                             ║
+║                                                                  ║
+║  Task TASK-001 is now complete.                                  ║
+║                                                                  ║
+║  Next: Check DESIGN_STATE.yaml for next pending task             ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## Complete B Session Workflow Summary
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              COMPLETE B SESSION WORKFLOW                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  PHASE 0: Display State Tip                                      │
+│     │                                                            │
+│     ▼                                                            │
+│  PHASE 1: Environment Check                                      │
+│     │    (pause if env vars missing)                             │
+│     ▼                                                            │
+│  Fill TODOs + Commit WIP                                         │
+│     │                                                            │
+│     ▼                                                            │
+│  PHASE 2: Backend Self-Test                                      │
+│     │    (run server, test APIs)                                 │
+│     ▼                                                            │
+│  PHASE 3: Frontend Self-Test                                     │
+│     │    (agent-browser visual test)                             │
+│     ▼                                                            │
+│  PHASE 4: Commit Working Code                                    │
+│     │                                                            │
+│     ▼                                                            │
+│  PHASE 5: Create Pull Request                                    │
+│     │    (push + gh pr create)                                   │
+│     ▼                                                            │
+│  PHASE 6: Bugfix Mode ◄────────────────────┐                     │
+│     │    (wait for feedback)               │                     │
+│     ▼                                      │                     │
+│  Receive C Session Review / User Bug       │                     │
+│     │                                      │                     │
+│     ▼                                      │                     │
+│  Fix Issue                                 │                     │
+│     │                                      │                     │
+│     ▼                                      │                     │
+│  Self-Test Again                           │                     │
+│     │                                      │                     │
+│     ▼                                      │                     │
+│  Push + Update PR ─────────────────────────┘                     │
+│     │                                      (repeat until approved)│
+│     ▼                                                            │
+│  PR Approved & Merged                                            │
+│     │                                                            │
+│     ▼                                                            │
+│  Task Complete → Next Task                                       │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Workflow (Original - Enhanced)
 
 ### 1. Receiving Task
