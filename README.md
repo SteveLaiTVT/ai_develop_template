@@ -104,7 +104,6 @@ your-project/
 │       ├── android/              # Kotlin + Compose
 │       └── ios/                  # Swift + SwiftUI (planned)
 │
-├── package.json                  # Node.js dependencies (OpenSpec)
 └── infrastructure/               # Docker, K8s configs
 ```
 
@@ -133,13 +132,15 @@ architecture:
   # ... customize tech stack
 ```
 
-### 3. Initialize OpenSpec (Optional but Recommended)
+### 3. Install OpenSpec (Optional but Recommended)
 
 ```bash
-npm install
-# OpenSpec is now available via npm scripts
-npm run openspec:list
+npm install -g @fission-ai/openspec@latest
+# Verify installation
+openspec list
 ```
+
+**Requirements**: Node.js >= 20.19.0
 
 ### 4. Start First Iteration
 
@@ -169,15 +170,15 @@ OpenSpec enables structured collaboration between humans and AI by establishing 
 
 ```bash
 # List active changes
-npm run openspec:list
+openspec list
 
 # View interactive dashboard
-npm run openspec:view
+openspec view
 
 # Show specific change
-npm run openspec:show <change-name>
+openspec show <change-name>
 
-# Archive completed work (via command line)
+# Archive completed work
 openspec archive <change-name> --yes
 ```
 

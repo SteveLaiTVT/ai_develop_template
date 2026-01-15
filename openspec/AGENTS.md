@@ -39,10 +39,13 @@ For AI tools with native OpenSpec support:
 
 For command-line usage:
 ```bash
-npm run openspec:list        # List changes
-npm run openspec:view        # Interactive dashboard
-npm run openspec:show <name> # Show specific change
+openspec list                # List changes
+openspec view                # Interactive dashboard
+openspec show <name>         # Show specific change
+openspec archive <name>      # Archive completed change
 ```
+
+**Note**: Requires global installation: `npm install -g @fission-ai/openspec@latest`
 
 ## Workflow Example
 

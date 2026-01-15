@@ -6,22 +6,18 @@ This template integrates [OpenSpec](https://github.com/Fission-AI/OpenSpec) to p
 
 ## Quick Setup
 
-### 1. Install Dependencies
-
-```bash
-npm install
-```
-
-This installs OpenSpec as a dev dependency. For global installation:
+### 1. Install OpenSpec Globally
 
 ```bash
 npm install -g @fission-ai/openspec@latest
 ```
 
+**Requirements**: Node.js >= 20.19.0
+
 ### 2. Verify Installation
 
 ```bash
-npm run openspec:list
+openspec list
 ```
 
 You should see an empty list of changes (initially).
@@ -279,15 +275,7 @@ openspec/changes/[change-name]/
 
 ## Commands Reference
 
-### npm Scripts
-```bash
-npm run openspec:init    # Initialize OpenSpec (if needed)
-npm run openspec:list    # List all active changes
-npm run openspec:view    # Interactive dashboard
-npm run openspec:show    # Show specific change details
-```
-
-### Direct Commands (if globally installed)
+### CLI Commands
 ```bash
 openspec list                      # List changes
 openspec view                      # Interactive dashboard
@@ -307,8 +295,6 @@ openspec archive <change-name>     # Archive completed change
 
 ### "OpenSpec not found"
 ```bash
-npm install
-# or
 npm install -g @fission-ai/openspec@latest
 ```
 

@@ -310,9 +310,9 @@ export class AuthService {
 
 **Common Commands**:
 ```bash
-npm run openspec:list        # List active changes
-npm run openspec:view        # Interactive dashboard
-npm run openspec:show <name> # Show change details
+openspec list                # List active changes
+openspec view                # Interactive dashboard
+openspec show <name>         # Show change details
 openspec archive <name>      # Archive completed work
 ```
 
@@ -321,7 +321,7 @@ openspec archive <name>      # Archive completed work
 - **OpenSpec**: Detailed API contracts, implementation tasks, acceptance criteria
 
 **Quick Start**:
-1. Install: `npm install`
+1. Install: `npm install -g @fission-ai/openspec@latest`
 2. A Session creates proposal: "Create an OpenSpec change proposal for [feature]"
 3. Review and refine the spec
 4. B Session implements: "Implement according to openspec/changes/[name]/"

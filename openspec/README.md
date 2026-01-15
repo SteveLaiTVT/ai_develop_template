@@ -20,25 +20,15 @@ openspec/
 
 ## Quick Start
 
-### 1. Install OpenSpec
-
-```bash
-npm install
-```
-
-OpenSpec is included as a dev dependency. For global installation:
+### 1. Install OpenSpec Globally
 
 ```bash
 npm install -g @fission-ai/openspec@latest
 ```
 
+**Requirements**: Node.js >= 20.19.0
+
 ### 2. View Active Changes
-
-```bash
-npm run openspec:list
-```
-
-or
 
 ```bash
 openspec list
@@ -47,7 +37,7 @@ openspec list
 ### 3. Interactive Dashboard
 
 ```bash
-npm run openspec:view
+openspec view
 ```
 
 ### 4. Show Change Details
