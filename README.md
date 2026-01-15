@@ -11,6 +11,7 @@ A **project scaffold and workflow system** for developers who want to:
 - Maintain code quality through structured AI collaboration
 - Keep AI context focused and manageable
 - Scale from solo development to team workflows
+- Use spec-driven development with OpenSpec integration
 
 ## 🏗️ Architecture
 
@@ -80,8 +81,15 @@ your-project/
 │   │   ├── task_handoff.md       # A → B
 │   │   ├── implementation_report.md
 │   │   ├── review_report.md
+│   │   ├── openspec_integration.md  # OpenSpec guide
 │   │   └── ...
 │   └── handoffs/                 # Active iteration docs
+│
+├── openspec/                     # OpenSpec spec-driven development
+│   ├── AGENTS.md                 # AI tool instructions
+│   ├── README.md                 # OpenSpec documentation
+│   ├── specs/                    # Completed specifications
+│   └── changes/                  # Active change proposals
 │
 ├── packages/                     # Shared code (Monorepo)
 │   ├── types/                    # TypeScript types
@@ -96,6 +104,7 @@ your-project/
 │       ├── android/              # Kotlin + Compose
 │       └── ios/                  # Swift + SwiftUI (planned)
 │
+├── package.json                  # Node.js dependencies (OpenSpec)
 └── infrastructure/               # Docker, K8s configs
 ```
 
@@ -124,16 +133,69 @@ architecture:
   # ... customize tech stack
 ```
 
-### 3. Start First Iteration
+### 3. Initialize OpenSpec (Optional but Recommended)
+
+```bash
+npm install
+# OpenSpec is now available via npm scripts
+npm run openspec:list
+```
+
+### 4. Start First Iteration
 
 1. Open new Claude chat (Opus 4.5)
 2. Paste content from `.claude/prompts/A_SESSION.md`
 3. Describe your first feature
-4. A Session creates skeleton with TODOs
+4. A Session creates skeleton with TODOs (optionally with OpenSpec proposal)
 5. Open new chat (Sonnet 4.5) for B Session
 6. B Session implements TODOs
 7. Open new chat (Sonnet 4.5) for C Session
 8. C Session reviews code
+
+## 🎯 OpenSpec Integration
+
+This template now includes [OpenSpec](https://github.com/Fission-AI/OpenSpec) support for spec-driven development with AI coding assistants.
+
+### What is OpenSpec?
+
+OpenSpec enables structured collaboration between humans and AI by establishing agreed-upon specifications before implementation begins. It complements DESIGN_STATE.yaml by providing:
+
+- **Detailed specifications**: API contracts, implementation tasks, acceptance criteria
+- **Change management**: Separate `specs/` (completed) from `changes/` (active proposals)
+- **AI tool integration**: Native slash commands for Claude Code, Cursor, and more
+- **Structured workflow**: Propose → Review → Implement → Archive
+
+### Quick OpenSpec Usage
+
+```bash
+# List active changes
+npm run openspec:list
+
+# View interactive dashboard
+npm run openspec:view
+
+# Show specific change
+npm run openspec:show <change-name>
+
+# Archive completed work (via command line)
+openspec archive <change-name> --yes
+```
+
+### OpenSpec with Three-Session Model
+
+**A Session (Architect)**:
+- Creates high-level architecture in DESIGN_STATE.yaml
+- Creates detailed OpenSpec proposals: "Create an OpenSpec change proposal for user authentication"
+
+**B Session (Implementer)**:
+- Implements according to OpenSpec specs: "Implement per openspec/changes/add-auth-api/"
+
+**C Session (Reviewer)**:
+- Validates against specs: "Review implementation against openspec/changes/add-auth-api/"
+
+See [openspec/README.md](openspec/README.md) and [.claude/templates/openspec_integration.md](.claude/templates/openspec_integration.md) for detailed guides.
+
+---
 
 ## 📋 Templates Included
 
@@ -147,6 +209,7 @@ architecture:
 | `iteration_summary.md`     | Version release notes (supports Chinese) |
 | `external_review.md`       | External AI (Codex/Gemini) audit         |
 | `git_workflow.md`          | Git conventions and branching            |
+| `openspec_integration.md`  | OpenSpec spec-driven development guide   |
 
 ## 🔑 Core Principles
 
@@ -189,6 +252,9 @@ Define rules before coding. Constraints must be specific and verifiable.
 - [FILE_STRUCTURE.md](.claude/FILE_STRUCTURE.md) - Complete file location guide
 - [Templates INDEX](.claude/templates/INDEX.md) - All templates explained
 - [Git Workflow](.claude/templates/git_workflow.md) - Version control conventions
+- [OpenSpec Integration](.claude/templates/openspec_integration.md) - Spec-driven development guide
+- [OpenSpec README](openspec/README.md) - OpenSpec usage and examples
+- [OpenSpec AGENTS](openspec/AGENTS.md) - AI tool instructions for OpenSpec
 
 ## 🤝 Contributing
 

@@ -17,6 +17,7 @@ This document describes all templates used in the AI-assisted development workfl
 | Iteration Summary | `iteration_summary.md` | A Session | Stakeholders | Version release summary |
 | External Review | `external_review.md` | Codex/Gemini | A Session | External AI audit |
 | Git Workflow | `git_workflow.md` | - | All | Version control guide |
+| OpenSpec Integration | `openspec_integration.md` | - | All | Spec-driven development guide |
 
 ---
 
@@ -285,3 +286,46 @@ export class AuthService {
 2. Fill in Chinese summary for stakeholders
 3. Tag version: `git tag -a vX.Y.Z`
 4. Merge to develop
+
+---
+
+## OpenSpec Integration
+
+### 10. OpenSpec Integration (`openspec_integration.md`)
+
+**Purpose**: Guide for using OpenSpec with the three-session workflow
+
+**What is OpenSpec**: A spec-driven development framework that separates current specifications (`openspec/specs/`) from proposed updates (`openspec/changes/`). It complements DESIGN_STATE.yaml by providing detailed specifications for features.
+
+**Key Features**:
+- Lightweight, no-code specification management
+- Native slash command support for AI tools
+- Structured proposal → review → implement → archive workflow
+- Keeps specs and code in sync
+
+**Integration with Sessions**:
+- **A Session**: Creates OpenSpec change proposals with detailed specs
+- **B Session**: Implements according to OpenSpec specifications
+- **C Session**: Validates implementation against specs
+
+**Common Commands**:
+```bash
+npm run openspec:list        # List active changes
+npm run openspec:view        # Interactive dashboard
+npm run openspec:show <name> # Show change details
+openspec archive <name>      # Archive completed work
+```
+
+**When to Use**:
+- **DESIGN_STATE.yaml**: High-level architecture, constraints, module status
+- **OpenSpec**: Detailed API contracts, implementation tasks, acceptance criteria
+
+**Quick Start**:
+1. Install: `npm install`
+2. A Session creates proposal: "Create an OpenSpec change proposal for [feature]"
+3. Review and refine the spec
+4. B Session implements: "Implement according to openspec/changes/[name]/"
+5. C Session validates against spec
+6. Archive: `openspec archive [name] --yes`
+
+See the full guide at `.claude/templates/openspec_integration.md` for detailed workflows and examples.

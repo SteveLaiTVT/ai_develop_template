@@ -98,3 +98,12 @@ generated/
 # !.claude/**
 # The .claude directory contains essential AI workflow files
 # and should be committed to the repository
+
+# ================================
+# OpenSpec - Spec-driven development
+# ================================
+# Keep the structure and completed specs, but you may want to
+# ignore work-in-progress changes if working solo
+# !openspec/
+# !openspec/specs/**
+# openspec/changes/**/*.md  # Uncomment to ignore WIP changes

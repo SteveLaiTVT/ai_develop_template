@@ -1,0 +1,27 @@
+{
+  "name": "ai-develop-template",
+  "version": "0.1.0",
+  "description": "A structured workflow template for building applications with AI pair programming, integrated with OpenSpec for spec-driven development",
+  "type": "module",
+  "scripts": {
+    "openspec:init": "openspec init",
+    "openspec:list": "openspec list",
+    "openspec:view": "openspec view",
+    "openspec:show": "openspec show"
+  },
+  "keywords": [
+    "ai-development",
+    "claude",
+    "template",
+    "openspec",
+    "spec-driven-development"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@fission-ai/openspec": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}
