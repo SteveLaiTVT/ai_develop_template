@@ -8,6 +8,8 @@ This document describes all templates used in the AI-assisted development workfl
 
 | Template | File | From | To | Purpose |
 |----------|------|------|-----|---------|
+| **Session Start** | `session_start.md` | System | All Sessions | Display workflow state on start (NEW) |
+| **Discovery Questions** | `discovery_questions.md` | A Session | User | Project discovery interview (NEW) |
 | Task Handoff | `task_handoff.md` | A Session | B Session | Assign implementation tasks |
 | Implementation Report | `implementation_report.md` | B Session | C Session | Report completed work |
 | Review Report | `review_report.md` | C Session | A Session | Code review results |
@@ -27,7 +29,30 @@ This document describes all templates used in the AI-assisted development workfl
 ┌─────────────────────────────────────────────────────────────────────┐
 │                         DESIGN_STATE.yaml                           │
 │                    (Single Source of Truth)                         │
+│                                                                     │
+│  Sections:                                                          │
+│  • workflow_state    - Current phase & session status               │
+│  • project_analysis  - Auto-detected frontend/backend/env           │
+│  • discovery         - User interview results                       │
+│  • architecture      - Tech stack decisions                         │
+│  • current_iteration - Active tasks                                 │
 └───────────────────────────────┬─────────────────────────────────────┘
+                                │
+                                │
+    ╔═══════════════════════════╧═══════════════════════════╗
+    ║              PHASE 0: SESSION START                    ║
+    ║  All sessions display STATE TIP on start               ║
+    ║  (shows current phase, pending tasks, next action)     ║
+    ╚═══════════════════════════╤═══════════════════════════╝
+                                │
+    ╔═══════════════════════════╧═══════════════════════════╗
+    ║              PHASE 1: DISCOVERY (New Projects)         ║
+    ║  A Session asks questions about:                       ║
+    ║  • Target users & audience                             ║
+    ║  • Technical context & resources                       ║
+    ║  • Product vision & MVP                                ║
+    ║  • Constraints & compliance                            ║
+    ╚═══════════════════════════╤═══════════════════════════╝
                                 │
         ┌───────────────────────┴───────────────────────┐
         │                                               │
@@ -44,11 +69,11 @@ This document describes all templates used in the AI-assisted development workfl
 │   Feedback        │                                   │
 │                   │                                   │
 │ Outputs:          │                                   │
+│ - Discovery Q&A   │                                   │
+│ - Project Analysis│                                   │
 │ - Task Handoff ───┼──────────┐                       │
 │ - Design State    │          │                       │
 │   Changelog       │          │                       │
-│ - Iteration       │          │                       │
-│   Summary         │          │                       │
 └───────────────────┘          │                       │
         ▲                      │                       │
         │                      ▼                       │
@@ -59,14 +84,23 @@ This document describes all templates used in the AI-assisted development workfl
         │              │ Reads:            │          │
         │              │ - Task Handoff    │          │
         │              │ - DESIGN_STATE    │          │
-        │              │   (constraints)   │          │
+        │              │ - project_analysis│          │
+        │              │                   │          │
+        │              │ NEW Workflow:     │          │
+        │              │ 1. Fill TODOs     │          │
+        │              │ 2. Check env vars │          │
+        │              │ 3. Self-test API  │          │
+        │              │ 4. Self-test UI   │          │
+        │              │    (agent-browser)│          │
+        │              │ 5. Commit working │          │
         │              │                   │          │
         │              │ Outputs:          │          │
         │◄─────────────┤ - Question        │          │
         │              │   Feedback        │          │
         │              │ - Implementation ─┼────┐     │
         │              │   Report          │    │     │
-        │              │ - Code Files      │    │     │
+        │              │ - Self-test       │    │     │
+        │              │   Results         │    │     │
         │              └───────────────────┘    │     │
         │                                       │     │
         │                                       ▼     │
@@ -77,9 +111,10 @@ This document describes all templates used in the AI-assisted development workfl
         │              │ Reads:            │         │
         │              │ - Implementation  │         │
         │              │   Report          │         │
+        │              │ - Self-test       │         │
+        │              │   Results         │         │
         │              │ - Code Files      │         │
         │              │ - DESIGN_STATE    │         │
-        │              │   (constraints)   │         │
         │              │                   │         │
         │◄─────────────┤ Outputs:          │         │
         │              │ - Review Report   │         │
@@ -105,6 +140,61 @@ This document describes all templates used in the AI-assisted development workfl
 ---
 
 ## Template Declarations
+
+### 0. Session Start (`session_start.md`) - NEW
+
+**Purpose**: Display workflow state when any session starts
+
+**Key Sections**:
+- Current phase indicator (discovery | design | implementation | review)
+- Session status table (A, B, C with their states)
+- Pending tasks list
+- Next action recommendation
+- Environment warnings (if blocked)
+
+**When to Use**: Every session should display this state tip immediately on start.
+
+**Example Output**:
+```
+╔══════════════════════════════════════════════════════════════════╗
+║                    🚀 AI DEVELOPMENT WORKFLOW                     ║
+╠══════════════════════════════════════════════════════════════════╣
+║ Current Phase: implementation                                    ║
+║ Project: My Awesome App                                          ║
+╠══════════════════════════════════════════════════════════════════╣
+║ SESSION STATUS                                                   ║
+║ ┌────────────┬────────────┬────────────┐                        ║
+║ │ A Session  │ B Session  │ C Session  │                        ║
+║ │ waiting    │ ▶ ACTIVE   │ pending    │                        ║
+║ └────────────┴────────────┴────────────┘                        ║
+╠══════════════════════════════════════════════════════════════════╣
+║ 👉 NEXT: B Session should implement and self-test                ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+### 0.5 Discovery Questions (`discovery_questions.md`) - NEW
+
+**Purpose**: A Session conducts discovery interview for new projects
+
+**Key Sections**:
+- Target Users & Audience questions
+- Technical Context questions
+- Product Vision questions
+- Constraints questions
+- Summary template
+- Recording answers to DESIGN_STATE.yaml
+
+**When to Use**: When `discovery.completed: false` in DESIGN_STATE.yaml
+
+**Question Categories**:
+1. Who will use this app? (age, tech level, device, accessibility)
+2. Your technical background? (stack preference, experience)
+3. Product vision? (problem, MVP scope, design style)
+4. Constraints? (budget, compliance, integrations)
+
+---
 
 ### 1. Task Handoff (`task_handoff.md`)
 

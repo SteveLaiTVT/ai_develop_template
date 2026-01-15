@@ -9,11 +9,114 @@
 # ============================================================
 
 meta:
-  version: "0.1.1"
+  version: "0.2.0"
   updated_at: "2026-01-15"
   updated_by: "A Session"
   project_name: "Your Project Name"
   description: "Brief project description with OpenSpec integration"
+
+# ============================================================
+# 0. Workflow State (For Session Status Display)
+# ============================================================
+workflow_state:
+  current_phase: "discovery"  # discovery | design | implementation | review | completed
+
+  discovery:
+    status: "pending"  # pending | in_progress | completed
+    completed_at: null
+
+  sessions:
+    a_session:
+      status: "pending"  # pending | active | waiting | completed
+      last_action: null
+      last_action_at: null
+      pending_tasks: []
+
+    b_session:
+      status: "pending"
+      last_action: null
+      last_action_at: null
+      pending_tasks: []
+      blocked_by_env: false
+      missing_env_vars: []
+
+    c_session:
+      status: "pending"
+      last_action: null
+      last_action_at: null
+      pending_tasks: []
+
+  next_action:
+    session: "A"
+    action: "Run discovery interview"
+    description: "A Session should ask user questions to understand project requirements"
+
+# ============================================================
+# 0.5 Project Analysis (Auto-detected by A Session)
+# ============================================================
+project_analysis:
+  has_frontend: false      # Auto-detected: web frontend exists
+  has_backend: false       # Auto-detected: backend service exists
+  has_mobile: false        # Auto-detected: mobile app exists
+
+  detected_stack:
+    frontend: null         # react | vue | angular | svelte | null
+    backend: null          # nestjs | express | fastapi | null
+    database: null         # postgresql | mysql | mongodb | null
+
+  required_env:            # Environment variables needed to run
+    # Example:
+    # - name: "DATABASE_URL"
+    #   description: "PostgreSQL connection string"
+    #   required_by: "backend"
+    #   example: "postgresql://user:pass@localhost:5432/db"
+    []
+
+# ============================================================
+# 0.6 Discovery Results (Populated by A Session)
+# ============================================================
+discovery:
+  completed: false
+  completed_at: null
+
+  target_audience:
+    age_range: null              # e.g., "18-35", "all ages"
+    tech_level: null             # low | moderate | high
+    primary_device: null         # mobile-first | desktop-first | both
+    accessibility_needs: []      # color-blind, screen-reader, etc.
+    locale: null                 # Primary language/region
+
+  user_personas: []
+    # Example:
+    # - name: "Busy Professional"
+    #   description: "Uses app during commute, needs quick actions"
+    #   priority: "primary"
+
+  technical_context:
+    user_stack_preference:
+      frontend: null             # User's preferred frontend stack
+      backend: null              # User's preferred backend stack
+      familiar_with: []          # Technologies user knows
+    existing_resources:
+      has_designer: false
+      has_brand_guidelines: false
+      existing_codebase: false
+      apis_to_integrate: []
+    infrastructure_preference: null  # vercel | aws | gcp | self-hosted
+    team_size: "solo"               # solo | small | medium | large
+
+  product_vision:
+    core_problem: null           # What problem does this solve?
+    mvp_scope: null              # Minimum viable product definition
+    design_style: null           # minimal | playful | corporate | custom
+    reference_apps: []           # Apps user likes for inspiration
+
+  constraints:
+    budget: null                 # low | medium | flexible
+    compliance: []               # GDPR, HIPAA, etc.
+    integrations: []             # Existing systems to integrate with
+
+  raw_answers: []                # Store original Q&A for reference
 
 # ============================================================
 # 1. Technical Architecture
