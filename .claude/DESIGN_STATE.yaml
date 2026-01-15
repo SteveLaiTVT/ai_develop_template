@@ -9,11 +9,11 @@
 # ============================================================
 
 meta:
-  version: "0.1.0"
-  updated_at: "2026-01-14"
+  version: "0.1.1"
+  updated_at: "2026-01-15"
   updated_by: "A Session"
   project_name: "Your Project Name"
-  description: "Brief project description"
+  description: "Brief project description with OpenSpec integration"
 
 # ============================================================
 # 1. Technical Architecture
@@ -210,8 +210,67 @@ decision_log:
     decision: "Backend uses NestJS"
     rationale: "Modular design, native TypeScript support, easy type sharing with frontend"
 
+  - id: "ADR-003"
+    date: "2026-01-15"
+    decision: "Integrate OpenSpec for spec-driven development"
+    rationale: "Provides structured specification management complementing DESIGN_STATE.yaml. Enables detailed API contracts, task breakdowns, and acceptance criteria. Improves AI collaboration with explicit specs before implementation."
+
 # ============================================================
-# 8. Review History (Recorded by A Session)
+# 8. OpenSpec Integration (Spec-Driven Development)
+# ============================================================
+openspec:
+  enabled: true
+  version: "1.0.0"
+  description: "OpenSpec provides detailed specifications complementing DESIGN_STATE.yaml"
+
+  structure:
+    specs_dir: "openspec/specs/"        # Completed specifications (archived)
+    changes_dir: "openspec/changes/"    # Active change proposals
+    agents_file: "openspec/AGENTS.md"   # AI tool instructions
+
+  workflow:
+    - step: "A Session creates OpenSpec change proposal"
+      description: "Detailed API contracts, tasks, acceptance criteria"
+    - step: "Human + A Session review and refine"
+      description: "Iterate on specification until approved"
+    - step: "B Session implements per specification"
+      description: "Code according to OpenSpec docs"
+    - step: "C Session validates against specification"
+      description: "Check implementation matches spec"
+    - step: "Archive completed change to specs/"
+      description: "Move from changes/ to specs/ when done"
+
+  integration_with_design_state:
+    design_state_provides:
+      - "High-level architecture"
+      - "Technology stack decisions"
+      - "Code constraints and standards"
+      - "Module dependencies"
+      - "Current iteration status"
+
+    openspec_provides:
+      - "Detailed API specifications"
+      - "Implementation task breakdowns"
+      - "Acceptance testing criteria"
+      - "Feature-specific requirements"
+      - "Technical implementation details"
+
+  usage_examples:
+    - name: "example-auth-api"
+      location: "openspec/specs/example-auth-api/"
+      status: "completed"
+      description: "Authentication API with registration, login, refresh"
+
+  active_changes: []
+    # Example:
+    # - name: "add-user-profile"
+    #   created: "2026-01-15"
+    #   owner: "A Session"
+    #   status: "in_progress"
+    #   location: "openspec/changes/add-user-profile/"
+
+# ============================================================
+# 9. Review History (Recorded by A Session)
 # ============================================================
 review_history: []
   # Example:
