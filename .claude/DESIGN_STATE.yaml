@@ -9,11 +9,11 @@
 # ============================================================
 
 meta:
-  version: "0.2.0"
-  updated_at: "2026-01-15"
+  version: "0.3.0"
+  updated_at: "2026-01-16"
   updated_by: "A Session"
   project_name: "Your Project Name"
-  description: "Brief project description with OpenSpec integration"
+  description: "Brief project description with OpenSpec integration and progressive testing"
 
 # ============================================================
 # -1. Project Initialization (First-time Setup)
@@ -312,6 +312,61 @@ code_constraints:
     - "Separate UI from business logic (Compose + ViewModel)"
     - "Use StateFlow/SharedFlow for state management"
     - "Network requests through Repository layer"
+
+# ============================================================
+# 4.5 Testing Strategy (Progressive Approach)
+# ============================================================
+testing_strategy:
+  philosophy: "Test what matters NOW, add comprehensive testing as the project matures"
+  documentation: ".claude/templates/progressive_testing.md"
+
+  levels:
+    level_1_self_test:
+      name: "Self-Test"
+      required: true  # ALWAYS required
+      description: "Run the code, verify it works as expected"
+      backend_checklist:
+        - "Server starts without errors"
+        - "API endpoints respond correctly (test with curl)"
+        - "Database operations work"
+        - "Error cases return proper codes"
+      frontend_checklist:
+        - "Dev server starts without build errors"
+        - "Main pages load (no console errors)"
+        - "Can delegate to external agent (Vercel, Playwright MCP)"
+
+    level_2_unit_tests:
+      name: "Unit Tests"
+      required: false  # Recommended, not mandatory
+      when_to_add:
+        - "Critical security logic (password hashing, tokens)"
+        - "Complex business rules"
+        - "After fixing bugs (regression prevention)"
+        - "When requirements stabilize"
+      coverage_target: "80% for stable features"
+
+    level_3_e2e_tests:
+      name: "E2E/Integration Tests"
+      required: false  # Mature stage only
+      when_to_add:
+        - "Feature requirements are stable"
+        - "Core functionality is complete"
+        - "Preparing for production release"
+      note: "Not required for initial implementation - add when project matures"
+
+  frontend_testing_options:
+    - option: "quick_smoke_test"
+      description: "Start server, verify no errors, main elements render"
+      recommended_for: "Early stage, rapid development"
+    - option: "delegate_to_agent"
+      description: "Use external browser agent (Vercel, Playwright MCP)"
+      recommended_for: "When visual testing needs automation"
+    - option: "manual_user_test"
+      description: "Notify user, they test and report issues"
+      recommended_for: "MVP/prototype, user feedback loop"
+    - option: "detailed_visual"
+      description: "Full agent-browser testing of all pages"
+      recommended_for: "Mature projects, production readiness"
 
 # ============================================================
 # 5. Current Iteration

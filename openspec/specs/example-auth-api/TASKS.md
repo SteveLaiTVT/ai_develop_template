@@ -321,34 +321,44 @@ ThrottlerModule.forRoot({
 
 ## Task 12: Write Unit Tests ✅
 
-**Priority**: P0
+**Priority**: P1 (Recommended, not blocking)
 
-**Description**: Write unit tests for service and repository
+**Description**: Write unit tests for critical business logic
+
+> **Progressive Testing**: Start with tests for critical paths (password hashing, token validation). Add comprehensive coverage as the feature matures.
 
 **Files to Create**:
-- `auth.service.spec.ts`
-- `auth.repository.spec.ts`
-- `auth.controller.spec.ts`
+- `auth.service.spec.ts` (focus on: password hashing, token generation)
+- `auth.repository.spec.ts` (optional for early stage)
+- `auth.controller.spec.ts` (optional for early stage)
 
-**Test Cases**:
-- Registration: success, duplicate email, invalid email, weak password
-- Login: success, invalid email, wrong password
-- Refresh: success, expired token, invalid token
+**Critical Test Cases** (Start Here):
 - Password hashing: correct hash, comparison
 - Token generation: valid tokens, expiration
+- Registration: duplicate email handling
+
+**Additional Test Cases** (Add Later):
+- Registration: success, invalid email, weak password
+- Login: success, invalid email, wrong password
+- Refresh: success, expired token, invalid token
 
 **Acceptance Criteria**:
-- [ ] Minimum 80% code coverage
-- [ ] All error paths tested
+- [ ] Critical paths tested (password, tokens)
 - [ ] Mock database calls
+- [ ] Target 80% coverage for stable features (flexible for early stage)
 
 ---
 
-## Task 13: Write E2E Tests ✅
+## Task 13: Write E2E Tests (OPTIONAL - Mature Stage)
 
-**Priority**: P0
+**Priority**: P2 (Deferred - Add when feature is stable)
 
 **Description**: Write end-to-end API tests
+
+> **Note**: E2E tests are valuable for mature, stable features but can be time-consuming during rapid development. Focus on self-testing (curl/API calls) and unit tests first. Add E2E tests when:
+> - Feature requirements are stable
+> - Core functionality is complete
+> - Preparing for production release
 
 **File to Create**:
 - `test/auth.e2e.spec.ts`
@@ -361,7 +371,7 @@ ThrottlerModule.forRoot({
 5. Rate limiting
 6. Concurrent requests
 
-**Acceptance Criteria**:
+**Acceptance Criteria** (when implemented):
 - [ ] All happy paths tested
 - [ ] All error cases tested
 - [ ] Tests use test database
@@ -372,6 +382,7 @@ ThrottlerModule.forRoot({
 ## Task Dependencies
 
 ```
+CORE IMPLEMENTATION (Required)
 Task 1 (Module Structure)
   └─> Task 2 (DTOs)
   └─> Task 3 (Database Schema)
@@ -384,9 +395,17 @@ Task 1 (Module Structure)
               └─> Task 10 (Auth Guard)
                   └─> Task 9 (Rate Limiting)
                       └─> Task 11 (Logging)
-                          └─> Task 12 (Unit Tests)
-                              └─> Task 13 (E2E Tests)
+
+TESTING (Progressive)
+Task 11 (Logging) ──► SELF-TEST (Required) ──► Task 12 (Unit Tests - Recommended)
+                                                       │
+                                                       └─> Task 13 (E2E Tests - Mature Stage)
 ```
+
+**Testing Priority**:
+1. **Self-Test** (ALWAYS): Run server, test with curl, verify endpoints work
+2. **Unit Tests** (RECOMMENDED): Add for critical business logic
+3. **E2E Tests** (MATURE STAGE): Add when feature is stable
 
 ---
 
@@ -406,14 +425,20 @@ Task 1 (Module Structure)
 
 ## Completion Checklist
 
-After completing all tasks, verify:
+After completing tasks, verify:
 
-- [ ] All 13 tasks completed
-- [ ] All acceptance criteria met
-- [ ] Tests passing (unit + e2e)
-- [ ] Code coverage >= 80%
+**Required (All Stages)**:
+- [ ] Core tasks (1-11) completed
+- [ ] Self-test passed (server runs, endpoints respond correctly)
 - [ ] No TypeScript errors
 - [ ] No linter errors
-- [ ] Endpoints tested manually via Postman/curl
-- [ ] Documentation updated
+- [ ] Endpoints tested via curl/Postman
 - [ ] Implementation report created
+
+**Recommended**:
+- [ ] Task 12: Critical unit tests added
+- [ ] Documentation updated
+
+**Mature Stage (Optional)**:
+- [ ] Task 13: E2E tests added
+- [ ] Code coverage >= 80%
