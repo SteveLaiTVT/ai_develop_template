@@ -16,10 +16,50 @@ meta:
   description: "Brief project description with OpenSpec integration"
 
 # ============================================================
+# -1. Project Initialization (First-time Setup)
+# ============================================================
+# When this template is first loaded, Claude should:
+# 1. Detect this is a fresh template (is_template: true)
+# 2. Ask user onboarding questions
+# 3. Initialize the project with user's intent
+# 4. Clear .git and set up new repository
+# 5. Launch the A/B/C session workflow
+# ============================================================
+initialization:
+  is_template: true          # Set to false after project is initialized
+  initialized: false         # Set to true after initialization complete
+  initialized_at: null       # Timestamp when initialized
+
+  # Onboarding questions to ask user
+  onboarding:
+    completed: false
+    answers:
+      project_name: null           # What should we call this project?
+      project_description: null    # Brief description of what you're building
+      project_type: null           # web-app | mobile-app | api-service | full-stack | other
+      use_cowork: null             # true | false - whether to use Claude Cowork
+      git_remote: null             # User's new git remote URL (e.g., github.com/user/repo)
+      preferred_stack: null        # User's tech stack preference or "recommend"
+
+  # Git initialization steps
+  git_setup:
+    cleared_template_git: false    # .git folder removed
+    initialized_new_repo: false    # git init completed
+    remote_added: false            # git remote add origin completed
+    initial_commit: false          # First commit made
+
+  # Session launch state
+  session_launch:
+    a_session_started: false       # A Session (Architect) launched
+    b_session_started: false       # B Session (Implementer) launched
+    c_session_started: false       # C Session (Reviewer) launched
+    parallel_mode: false           # Sessions working in parallel
+
+# ============================================================
 # 0. Workflow State (For Session Status Display)
 # ============================================================
 workflow_state:
-  current_phase: "discovery"  # discovery | design | implementation | review | completed
+  current_phase: "initialization"  # initialization | discovery | design | implementation | review | completed
 
   discovery:
     status: "pending"  # pending | in_progress | completed
@@ -47,9 +87,9 @@ workflow_state:
       pending_tasks: []
 
   next_action:
-    session: "A"
-    action: "Run discovery interview"
-    description: "A Session should ask user questions to understand project requirements"
+    session: "System"
+    action: "Run project initialization"
+    description: "First-time setup: ask onboarding questions, configure project, set up git, then launch sessions"
 
 # ============================================================
 # 0.5 Project Analysis (Auto-detected by A Session)

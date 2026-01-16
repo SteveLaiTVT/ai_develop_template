@@ -8,8 +8,9 @@ This document describes all templates used in the AI-assisted development workfl
 
 | Template | File | From | To | Purpose |
 |----------|------|------|-----|---------|
-| **Session Start** | `session_start.md` | System | All Sessions | Display workflow state on start (NEW) |
-| **Discovery Questions** | `discovery_questions.md` | A Session | User | Project discovery interview (NEW) |
+| **Project Init** | `project_init.md` | System | User | First-time project setup (NEW) |
+| **Session Start** | `session_start.md` | System | All Sessions | Display workflow state on start |
+| **Discovery Questions** | `discovery_questions.md` | A Session | User | Project discovery interview |
 | Task Handoff | `task_handoff.md` | A Session | B Session | Assign implementation tasks |
 | Implementation Report | `implementation_report.md` | B Session | C Session | Report completed work |
 | Review Report | `review_report.md` | C Session | A Session | Code review results |
@@ -142,7 +143,42 @@ This document describes all templates used in the AI-assisted development workfl
 
 ## Template Declarations
 
-### 0. Session Start (`session_start.md`) - NEW
+### -1. Project Initialization (`project_init.md`) - NEW
+
+**Purpose**: First-time setup when the AI Development Template is loaded
+
+**When to Run**: When `initialization.is_template: true` in DESIGN_STATE.yaml
+
+**Key Steps**:
+1. Display welcome banner
+2. Ask onboarding questions (project name, description, type, stack, git remote)
+3. Cowork detection (offer integration if available)
+4. Git setup (clear template .git, init new repo, add remote)
+5. Update DESIGN_STATE.yaml with user's answers
+6. Make initial commit
+7. Transition to discovery phase
+8. Launch parallel A/B/C session workflow
+
+**Entry Point**: See `CLAUDE.md` in project root for how this is triggered.
+
+**Onboarding Questions**:
+```
+Q1: What would you like to call this project?
+Q2: Briefly describe what you want to build
+Q3: What type of project? (web-app | mobile-app | api-service | full-stack)
+Q4: Tech stack preference? (recommend | specific stack)
+Q5: Git repository URL? (url | skip)
+```
+
+**After Initialization**:
+- `initialization.is_template` becomes `false`
+- `initialization.initialized` becomes `true`
+- `workflow_state.current_phase` becomes `"discovery"`
+- A Session automatically starts discovery interview
+
+---
+
+### 0. Session Start (`session_start.md`)
 
 **Purpose**: Display workflow state when any session starts
 
