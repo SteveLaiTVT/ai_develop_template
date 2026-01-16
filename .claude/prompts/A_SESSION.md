@@ -1,4 +1,6 @@
-# A SESSION - Design and Decision (Claude Opus 4.5)
+# A SESSION - Design and Decision (Claude Opus 4.5*)
+
+*\*Model configured in `initialization.model_preferences.a_session`*
 
 ## Your Role
 
@@ -83,6 +85,12 @@ Ask these questions to configure the project:
 ║      • Or "skip" - we'll use local git only                      ║
 ║      💡 You can add a remote later when you're ready             ║
 ║                                                                  ║
+║  Q6: Which Claude model for each session? (OPTIONAL)             ║
+║      • "default" - A=Opus, B=Sonnet, C=Sonnet (cost-effective)   ║
+║      • "all-opus" - Use Opus 4.5 for all (Claude Max users)      ║
+║      • Or specify - e.g., "A=opus, B=opus, C=sonnet"             ║
+║      💡 Claude Max users can use Opus for all sessions           ║
+║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
 
@@ -157,6 +165,15 @@ initialization:
       use_cowork: <true/false>
       git_remote: "<answer or null>"  # null if skipped
       preferred_stack: "<answer>"
+
+  # Model preferences based on user choice (Q6)
+  model_preferences:
+    a_session: "opus"           # Always opus for architect
+    b_session: "<opus/sonnet>"  # Based on user choice
+    c_session: "<opus/sonnet>"  # Based on user choice
+    # "default" → b_session: sonnet, c_session: sonnet
+    # "all-opus" → b_session: opus, c_session: opus
+
   git_setup:
     cleared_template_git: true
     created_gitignore: true
