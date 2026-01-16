@@ -242,22 +242,31 @@ SELECT * FROM refresh_tokens WHERE user_id = '<deleted-user-id>';
 
 ---
 
-### ✅ Testing
+### ✅ Testing (Progressive Approach)
 
-**Must Have**:
-- [x] Unit tests for auth.service.ts (all methods)
-- [x] Unit tests for auth.repository.ts (all methods)
-- [x] Unit tests for auth.controller.ts (all endpoints)
-- [x] E2E tests for complete flows
-- [x] Minimum 80% code coverage
-- [x] All tests passing: `npm run test`
-- [x] All e2e tests passing: `npm run test:e2e`
+**Level 1 - Self-Test (REQUIRED)**:
+- [x] Backend server starts without errors
+- [x] All endpoints respond correctly (curl/API tests)
+- [x] Self-test documented in commit/PR
 
-**Coverage Report**:
+**Level 2 - Unit Tests (Recommended)**:
+- [ ] Unit tests for auth.service.ts (critical methods)
+- [ ] Unit tests for auth.repository.ts (critical methods)
+- [ ] Unit tests for auth.controller.ts (error handling)
+- [ ] All tests passing: `npm run test`
+
+**Level 3 - E2E Tests (Mature Stage - Optional)**:
+- [ ] E2E tests for complete flows
+- [ ] Minimum 80% code coverage
+- [ ] All e2e tests passing: `npm run test:e2e`
+
+> **Note**: E2E tests are recommended for mature, stable features. For initial implementation, focus on self-testing and unit tests for critical paths.
+
+**Coverage Report** (when applicable):
 ```bash
 npm run test:cov
 
-# Expected output:
+# Target for stable features:
 # File                | % Stmts | % Branch | % Funcs | % Lines
 # auth.controller.ts  |   90.00 |    85.00 |   90.00 |   90.00
 # auth.service.ts     |   92.00 |    88.00 |   95.00 |   92.00

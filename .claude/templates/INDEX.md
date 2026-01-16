@@ -22,6 +22,7 @@ This document describes all templates used in the AI-assisted development workfl
 | Git Workflow | `git_workflow.md` | - | All | Version control guide |
 | OpenSpec Integration | `openspec_integration.md` | - | All | Spec-driven development guide |
 | **Cowork Integration** | `cowork_integration.md` | - | All | Claude Cowork setup guide (NEW) |
+| **Progressive Testing** | `progressive_testing.md` | - | B Session | Testing strategy guide (NEW) |
 
 ---
 
@@ -504,3 +505,53 @@ See the full guide at `.claude/templates/openspec_integration.md` for detailed w
 5. (Optional) Connect third-party apps
 
 See the full guide at `.claude/templates/cowork_integration.md` for setup and workflow details.
+
+---
+
+## Progressive Testing Strategy
+
+### 12. Progressive Testing (`progressive_testing.md`) - NEW
+
+**Purpose**: Guide for practical, staged testing that matches project maturity
+
+**Philosophy**: "Test what matters NOW, add comprehensive testing as the project matures"
+
+**Key Insight**: E2E tests at project start are often wasted effort - requirements change, tests break, and time is lost. Focus on practical self-testing first.
+
+**Testing Levels**:
+
+| Level | Name | Required | When to Add |
+|-------|------|----------|-------------|
+| 1 | Self-Test | ALWAYS | Every PR - just run the code |
+| 2 | Unit Tests | Recommended | Critical logic, after bugs |
+| 3 | E2E Tests | Mature Stage | Stable features, pre-release |
+
+**Self-Test (Level 1) - Always Required**:
+```bash
+# Backend: Run server, test with curl
+npm run start:dev
+curl -X POST http://localhost:3000/api/auth/register -d '...'
+
+# Frontend: Start dev server, verify no errors
+npm run dev
+# Check: build succeeds, page loads, no console errors
+```
+
+**Frontend Testing Options**:
+- **Quick Smoke Test**: Build succeeds, main page loads
+- **Delegate to Agent**: Vercel Browser Agent, Playwright MCP
+- **Manual User Test**: User tests and reports issues
+- **Detailed Visual**: Full agent-browser testing (mature stage)
+
+**When to Add More Tests**:
+- **Unit Tests**: Security code, complex logic, after fixing bugs
+- **E2E Tests**: Stable features, preparing for production
+
+**Integration with B Session**:
+- B Session follows progressive testing by default
+- Documents self-test results in commits/PRs
+- Can delegate frontend testing to external agents
+- Adds unit tests for critical paths
+- E2E tests are optional until feature matures
+
+See the full guide at `.claude/templates/progressive_testing.md` for detailed decision guides and examples.

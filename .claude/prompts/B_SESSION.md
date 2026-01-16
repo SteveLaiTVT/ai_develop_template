@@ -11,9 +11,46 @@ You are the project's **implementer**. You fill in the TODO markers provided by 
 1. **Fill TODOs** - Implement code where A Session left TODO markers
 2. **Follow Constraints** - Strictly follow `DESIGN_STATE.yaml` constraints
 3. **Document** - Add comments for complex logic
-4. **Self-Test** - Actually run the code and verify it works (NEW - Critical)
-5. **Environment Check** - Pause and ask user if env vars are missing (NEW)
-6. **Unit Tests** - Write and run unit tests for backend code
+4. **Self-Test** - Actually run the code and verify it works (CRITICAL)
+5. **Environment Check** - Pause and ask user if env vars are missing
+6. **Unit Tests** - Write unit tests for critical business logic (optional for early iterations)
+
+## Progressive Testing Philosophy
+
+**Key Principle**: Test what matters NOW, add comprehensive testing as the project matures.
+
+```
+PROJECT MATURITY TIMELINE
+─────────────────────────────────────────────────────────────────
+
+Early Stage (MVP/Prototype)     Mid Stage (Stable)      Mature Stage
+├── Self-Test (REQUIRED)        ├── Unit Tests          ├── E2E Tests
+├── Manual curl/API tests       ├── Integration Tests   ├── Performance Tests
+└── Visual smoke test           └── Self-Test           └── Security Audits
+
+TESTING LEVELS:
+┌─────────────────────────────────────────────────────────────────┐
+│ Level 1 (Always Required): SELF-TEST                            │
+│   → Run the code, verify it works as expected                   │
+│   → Backend: curl/API calls with real server                    │
+│   → Frontend: Visual smoke test (manual or external agent)      │
+├─────────────────────────────────────────────────────────────────┤
+│ Level 2 (Recommended): UNIT TESTS                               │
+│   → Add for critical business logic                             │
+│   → Add when fixing bugs (regression prevention)                │
+│   → Can be deferred for rapid prototyping                       │
+├─────────────────────────────────────────────────────────────────┤
+│ Level 3 (Mature Projects): E2E/INTEGRATION TESTS                │
+│   → Add when core features are stable                           │
+│   → Add before major releases                                   │
+│   → NOT required for initial implementation                     │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Why This Matters**:
+- E2E tests at project start = time wasted on changing requirements
+- Self-test catches 80% of bugs with 20% of the effort
+- Add comprehensive testing when features stabilize
 
 ## The Human Developer Workflow
 
@@ -250,112 +287,118 @@ backend_self_test:
 
 ---
 
-## PHASE 3: Frontend Self-Test (Using agent-browser)
+## PHASE 3: Frontend Self-Test (OPTIONAL - Can Delegate)
 
-**If `project_analysis.has_frontend: true`, run visual self-test.**
+**If `project_analysis.has_frontend: true`, verify frontend works.**
 
-### Prerequisites
+### Testing Options
 
-- Backend server running (if frontend needs API)
-- agent-browser installed: `npm install -g @anthropic-ai/agent-browser`
+B Session has flexibility in how frontend is tested:
 
-### Step 1: Start Frontend Server
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ FRONTEND TESTING OPTIONS (Choose One)                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ Option A: QUICK SMOKE TEST (Recommended for Early Stage)        │
+│   → Start dev server                                            │
+│   → Verify page loads without errors (check console)            │
+│   → Verify main elements render                                 │
+│   → Document: "Page loads, no console errors"                   │
+│                                                                 │
+│ Option B: DELEGATE TO EXTERNAL AGENT                            │
+│   → Vercel Browser Agent                                        │
+│   → Playwright MCP Server                                       │
+│   → Other browser automation tools                              │
+│   → Document: "Delegated to [agent], see separate report"       │
+│                                                                 │
+│ Option C: MANUAL USER TESTING                                   │
+│   → Notify user: "Frontend ready for manual testing"            │
+│   → User tests and reports issues                               │
+│   → Document: "Ready for user testing"                          │
+│                                                                 │
+│ Option D: DETAILED VISUAL TEST (Mature Projects)                │
+│   → Use agent-browser or similar tool                           │
+│   → Test all pages and interactions                             │
+│   → Full documentation                                          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Quick Smoke Test (Option A - Default)
 
 ```bash
-# Navigate to frontend directory
-cd apps/user-web
+# Start frontend
+cd apps/user-web && npm run dev
 
-# Install dependencies
-npm install
-
-# Start dev server
-npm run dev
+# Verify in terminal output:
+# ✓ No build errors
+# ✓ Server started successfully
+# ✓ Note the URL (e.g., http://localhost:5173)
 ```
 
-### Step 2: Wait for Server Ready
-
-```
-Waiting for frontend to start...
-✓ Frontend running on http://localhost:5173
-```
-
-### Step 3: Visual Test with agent-browser
-
-Use agent-browser to interact with the UI like a real user:
-
-```typescript
-// agent-browser test script concept
-const tests = [
-  {
-    name: "Login Page Renders",
-    steps: [
-      "Navigate to http://localhost:5173/login",
-      "Verify login form is visible",
-      "Verify email input exists",
-      "Verify password input exists",
-      "Verify submit button exists"
-    ]
-  },
-  {
-    name: "Login Flow Works",
-    steps: [
-      "Navigate to http://localhost:5173/login",
-      "Enter 'test@example.com' in email field",
-      "Enter 'TestPassword123!' in password field",
-      "Click submit button",
-      "Verify redirect to dashboard OR error message shown"
-    ]
-  },
-  {
-    name: "Responsive Design",
-    steps: [
-      "Set viewport to mobile (375px)",
-      "Verify layout adapts correctly",
-      "Set viewport to tablet (768px)",
-      "Verify layout adapts correctly"
-    ]
-  }
-];
+Document results:
+```yaml
+frontend_self_test:
+  method: "quick_smoke_test"
+  server_started: true
+  build_errors: none
+  url: "http://localhost:5173"
+  status: "pass"
+  notes: "Server starts, no build errors. Ready for user/agent testing."
 ```
 
-### Step 4: Document Visual Test Results
+### Delegate to External Agent (Option B)
+
+If using Vercel v0 Agent, Playwright MCP, or similar:
 
 ```yaml
 frontend_self_test:
-  server_started: true
+  method: "delegated"
+  delegated_to: "vercel-browser-agent"  # or "playwright-mcp", etc.
+  status: "pending_external"
+  notes: "Frontend testing delegated to external browser agent"
+```
+
+**B Session continues with PR creation** - external agent handles visual testing.
+
+### Manual User Testing (Option C)
+
+For rapid development, let the user test:
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  👁️  FRONTEND READY FOR TESTING                                  ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  The frontend is running at: http://localhost:5173               ║
+║                                                                  ║
+║  Please test the following:                                      ║
+║  • [ ] Page loads without errors                                 ║
+║  • [ ] Login form renders correctly                              ║
+║  • [ ] Form validation works                                     ║
+║                                                                  ║
+║  Report any issues and I'll fix them immediately.                ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+### Detailed Visual Test (Option D - Mature Projects)
+
+Full visual testing with agent-browser (only when project requires it):
+
+```yaml
+frontend_self_test:
+  method: "detailed_visual"
   pages_tested:
     - page: "/login"
       status: "pass"
-      visual_checks:
-        - "Form renders correctly"
-        - "Inputs are accessible"
-        - "Button is clickable"
-      responsive:
-        mobile: "pass"
-        tablet: "pass"
-        desktop: "pass"
-    - page: "/register"
-      status: "pass"
-      visual_checks:
-        - "Form renders correctly"
-        - "Validation messages work"
+      checks: ["form renders", "inputs accessible", "button clickable"]
   interactions_tested:
     - name: "Login flow"
       status: "pass"
-      notes: "Successfully logs in with valid credentials"
-    - name: "Error handling"
-      status: "pass"
-      notes: "Shows error message for invalid credentials"
   issues_found: []
 ```
-
-### Step 5: Fix Issues and Re-test
-
-If issues found:
-1. Fix the code
-2. Re-run the failing test
-3. Repeat until all tests pass
-4. Then commit
 
 ---
 
@@ -1048,6 +1091,7 @@ known_issues:
 
 ## Checklist Before Submitting
 
+**Code Quality (Required)**:
 - [ ] All TODOs filled in
 - [ ] File headers added with task ID
 - [ ] No `any` types
@@ -1056,6 +1100,18 @@ known_issues:
 - [ ] Files under 300 lines
 - [ ] Sensitive operations logged
 - [ ] Error handling complete
+
+**Self-Test (Required)**:
+- [ ] Backend: Server starts, endpoints respond correctly
+- [ ] Frontend: Build succeeds, main page loads (or delegated to external agent)
+- [ ] Self-test results documented in commit message
+
+**Unit Tests (Recommended)**:
+- [ ] Critical security logic tested (password hashing, tokens)
+- [ ] Complex business rules tested
+- [ ] Tests pass: `npm run test`
+
+**Documentation**:
 - [ ] Acceptance criteria self-verified
 - [ ] Implementation report complete
-- [ ] Git commit with proper message
+- [ ] Git commit with proper message and self-test results
