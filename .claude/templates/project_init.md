@@ -103,9 +103,10 @@ Ask these questions to understand user's intent:
 ║      • "recommend"  - Let me suggest based on your project       ║
 ║      • Or specify   - e.g., "React + Node.js + PostgreSQL"       ║
 ║                                                                  ║
-║  Q5: What's your GitHub/GitLab repository URL?                   ║
-║      (e.g., github.com/username/my-project)                      ║
-║      Or type "skip" to set up git later                          ║
+║  Q5: Do you have a Git remote repository? (OPTIONAL)             ║
+║      • Enter URL (e.g., github.com/username/my-project)          ║
+║      • Or "skip" - we'll use local git only (recommended start)  ║
+║      💡 You can add a remote later when you're ready to share    ║
 ║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
@@ -160,18 +161,125 @@ If running in Claude Cowork environment or user indicates macOS + Claude Desktop
 
 ---
 
-## Step 4: Git Setup
+## Step 4: Git Setup (Local-First)
 
-### Clear Template Git
+**Git remote is OPTIONAL.** We use a local-first approach - you can add a remote later when ready.
+
+### Step 4.1: Clear Template Git
 
 ```bash
 # Remove template's git history
 rm -rf .git
+```
 
-# Initialize fresh repository
+### Step 4.2: Create .gitignore
+
+Create a comprehensive `.gitignore` file:
+
+```bash
+cat > .gitignore << 'EOF'
+# Dependencies
+node_modules/
+vendor/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+.output/
+
+# Environment files (IMPORTANT: never commit secrets)
+.env
+.env.local
+.env.*.local
+*.env
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs and debug
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+debug.log
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Cache
+.cache/
+.parcel-cache/
+.eslintcache
+.prettiercache
+*.tsbuildinfo
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Python (if using)
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.egg-info/
+.eggs/
+venv/
+.venv/
+
+# Mobile (if using)
+*.apk
+*.aab
+*.ipa
+*.dSYM.zip
+*.dSYM
+android/.gradle/
+android/app/build/
+ios/Pods/
+ios/build/
+
+# Database (local dev)
+*.sqlite
+*.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+EOF
+```
+
+### Step 4.3: Initialize Git Repository
+
+```bash
+# Initialize new git repository
 git init
 
-# Add user's remote (if provided)
+# Set default branch to main
+git branch -M main
+```
+
+### Step 4.4: Add Remote (OPTIONAL)
+
+Only if user provided a remote URL:
+
+```bash
+# Add remote origin (OPTIONAL - skip if user said "skip")
 git remote add origin https://github.com/user/project.git
 ```
 
@@ -181,9 +289,12 @@ git remote add origin https://github.com/user/project.git
 initialization:
   git_setup:
     cleared_template_git: true
+    created_gitignore: true
     initialized_new_repo: true
-    remote_added: true
+    created_main_branch: true
     initial_commit: false  # Will be true after commit
+    remote_added: false    # true only if user provided remote
+    pushed_to_remote: false
 ```
 
 ---
@@ -216,28 +327,43 @@ architecture:
 
 ## Step 6: Initial Commit
 
+Make the first commit with the user's project intent:
+
 ```bash
 git add .
 git commit -m "$(cat <<'EOF'
-chore: Initialize project from AI Development Template
+chore: Initialize <project_name>
 
-Project: <project_name>
-Description: <project_description>
-Type: <project_type>
+<project_description>
 
-Initialized with:
-- Three-session AI workflow (A/B/C Sessions)
+Project Type: <project_type>
+Tech Stack: <preferred_stack or recommended>
+
+Initialized with AI Development Template:
+- Three-session workflow (Architect/Implementer/Reviewer)
 - DESIGN_STATE.yaml configuration
 - OpenSpec integration
-- Cowork integration (if enabled)
+- Cowork integration: <enabled/disabled>
 
 Ready for discovery phase.
 EOF
 )"
 ```
 
-If remote was set:
+### Push to Remote (OPTIONAL)
+
+Only if user provided a remote URL:
+
 ```bash
+# Push to remote (ONLY if remote was added)
+git push -u origin main
+```
+
+**If no remote:** That's fine! The project stays local. User can add remote later:
+
+```bash
+# Add remote later when ready
+git remote add origin https://github.com/user/project.git
 git push -u origin main
 ```
 
@@ -264,10 +390,10 @@ initialization:
 ║  ✅ PROJECT INITIALIZED SUCCESSFULLY!                            ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║                                                                  ║
-║  Project: task-tracker                                           ║
-║  Type: full-stack                                                ║
-║  Git: github.com/user/task-tracker                               ║
-║  Cowork: Enabled                                                 ║
+║  Project: <project_name>                                         ║
+║  Type: <project_type>                                            ║
+║  Git: Local repository (remote: <url or "not configured">)       ║
+║  Cowork: <Enabled/Disabled>                                      ║
 ║                                                                  ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║                                                                  ║
@@ -290,6 +416,37 @@ initialization:
 ║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
+
+### Git Workflow (Local-First)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    LOCAL GIT WORKFLOW                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  main branch (stable)                                            │
+│       │                                                          │
+│       ├── feature/task-001 ──► B Session implements              │
+│       │         │                                                │
+│       │         └──► C Session reviews                           │
+│       │                   │                                      │
+│       │                   ├── ❌ Issues found → B fixes           │
+│       │                   │                                      │
+│       │                   └── ✅ Approved → Merge to main         │
+│       │                             │                            │
+│       ◄─────────────────────────────┘                            │
+│       │                                                          │
+│       └── (Later) Push to remote when ready                      │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+After C Session Approval:
+  git checkout main
+  git merge feature/task-001
+  git branch -d feature/task-001   # Delete merged branch
+```
+
+**No remote? No problem!** Everything works locally until you're ready to share.
 
 ### Parallel Session Workflow
 

@@ -22,7 +22,7 @@ meta:
 # 1. Detect this is a fresh template (is_template: true)
 # 2. Ask user onboarding questions
 # 3. Initialize the project with user's intent
-# 4. Clear .git and set up new repository
+# 4. Set up local git (remote is optional)
 # 5. Launch the A/B/C session workflow
 # ============================================================
 initialization:
@@ -38,15 +38,18 @@ initialization:
       project_description: null    # Brief description of what you're building
       project_type: null           # web-app | mobile-app | api-service | full-stack | other
       use_cowork: null             # true | false - whether to use Claude Cowork
-      git_remote: null             # User's new git remote URL (e.g., github.com/user/repo)
+      git_remote: null             # User's git remote URL (OPTIONAL - can be null/skip)
       preferred_stack: null        # User's tech stack preference or "recommend"
 
-  # Git initialization steps
+  # Git initialization steps (local-first, remote optional)
   git_setup:
-    cleared_template_git: false    # .git folder removed
+    cleared_template_git: false    # Template's .git folder removed
+    created_gitignore: false       # .gitignore file created
     initialized_new_repo: false    # git init completed
-    remote_added: false            # git remote add origin completed
-    initial_commit: false          # First commit made
+    created_main_branch: false     # main branch created
+    initial_commit: false          # First commit made with user's intent
+    remote_added: false            # git remote add origin (OPTIONAL)
+    pushed_to_remote: false        # git push (OPTIONAL, only if remote added)
 
   # Session launch state
   session_launch:
@@ -54,6 +57,15 @@ initialization:
     b_session_started: false       # B Session (Implementer) launched
     c_session_started: false       # C Session (Reviewer) launched
     parallel_mode: false           # Sessions working in parallel
+
+  # Review and merge workflow (local-first)
+  merge_workflow:
+    description: "After C Session review passes, merge to main branch locally"
+    steps:
+      - "B Session creates feature branch and implements"
+      - "C Session reviews and approves"
+      - "Merge to main branch locally"
+      - "Push to remote only when user is ready (optional)"
 
 # ============================================================
 # 0. Workflow State (For Session Status Display)

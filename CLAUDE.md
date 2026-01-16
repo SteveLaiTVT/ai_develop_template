@@ -35,7 +35,7 @@ initialization:
 2. **Description**: Briefly describe what you want to build (1-2 sentences)
 3. **Project Type**: web-app | mobile-app | api-service | full-stack | other
 4. **Tech Stack**: Your preference or "recommend" for suggestions
-5. **Git Remote**: Your repository URL (e.g., github.com/user/repo) or "skip"
+5. **Git Remote** (OPTIONAL): Your repository URL or "skip" for local-only git
 
 **Also ask about Cowork** (if macOS/Claude Desktop detected):
 - Would you like to enable Claude Cowork integration?
@@ -44,11 +44,14 @@ initialization:
 
 1. Update `DESIGN_STATE.yaml` with answers
 2. Clear template `.git`: `rm -rf .git`
-3. Initialize new repo: `git init`
-4. Add remote (if provided): `git remote add origin <url>`
-5. Make initial commit
-6. Set `initialization.initialized: true` and `is_template: false`
-7. Transition to discovery phase
+3. Create `.gitignore` file
+4. Initialize new repo: `git init && git branch -M main`
+5. Add remote (OPTIONAL - only if user provided URL)
+6. Make initial commit with user's project intent
+7. Set `initialization.initialized: true` and `is_template: false`
+8. Transition to discovery phase
+
+**Git Remote is Optional:** The workflow works entirely locally. User can add a remote later when ready to share.
 
 See `.claude/templates/project_init.md` for full initialization flow.
 
@@ -112,9 +115,23 @@ This template uses a three-session model for AI-assisted development:
 1. **Initialization** - First-time project setup (this file guides this)
 2. **Discovery** - A Session interviews user to understand requirements
 3. **Design** - A Session creates architecture and skeleton code
-4. **Implementation** - B Session fills in TODOs, tests, creates PRs
+4. **Implementation** - B Session fills in TODOs, tests on feature branch
 5. **Review** - C Session validates code against constraints
-6. **Completed** - Iteration done, ready for user testing
+6. **Merge** - After C Session approves, merge to main branch locally
+7. **Completed** - Iteration done, ready for user testing
+
+### Git Workflow (Local-First)
+
+```
+main ─────────────────────────────────────────► (stable)
+      │                              │
+      └── feature/task-001 ──────────┘
+          (B implements → C reviews → merge to main)
+```
+
+- B Session creates feature branch: `git checkout -b feature/task-xxx`
+- After C Session approves: `git checkout main && git merge feature/task-xxx`
+- No remote required - push when user is ready
 
 ---
 

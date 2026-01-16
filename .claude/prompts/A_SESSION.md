@@ -78,9 +78,10 @@ Ask these questions to configure the project:
 ║      • "recommend"  - Let me suggest based on your project       ║
 ║      • Or specify   - e.g., "React + Node.js + PostgreSQL"       ║
 ║                                                                  ║
-║  Q5: What's your Git repository URL?                             ║
-║      (e.g., github.com/username/my-project)                      ║
-║      Or "skip" to set up later                                   ║
+║  Q5: Do you have a Git remote repository? (OPTIONAL)             ║
+║      • Enter URL (e.g., github.com/username/my-project)          ║
+║      • Or "skip" - we'll use local git only                      ║
+║      💡 You can add a remote later when you're ready             ║
 ║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
@@ -107,18 +108,32 @@ If macOS/Claude Desktop detected, also ask:
 ╚══════════════════════════════════════════════════════════════════╝
 ```
 
-### Step 4: Git Setup
+### Step 4: Git Setup (Local-First)
 
-Execute these commands to set up the new repository:
+**Git remote is OPTIONAL.** We use a local-first approach.
 
 ```bash
-# Remove template's git history
+# 1. Remove template's git history
 rm -rf .git
 
-# Initialize fresh repository
-git init
+# 2. Create .gitignore (see project_init.md for full template)
+cat > .gitignore << 'EOF'
+node_modules/
+dist/
+.env
+.env.local
+*.log
+.DS_Store
+coverage/
+.cache/
+EOF
 
-# Add user's remote (if provided)
+# 3. Initialize fresh repository
+git init
+git branch -M main
+
+# 4. Add remote (ONLY if user provided URL)
+# Skip this step if user said "skip"
 git remote add origin https://github.com/user/project.git
 ```
 
@@ -140,13 +155,16 @@ initialization:
       project_description: "<answer>"
       project_type: "<answer>"
       use_cowork: <true/false>
-      git_remote: "<answer or null>"
+      git_remote: "<answer or null>"  # null if skipped
       preferred_stack: "<answer>"
   git_setup:
     cleared_template_git: true
+    created_gitignore: true
     initialized_new_repo: true
-    remote_added: <true/false>
+    created_main_branch: true
     initial_commit: true
+    remote_added: <true/false>  # false if user skipped
+    pushed_to_remote: <true/false>
 
 workflow_state:
   current_phase: "discovery"  # Move from initialization
@@ -157,19 +175,30 @@ cowork:
 
 ### Step 6: Initial Commit
 
+Make the first commit with the user's project intent:
+
 ```bash
 git add .
-git commit -m "chore: Initialize project from AI Development Template
+git commit -m "$(cat <<'EOF'
+chore: Initialize <project_name>
 
-Project: <project_name>
-Description: <project_description>
-Type: <project_type>
+<project_description>
 
-Ready for discovery phase."
+Project Type: <project_type>
+Tech Stack: <preferred_stack>
 
-# Push if remote was set
+Initialized with AI Development Template.
+Ready for discovery phase.
+EOF
+)"
+
+# Push to remote ONLY if remote was configured
+# Skip if user chose "skip" for git remote
 git push -u origin main
 ```
+
+**If no remote configured:** That's fine! Work continues locally.
+User can add remote later: `git remote add origin <url> && git push -u origin main`
 
 ### Step 7: Transition to Discovery
 
