@@ -17,40 +17,47 @@ You are the project's **implementer**. You fill in the TODO markers provided by 
 
 ## Progressive Testing Philosophy
 
-**Key Principle**: Test what matters NOW, add comprehensive testing as the project matures.
+**Key Principle**: Self-test is the foundation of development. Add automated tests progressively as the project matures.
 
 ```
-PROJECT MATURITY TIMELINE
+TESTING LEVELS (Additive, Not Replacement)
 ─────────────────────────────────────────────────────────────────
 
-Early Stage (MVP/Prototype)     Mid Stage (Stable)      Mature Stage
-├── Self-Test (REQUIRED)        ├── Unit Tests          ├── E2E Tests
-├── Manual curl/API tests       ├── Integration Tests   ├── Performance Tests
-└── Visual smoke test           └── Self-Test           └── Security Audits
-
-TESTING LEVELS:
 ┌─────────────────────────────────────────────────────────────────┐
-│ Level 1 (Always Required): SELF-TEST                            │
-│   → Run the code, verify it works as expected                   │
-│   → Backend: curl/API calls with real server                    │
-│   → Frontend: Visual smoke test (manual or external agent)      │
+│ Level 1: SELF-TEST (Core Development Practice - ALL STAGES)     │
+│   → Part of every development cycle                             │
+│   → Backend: Run server, test APIs with curl                    │
+│   → Frontend: Verify build, check page loads                    │
+│   → This is HOW you develop, not just HOW you test              │
 ├─────────────────────────────────────────────────────────────────┤
-│ Level 2 (Recommended): UNIT TESTS                               │
-│   → Add for critical business logic                             │
+│ Level 2: UNIT TESTS (Add progressively)                         │
+│   → Add for critical security logic                             │
 │   → Add when fixing bugs (regression prevention)                │
-│   → Can be deferred for rapid prototyping                       │
+│   → Grows as codebase matures                                   │
 ├─────────────────────────────────────────────────────────────────┤
-│ Level 3 (Mature Projects): E2E/INTEGRATION TESTS                │
-│   → Add when core features are stable                           │
-│   → Add before major releases                                   │
-│   → NOT required for initial implementation                     │
+│ Level 3: E2E/INTEGRATION TESTS (Mature projects)                │
+│   → Add when features are stable                                │
+│   → Add before production releases                              │
+│   → NOT required at project start                               │
 └─────────────────────────────────────────────────────────────────┘
+
+WHAT CHANGES BY STAGE:
+                        Early         Mid           Mature
+Self-Test:              ALWAYS        ALWAYS        ALWAYS
+Unit Tests:             Critical      Growing       Comprehensive
+E2E Tests:              Skip          Optional      Required
 ```
 
-**Why This Matters**:
+**Why Self-Test is Core**:
+- It's how real developers work: write code → run it → verify it works
+- Catches obvious bugs immediately
+- Proves the code actually runs in real environment
+- Quick feedback loop for iteration
+
+**Why E2E Tests Can Wait**:
 - E2E tests at project start = time wasted on changing requirements
-- Self-test catches 80% of bugs with 20% of the effort
-- Add comprehensive testing when features stabilize
+- Self-test + unit tests catch 90% of bugs
+- Add E2E when features stabilize
 
 ## The Human Developer Workflow
 

@@ -512,21 +512,21 @@ See the full guide at `.claude/templates/cowork_integration.md` for setup and wo
 
 ### 12. Progressive Testing (`progressive_testing.md`) - NEW
 
-**Purpose**: Guide for practical, staged testing that matches project maturity
+**Purpose**: Guide for practical, staged testing as part of the development workflow
 
-**Philosophy**: "Test what matters NOW, add comprehensive testing as the project matures"
+**Philosophy**: "Self-test is HOW you develop. Add automated tests progressively."
 
-**Key Insight**: E2E tests at project start are often wasted effort - requirements change, tests break, and time is lost. Focus on practical self-testing first.
+**Key Insight**: Self-test is a core development practice at ALL stages - not just early stages. E2E tests can wait until features stabilize.
 
 **Testing Levels**:
 
-| Level | Name | Required | When to Add |
-|-------|------|----------|-------------|
-| 1 | Self-Test | ALWAYS | Every PR - just run the code |
-| 2 | Unit Tests | Recommended | Critical logic, after bugs |
-| 3 | E2E Tests | Mature Stage | Stable features, pre-release |
+| Level | Name | When | Purpose |
+|-------|------|------|---------|
+| 1 | Self-Test | ALWAYS (core dev) | Verify code works in real env |
+| 2 | Unit Tests | Progressively | Prevent regressions |
+| 3 | E2E Tests | Mature Stage | Validate user journeys |
 
-**Self-Test (Level 1) - Always Required**:
+**Self-Test - Core Development Practice**:
 ```bash
 # Backend: Run server, test with curl
 npm run start:dev

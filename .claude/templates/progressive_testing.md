@@ -2,22 +2,30 @@
 
 ## Philosophy
 
-**Test what matters NOW, add comprehensive testing as the project matures.**
+**Self-test is core development practice. Add automated tests progressively as the project matures.**
+
+Self-testing isn't just for "early stage" projects - it's HOW developers work at every stage:
+- Write code → Run it → Verify it works → Iterate
 
 Traditional approaches mandate E2E tests from day one, which leads to:
 - Time spent on tests that break as requirements change
 - False confidence from tests that don't catch real bugs
 - Delayed delivery without proportional quality improvement
 
-This template uses a **progressive testing approach** that matches testing effort to project maturity.
+This template uses a **progressive testing approach**:
+- Self-test: ALWAYS (it's part of development)
+- Unit tests: Add progressively for critical logic
+- E2E tests: Add when features stabilize
 
 ---
 
 ## Testing Levels
 
-### Level 1: Self-Test (ALWAYS REQUIRED)
+### Level 1: Self-Test (Core Development Practice)
 
-**What it means**: Actually run the code and verify it works.
+**This is HOW you develop, not just how you test.**
+
+Self-test happens at EVERY stage of every project. It's the fundamental development loop:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -125,37 +133,48 @@ GOOD USE OF E2E TESTS              BAD USE OF E2E TESTS
 
 ---
 
-## Testing by Project Stage
+## What Changes By Project Stage
 
-### Stage 1: MVP/Prototype (0-2 months)
+Self-test is ALWAYS part of development. What changes is the automated test coverage:
 
 ```
-TESTING REQUIREMENTS:
-├── Self-Test: REQUIRED for every PR
-├── Unit Tests: Optional (add for critical security code)
-└── E2E Tests: Skip entirely
+                        Early         Mid           Mature
+────────────────────────────────────────────────────────────
+Self-Test:              ALWAYS        ALWAYS        ALWAYS
+Unit Tests:             Critical      Growing       Comprehensive
+E2E Tests:              Skip          Optional      Required
+────────────────────────────────────────────────────────────
+```
+
+### Stage 1: MVP/Prototype
+
+```
+Development Flow:
+├── Self-Test: Part of every coding cycle
+├── Unit Tests: Add for security-critical code only
+└── E2E Tests: Skip (requirements still changing)
 ```
 
 **Focus**: Ship fast, iterate on feedback, prove the concept works.
 
-### Stage 2: Early Product (2-6 months)
+### Stage 2: Early Product
 
 ```
-TESTING REQUIREMENTS:
-├── Self-Test: REQUIRED for every PR
-├── Unit Tests: REQUIRED for business logic
-└── E2E Tests: Optional (add for stable flows)
+Development Flow:
+├── Self-Test: Part of every coding cycle
+├── Unit Tests: Growing coverage for business logic
+└── E2E Tests: Optional (add for stable core flows)
 ```
 
 **Focus**: Build confidence in core features, catch regressions.
 
-### Stage 3: Mature Product (6+ months)
+### Stage 3: Mature Product
 
 ```
-TESTING REQUIREMENTS:
-├── Self-Test: REQUIRED for every PR
-├── Unit Tests: REQUIRED (80%+ coverage target)
-└── E2E Tests: REQUIRED for critical user journeys
+Development Flow:
+├── Self-Test: Part of every coding cycle
+├── Unit Tests: Comprehensive (80%+ coverage target)
+└── E2E Tests: Required for critical user journeys
 ```
 
 **Focus**: Prevent regressions, ensure reliability at scale.
@@ -242,10 +261,17 @@ Should I write tests for this?
 
 ## Summary
 
-| Level | When Required | Effort | Value |
-|-------|---------------|--------|-------|
-| Self-Test | Always | Low | High |
-| Unit Tests | Stable features | Medium | High |
-| E2E Tests | Mature products | High | Medium |
+| Level | When | Effort | Purpose |
+|-------|------|--------|---------|
+| Self-Test | ALWAYS (core dev practice) | Low | Verify code works in real environment |
+| Unit Tests | Add progressively | Medium | Prevent regressions, test edge cases |
+| E2E Tests | Mature products | High | Validate complete user journeys |
 
-**Key Principle**: The best test is one that catches real bugs with minimal maintenance burden. Self-testing catches most bugs. Add automated tests as the project matures and requirements stabilize.
+**Key Principle**: Self-test is HOW you develop - it's part of the coding cycle at every stage. Unit and E2E tests are automated safety nets that grow as the project matures.
+
+```
+Development Cycle (Every Stage):
+    Write Code → Self-Test → Fix → Commit
+                    ↑
+            This never goes away
+```
