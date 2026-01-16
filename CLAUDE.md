@@ -36,6 +36,9 @@ initialization:
 3. **Project Type**: web-app | mobile-app | api-service | full-stack | other
 4. **Tech Stack**: Your preference or "recommend" for suggestions
 5. **Git Remote** (OPTIONAL): Your repository URL or "skip" for local-only git
+6. **Model Selection** (OPTIONAL): Which Claude model for each session?
+   - Default: A=Opus, B=Sonnet, C=Sonnet (cost-effective)
+   - All Opus: Use Opus 4.5 for all sessions (Claude Max users)
 
 **Also ask about Cowork** (if macOS/Claude Desktop detected):
 - Would you like to enable Claude Cowork integration?
@@ -104,11 +107,29 @@ openspec/                 # Spec-driven development
 
 This template uses a three-session model for AI-assisted development:
 
-| Session | Model | Role | Responsibilities |
-|---------|-------|------|------------------|
+| Session | Default Model | Role | Responsibilities |
+|---------|---------------|------|------------------|
 | **A Session** | Opus 4.5 | Architect | Design, discovery, task decomposition |
-| **B Session** | Sonnet 4.5 | Implementer | Fill TODOs, self-test, create PRs |
-| **C Session** | Sonnet 4.5 | Reviewer | Code review, constraint validation |
+| **B Session** | Sonnet 4.5* | Implementer | Fill TODOs, self-test, create PRs |
+| **C Session** | Sonnet 4.5* | Reviewer | Code review, constraint validation |
+
+*\*Model configurable - Claude Max users can use Opus 4.5 for all sessions*
+
+### Model Selection
+
+During initialization, you can choose which model to use for each session:
+
+- **Default (Recommended)**: A=Opus, B=Sonnet, C=Sonnet
+  - Cost-effective balance of capability and speed
+  - Opus handles complex architecture decisions
+  - Sonnet efficiently handles implementation and review
+
+- **All Opus**: Use Opus 4.5 for all sessions
+  - Maximum capability for complex projects
+  - Best for Claude Max subscribers
+  - Ideal when implementation requires deep reasoning
+
+Model preferences are stored in `initialization.model_preferences` in DESIGN_STATE.yaml.
 
 ### Workflow Phases
 

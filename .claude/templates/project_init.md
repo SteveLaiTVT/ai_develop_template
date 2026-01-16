@@ -108,6 +108,12 @@ Ask these questions to understand user's intent:
 ║      • Or "skip" - we'll use local git only (recommended start)  ║
 ║      💡 You can add a remote later when you're ready to share    ║
 ║                                                                  ║
+║  Q6: Which Claude model for each session? (OPTIONAL)             ║
+║      • "default" - A=Opus, B=Sonnet, C=Sonnet (cost-effective)   ║
+║      • "all-opus" - Use Opus 4.5 for all (Claude Max users)      ║
+║      • Or customize - e.g., "A=opus, B=opus, C=sonnet"           ║
+║      💡 Claude Max subscribers can use Opus for all sessions     ║
+║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
 
@@ -126,6 +132,12 @@ initialization:
       use_cowork: true
       git_remote: "github.com/user/task-tracker"
       preferred_stack: "recommend"
+
+  # Model preferences (based on user choice)
+  model_preferences:
+    a_session: "opus"     # Always opus for architect
+    b_session: "opus"     # User chose "all-opus"
+    c_session: "opus"     # User chose "all-opus"
 
 meta:
   project_name: "task-tracker"

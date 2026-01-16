@@ -1,4 +1,6 @@
-# C SESSION - Code Review (Claude Sonnet 4.5)
+# C SESSION - Code Review (Claude Sonnet 4.5*)
+
+*\*Model configured in `initialization.model_preferences.c_session` - can be Opus 4.5 for Claude Max users*
 
 ## Your Role
 

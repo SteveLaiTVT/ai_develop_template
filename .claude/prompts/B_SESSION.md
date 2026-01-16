@@ -1,4 +1,6 @@
-# B SESSION - Implementation (Claude Sonnet 4.5)
+# B SESSION - Implementation (Claude Sonnet 4.5*)
+
+*\*Model configured in `initialization.model_preferences.b_session` - can be Opus 4.5 for Claude Max users*
 
 ## Your Role
 

@@ -41,6 +41,23 @@ initialization:
       git_remote: null             # User's git remote URL (OPTIONAL - can be null/skip)
       preferred_stack: null        # User's tech stack preference or "recommend"
 
+  # Model preferences for each session (Claude Max users can use Opus for all)
+  model_preferences:
+    description: "Configure which Claude model to use for each session"
+    a_session: "opus"              # opus (default) - Architect needs deep reasoning
+    b_session: "sonnet"            # sonnet (default) | opus - Implementer
+    c_session: "sonnet"            # sonnet (default) | opus - Reviewer
+    available_models:
+      opus:
+        name: "Claude Opus 4.5"
+        description: "Best for complex reasoning, architecture, nuanced decisions"
+        recommended_for: "A Session (Architect)"
+      sonnet:
+        name: "Claude Sonnet 4.5"
+        description: "Fast, efficient, great for implementation and review"
+        recommended_for: "B/C Sessions (Implementer/Reviewer)"
+    note: "Claude Max subscribers can use Opus for all sessions for maximum capability"
+
   # Git initialization steps (local-first, remote optional)
   git_setup:
     cleared_template_git: false    # Template's .git folder removed
