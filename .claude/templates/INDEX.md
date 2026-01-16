@@ -20,6 +20,7 @@ This document describes all templates used in the AI-assisted development workfl
 | External Review | `external_review.md` | Codex/Gemini | A Session | External AI audit |
 | Git Workflow | `git_workflow.md` | - | All | Version control guide |
 | OpenSpec Integration | `openspec_integration.md` | - | All | Spec-driven development guide |
+| **Cowork Integration** | `cowork_integration.md` | - | All | Claude Cowork setup guide (NEW) |
 
 ---
 
@@ -419,3 +420,51 @@ openspec archive <name>      # Archive completed work
 6. Archive: `openspec archive [name] --yes`
 
 See the full guide at `.claude/templates/openspec_integration.md` for detailed workflows and examples.
+
+---
+
+## Claude Cowork Integration
+
+### 11. Cowork Integration (`cowork_integration.md`) - NEW
+
+**Purpose**: Guide for using Claude Cowork with the AI Development Workflow
+
+**What is Claude Cowork**: Anthropic's feature that brings Claude Code's agentic capabilities to non-developers through the Claude Desktop app (macOS). It provides:
+- Direct file access without terminal commands
+- Browser navigation (with Chrome extension)
+- Third-party integrations via Connectors (Asana, Notion, Canva, etc.)
+
+**Availability** (as of January 2026):
+- Claude Max subscribers ($100-200/month)
+- macOS only via Claude Desktop app
+- Research preview (other plans can join waitlist)
+
+**Key Features**:
+- Simplified file operations for non-developers
+- Visual frontend testing via browser
+- Project management tool integration
+- Design file access
+
+**Integration with Sessions**:
+- **A Session**: Browse reference apps, access project management tools, view design files
+- **B Session**: Simplified file editing, browser-based UI testing
+- **C Session**: Visual inspection, design mockup comparison
+
+**Detection**: At session start, check `cowork.current_session.is_cowork` in DESIGN_STATE.yaml
+
+**When to Use Cowork vs Claude Code**:
+| Use Cowork For | Use Claude Code For |
+|----------------|---------------------|
+| File read/write | npm/yarn commands |
+| Visual testing | Database operations |
+| Design reference | Docker/CI-CD |
+| Project mgmt access | Build processes |
+
+**Quick Start**:
+1. Open Claude Desktop on macOS
+2. Enable Cowork feature
+3. Grant folder access to project
+4. (Optional) Install Chrome extension
+5. (Optional) Connect third-party apps
+
+See the full guide at `.claude/templates/cowork_integration.md` for setup and workflow details.

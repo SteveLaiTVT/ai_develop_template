@@ -53,6 +53,88 @@ Read `workflow_state` from DESIGN_STATE.yaml and display this status.
 
 ---
 
+## PHASE 0.5: Claude Cowork Detection (Optional)
+
+**Check if running in Claude Cowork environment and offer integration if available.**
+
+### When to Check
+- At session start, before discovery
+- When user mentions using Claude Desktop or Cowork
+
+### Cowork Detection Prompt
+
+If Cowork capabilities are detected or user indicates they're using Claude Desktop on macOS:
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  🔗 CLAUDE COWORK DETECTED                                       ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  Would you like to enable Claude Cowork integration?             ║
+║                                                                  ║
+║  Benefits for A Session (Architect):                             ║
+║  • Browse reference apps for design inspiration                  ║
+║  • Access project management tools (Asana, Notion)               ║
+║  • View design files in Canva for brand guidelines               ║
+║                                                                  ║
+║  Options:                                                        ║
+║  1. Yes, enable Cowork integration                               ║
+║  2. No, use standard workflow                                    ║
+║  3. Tell me more about Cowork                                    ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+### If User Chooses to Enable Cowork
+
+Update `DESIGN_STATE.yaml`:
+
+```yaml
+cowork:
+  enabled: true
+  capabilities:
+    file_access:
+      enabled: true
+      granted_folders: ["<user's project folder>"]
+    browser_navigation:
+      enabled: <true if Chrome extension installed>
+    connectors:
+      enabled: <true if connectors available>
+      available: ["notion", "asana", ...]  # List available connectors
+  current_session:
+    is_cowork: true
+    granted_folders: ["<user's project folder>"]
+    active_connectors: [...]
+    browser_enabled: <true/false>
+```
+
+### Cowork-Enhanced Session Start Banner
+
+When Cowork is enabled, display enhanced banner:
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║                    🚀 AI DEVELOPMENT WORKFLOW                     ║
+║                    🔗 COWORK MODE ACTIVE                          ║
+╠══════════════════════════════════════════════════════════════════╣
+║ Current Phase: [phase]                                           ║
+║ Project: [project_name]                                          ║
+╠══════════════════════════════════════════════════════════════════╣
+║ COWORK CAPABILITIES                                              ║
+║ ┌────────────────────────────────────────────────────────────┐   ║
+║ │ ✅ File Access: [granted folders]                          │   ║
+║ │ [✅/❌] Browser Navigation                                 │   ║
+║ │ [✅/❌] Connectors: [list if available]                    │   ║
+║ └────────────────────────────────────────────────────────────┘   ║
+╠══════════════════════════════════════════════════════════════════╣
+║ 👉 Cowork enhances discovery with web browsing and tool access   ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+See `.claude/templates/cowork_integration.md` for full Cowork setup guide.
+
+---
+
 ## PHASE 1: Discovery Interview (For New Projects)
 
 **Before designing, understand the user deeply.** This mimics how a real architect works.

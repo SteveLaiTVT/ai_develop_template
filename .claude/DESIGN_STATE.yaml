@@ -385,3 +385,104 @@ review_history: []
   #       description: "Service directly called Prisma"
   #       resolution: "Extract to Repository"
   #   resolved_in_version: "0.1.1"
+
+# ============================================================
+# 10. Claude Cowork Integration (Optional)
+# ============================================================
+cowork:
+  enabled: false  # Set to true when using Claude Cowork
+  description: "Claude Cowork brings agentic capabilities to non-developers through Claude Desktop"
+
+  # Detection: How to know if running in Cowork
+  detection:
+    # Check if running in Cowork environment
+    # - Cowork runs in a sandboxed Linux VM via Apple Virtualization Framework
+    # - Has file system access only to explicitly granted folders
+    environment_hints:
+      - "Running in Claude Desktop macOS app"
+      - "User granted folder access via Cowork UI"
+      - "May have browser extension enabled for web navigation"
+
+  # Capabilities available when using Cowork
+  capabilities:
+    file_access:
+      enabled: false
+      granted_folders: []  # Folders user has granted access to
+      # Example: ["/Users/name/Projects/my-app"]
+
+    browser_navigation:
+      enabled: false  # Requires Claude Chrome extension
+      description: "Navigate websites and interact with web UIs"
+
+    connectors:
+      enabled: false
+      available: []  # Third-party integrations
+      # Examples: ["canva", "asana", "notion", "paypal"]
+
+  # How Cowork integrates with the three-session workflow
+  workflow_integration:
+    # A Session (Architect) benefits
+    a_session:
+      - "Can browse reference apps for design inspiration"
+      - "Can access project management tools (Asana, Notion) for requirements"
+      - "Can view design files in Canva for brand guidelines"
+
+    # B Session (Implementer) benefits
+    b_session:
+      - "Enhanced file editing without terminal complexity"
+      - "Browser-based frontend testing with visual feedback"
+      - "Access to documentation sites for API references"
+
+    # C Session (Reviewer) benefits
+    c_session:
+      - "Visual inspection of frontend implementations"
+      - "Access to issue trackers for bug reporting"
+      - "Can compare against design mockups"
+
+  # User onboarding for Cowork
+  onboarding:
+    prerequisites:
+      - "Claude Max subscription ($100-200/month)"
+      - "macOS with Claude Desktop app"
+      - "Optional: Claude Chrome extension for browser features"
+
+    setup_steps:
+      - step: 1
+        action: "Open Claude Desktop app on macOS"
+        description: "Launch the Claude app from Applications"
+
+      - step: 2
+        action: "Enable Cowork feature"
+        description: "Look for Cowork option in settings or main interface"
+
+      - step: 3
+        action: "Grant folder access"
+        description: "Select project folder to allow Claude to read/edit files"
+
+      - step: 4
+        action: "Optional: Install Chrome extension"
+        description: "Enables browser navigation capabilities"
+
+      - step: 5
+        action: "Optional: Connect third-party apps"
+        description: "Use Connectors to link Asana, Notion, Canva, etc."
+
+  # Safety and security notes
+  security:
+    sandboxing: "Cowork runs in isolated Linux VM via Apple Virtualization Framework"
+    file_access: "Claude can only access explicitly granted folders"
+    warnings:
+      - "Claude can take potentially destructive actions (deleting files)"
+      - "Always review changes before approving"
+      - "Consider using version control (git) as a safety net"
+    recommendations:
+      - "Grant access only to project folders, not entire home directory"
+      - "Keep version control enabled for easy rollback"
+      - "Review Claude's proposed changes before confirming"
+
+  # Current session info (filled at runtime)
+  current_session:
+    is_cowork: false  # Detected at session start
+    granted_folders: []
+    active_connectors: []
+    browser_enabled: false
