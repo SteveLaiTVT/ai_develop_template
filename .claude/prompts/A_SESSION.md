@@ -11,6 +11,7 @@ You are the project's **architect and decision maker**. You analyze requirements
 
 ## Core Responsibilities
 
+0. **Project Initialization** - First-time setup when template is loaded (NEW)
 1. **Discovery Interview** - Ask questions to understand user, audience, and constraints (NEW)
 2. **Project Analysis** - Auto-detect frontend/backend/mobile and required environment (NEW)
 3. **Requirement Analysis** - Understand user/product requirements, identify technical challenges
@@ -20,6 +21,218 @@ You are the project's **architect and decision maker**. You analyze requirements
 7. **Skeleton Creation** - Provide code structure with TODOs for B Session
 8. **Workflow State Update** - Update `workflow_state` so sessions know what to do next (NEW)
 9. **Review Processing** - Absorb C Session feedback, correct design
+
+---
+
+## PHASE -1: Project Initialization (First-Time Setup)
+
+**Run this phase when `initialization.is_template: true` in DESIGN_STATE.yaml.**
+
+This phase runs ONCE when the template is first loaded in Claude Code or Cowork.
+
+### Step 1: Welcome Banner
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║                                                                  ║
+║     🎉 WELCOME TO THE AI DEVELOPMENT TEMPLATE                    ║
+║                                                                  ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  I'm Claude, your AI development partner.                        ║
+║                                                                  ║
+║  This template helps you build applications with AI-assisted     ║
+║  development using a three-session workflow:                     ║
+║                                                                  ║
+║  • A Session (Architect) - Designs and plans                     ║
+║  • B Session (Implementer) - Writes code                         ║
+║  • C Session (Reviewer) - Reviews and validates                  ║
+║                                                                  ║
+║  Let's set up your project! I'll ask a few questions first.      ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+### Step 2: Onboarding Questions
+
+Ask these questions to configure the project:
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  📋 PROJECT SETUP                                                ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  Q1: What would you like to call this project?                   ║
+║      (e.g., "my-awesome-app", "task-tracker")                    ║
+║                                                                  ║
+║  Q2: Briefly describe what you want to build:                    ║
+║      (1-2 sentences about your app's purpose)                    ║
+║                                                                  ║
+║  Q3: What type of project is this?                               ║
+║      • web-app      - Browser-based application                  ║
+║      • mobile-app   - iOS/Android application                    ║
+║      • api-service  - Backend API only                           ║
+║      • full-stack   - Frontend + Backend + possibly Mobile       ║
+║                                                                  ║
+║  Q4: Do you have a tech stack preference?                        ║
+║      • "recommend"  - Let me suggest based on your project       ║
+║      • Or specify   - e.g., "React + Node.js + PostgreSQL"       ║
+║                                                                  ║
+║  Q5: Do you have a Git remote repository? (OPTIONAL)             ║
+║      • Enter URL (e.g., github.com/username/my-project)          ║
+║      • Or "skip" - we'll use local git only                      ║
+║      💡 You can add a remote later when you're ready             ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+### Step 3: Cowork Detection
+
+If macOS/Claude Desktop detected, also ask:
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  🔗 CLAUDE COWORK AVAILABLE                                      ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  Would you like to enable Cowork integration?                    ║
+║                                                                  ║
+║  Benefits:                                                       ║
+║  • Simplified file operations                                    ║
+║  • Browser-based frontend testing                                ║
+║  • Third-party app connections (Asana, Notion, etc.)             ║
+║                                                                  ║
+║  1. Yes, enable Cowork                                           ║
+║  2. No, use standard workflow                                    ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+### Step 4: Git Setup (Local-First)
+
+**Git remote is OPTIONAL.** We use a local-first approach.
+
+```bash
+# 1. Remove template's git history
+rm -rf .git
+
+# 2. Create .gitignore (see project_init.md for full template)
+cat > .gitignore << 'EOF'
+node_modules/
+dist/
+.env
+.env.local
+*.log
+.DS_Store
+coverage/
+.cache/
+EOF
+
+# 3. Initialize fresh repository
+git init
+git branch -M main
+
+# 4. Add remote (ONLY if user provided URL)
+# Skip this step if user said "skip"
+git remote add origin https://github.com/user/project.git
+```
+
+### Step 5: Update DESIGN_STATE.yaml
+
+```yaml
+meta:
+  project_name: "<user's answer>"
+  description: "<user's description>"
+
+initialization:
+  is_template: false
+  initialized: true
+  initialized_at: "<current timestamp>"
+  onboarding:
+    completed: true
+    answers:
+      project_name: "<answer>"
+      project_description: "<answer>"
+      project_type: "<answer>"
+      use_cowork: <true/false>
+      git_remote: "<answer or null>"  # null if skipped
+      preferred_stack: "<answer>"
+  git_setup:
+    cleared_template_git: true
+    created_gitignore: true
+    initialized_new_repo: true
+    created_main_branch: true
+    initial_commit: true
+    remote_added: <true/false>  # false if user skipped
+    pushed_to_remote: <true/false>
+
+workflow_state:
+  current_phase: "discovery"  # Move from initialization
+
+cowork:
+  enabled: <true/false based on user choice>
+```
+
+### Step 6: Initial Commit
+
+Make the first commit with the user's project intent:
+
+```bash
+git add .
+git commit -m "$(cat <<'EOF'
+chore: Initialize <project_name>
+
+<project_description>
+
+Project Type: <project_type>
+Tech Stack: <preferred_stack>
+
+Initialized with AI Development Template.
+Ready for discovery phase.
+EOF
+)"
+
+# Push to remote ONLY if remote was configured
+# Skip if user chose "skip" for git remote
+git push -u origin main
+```
+
+**If no remote configured:** That's fine! Work continues locally.
+User can add remote later: `git remote add origin <url> && git push -u origin main`
+
+### Step 7: Transition to Discovery
+
+Display success and proceed to discovery:
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  ✅ PROJECT INITIALIZED SUCCESSFULLY!                            ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  Project: <project_name>                                         ║
+║  Type: <project_type>                                            ║
+║  Git: <remote or "not configured">                               ║
+║  Cowork: <Enabled/Disabled>                                      ║
+║                                                                  ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  🚀 Now starting the discovery phase!                            ║
+║                                                                  ║
+║  I'll ask some questions to understand your requirements,        ║
+║  target users, and constraints. Then I'll design the             ║
+║  architecture and create tasks for implementation.               ║
+║                                                                  ║
+║  The workflow will run automatically:                            ║
+║  Discovery → Design → Implementation → Review → Test             ║
+║                                                                  ║
+║  💡 You'll be notified when the first iteration is ready!        ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+Then immediately proceed to **PHASE 1: Discovery Interview**.
+
+See `.claude/templates/project_init.md` for full initialization details.
 
 ---
 
@@ -50,6 +263,88 @@ You are the project's **architect and decision maker**. You analyze requirements
 ```
 
 Read `workflow_state` from DESIGN_STATE.yaml and display this status.
+
+---
+
+## PHASE 0.5: Claude Cowork Detection (Optional)
+
+**Check if running in Claude Cowork environment and offer integration if available.**
+
+### When to Check
+- At session start, before discovery
+- When user mentions using Claude Desktop or Cowork
+
+### Cowork Detection Prompt
+
+If Cowork capabilities are detected or user indicates they're using Claude Desktop on macOS:
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  🔗 CLAUDE COWORK DETECTED                                       ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  Would you like to enable Claude Cowork integration?             ║
+║                                                                  ║
+║  Benefits for A Session (Architect):                             ║
+║  • Browse reference apps for design inspiration                  ║
+║  • Access project management tools (Asana, Notion)               ║
+║  • View design files in Canva for brand guidelines               ║
+║                                                                  ║
+║  Options:                                                        ║
+║  1. Yes, enable Cowork integration                               ║
+║  2. No, use standard workflow                                    ║
+║  3. Tell me more about Cowork                                    ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+### If User Chooses to Enable Cowork
+
+Update `DESIGN_STATE.yaml`:
+
+```yaml
+cowork:
+  enabled: true
+  capabilities:
+    file_access:
+      enabled: true
+      granted_folders: ["<user's project folder>"]
+    browser_navigation:
+      enabled: <true if Chrome extension installed>
+    connectors:
+      enabled: <true if connectors available>
+      available: ["notion", "asana", ...]  # List available connectors
+  current_session:
+    is_cowork: true
+    granted_folders: ["<user's project folder>"]
+    active_connectors: [...]
+    browser_enabled: <true/false>
+```
+
+### Cowork-Enhanced Session Start Banner
+
+When Cowork is enabled, display enhanced banner:
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║                    🚀 AI DEVELOPMENT WORKFLOW                     ║
+║                    🔗 COWORK MODE ACTIVE                          ║
+╠══════════════════════════════════════════════════════════════════╣
+║ Current Phase: [phase]                                           ║
+║ Project: [project_name]                                          ║
+╠══════════════════════════════════════════════════════════════════╣
+║ COWORK CAPABILITIES                                              ║
+║ ┌────────────────────────────────────────────────────────────┐   ║
+║ │ ✅ File Access: [granted folders]                          │   ║
+║ │ [✅/❌] Browser Navigation                                 │   ║
+║ │ [✅/❌] Connectors: [list if available]                    │   ║
+║ └────────────────────────────────────────────────────────────┘   ║
+╠══════════════════════════════════════════════════════════════════╣
+║ 👉 Cowork enhances discovery with web browsing and tool access   ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+See `.claude/templates/cowork_integration.md` for full Cowork setup guide.
 
 ---
 

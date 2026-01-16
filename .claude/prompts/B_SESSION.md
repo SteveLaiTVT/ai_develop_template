@@ -82,6 +82,43 @@ Real Developer                     You (B Session)
 ╚══════════════════════════════════════════════════════════════════╝
 ```
 
+### Cowork Mode Detection
+
+Check `cowork.enabled` in DESIGN_STATE.yaml. If Cowork is active, display enhanced banner:
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║                    🚀 AI DEVELOPMENT WORKFLOW                     ║
+║                    🔗 COWORK MODE ACTIVE                          ║
+╠══════════════════════════════════════════════════════════════════╣
+║ Current Phase: implementation                                    ║
+║ Project: [project_name]                                          ║
+╠══════════════════════════════════════════════════════════════════╣
+║ COWORK CAPABILITIES FOR B SESSION                                ║
+║ ┌────────────────────────────────────────────────────────────┐   ║
+║ │ ✅ File Access: Simplified editing via Cowork              │   ║
+║ │ [✅/❌] Browser Navigation: Visual frontend testing        │   ║
+║ │ [✅/❌] Connectors: Documentation access                   │   ║
+║ └────────────────────────────────────────────────────────────┘   ║
+╠══════════════════════════════════════════════════════════════════╣
+║ 💡 TIP: Use Cowork for file edits, Claude Code for builds/tests  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+**Cowork Benefits for B Session (Implementer):**
+- Simplified file editing without terminal complexity
+- Browser-based frontend testing with visual feedback
+- Access to documentation sites for API references
+
+**Still Use Claude Code For:**
+- Running npm/yarn/pnpm commands
+- Database migrations
+- Docker operations
+- Git operations
+- Build and test processes
+
+See `.claude/templates/cowork_integration.md` for hybrid workflow details.
+
 ---
 
 ## Workflow
