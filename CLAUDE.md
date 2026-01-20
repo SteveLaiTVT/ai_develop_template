@@ -181,7 +181,7 @@ When starting work, read these files in order:
 4. **All sessions display status tip on start**
 5. **B Session must self-test before creating PRs**
 6. **Frontend testing should prefer MCP/agent browser tools**
-6. **Notify user when iteration is ready for testing**
+7. **Notify user when iteration is ready for testing**
 
 ---
 
