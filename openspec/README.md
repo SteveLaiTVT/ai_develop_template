@@ -55,9 +55,9 @@ openspec archive <change-name> --yes
 ## How It Works with This Template
 
 This template uses a three-session AI development model:
-- **A Session (Opus)**: Architecture and design decisions
-- **B Session (Sonnet)**: Implementation
-- **C Session (Sonnet)**: Review and validation
+- **A Session (Reasoning)**: Architecture and design decisions
+- **B Session (Execution)**: Implementation
+- **C Session (Review)**: Review and validation
 
 OpenSpec integrates seamlessly:
 

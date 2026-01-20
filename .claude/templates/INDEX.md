@@ -21,7 +21,6 @@ This document describes all templates used in the AI-assisted development workfl
 | External Review | `external_review.md` | Codex/Gemini | A Session | External AI audit |
 | Git Workflow | `git_workflow.md` | - | All | Version control guide |
 | OpenSpec Integration | `openspec_integration.md` | - | All | Spec-driven development guide |
-| **Cowork Integration** | `cowork_integration.md` | - | All | Claude Cowork setup guide (NEW) |
 | **Progressive Testing** | `progressive_testing.md` | - | B Session | Testing strategy guide (NEW) |
 
 ---
@@ -62,7 +61,7 @@ This document describes all templates used in the AI-assisted development workfl
         ▼                                               │
 ┌───────────────────┐                                   │
 │   A SESSION       │                                   │
-│   (Opus 4.5)      │                                   │
+│   (Reasoning)     │                                   │
 │                   │                                   │
 │ Reads:            │                                   │
 │ - DESIGN_STATE    │                                   │
@@ -82,7 +81,7 @@ This document describes all templates used in the AI-assisted development workfl
         │                      ▼                       │
         │              ┌───────────────────┐          │
         │              │   B SESSION       │          │
-        │              │   (Sonnet 4.5)    │          │
+        │              │   (Execution)    │          │
         │              │                   │          │
         │              │ Reads:            │          │
         │              │ - Task Handoff    │          │
@@ -94,7 +93,7 @@ This document describes all templates used in the AI-assisted development workfl
         │              │ 2. Check env vars │          │
         │              │ 3. Self-test API  │          │
         │              │ 4. Self-test UI   │          │
-        │              │    (agent-browser)│          │
+        │              │    (MCP/agent)    │          │
         │              │ 5. Commit working │          │
         │              │                   │          │
         │              │ Outputs:          │          │
@@ -109,7 +108,7 @@ This document describes all templates used in the AI-assisted development workfl
         │                                       ▼     │
         │              ┌───────────────────┐         │
         │              │   C SESSION       │         │
-        │              │   (Sonnet 4.5)    │         │
+        │              │   (Review)       │         │
         │              │                   │         │
         │              │ Reads:            │         │
         │              │ - Implementation  │         │
@@ -153,12 +152,11 @@ This document describes all templates used in the AI-assisted development workfl
 **Key Steps**:
 1. Display welcome banner
 2. Ask onboarding questions (project name, description, type, stack, git remote)
-3. Cowork detection (offer integration if available)
-4. Git setup (clear template .git, init new repo, add remote)
-5. Update DESIGN_STATE.yaml with user's answers
-6. Make initial commit
-7. Transition to discovery phase
-8. Launch parallel A/B/C session workflow
+3. Git setup (clear template .git, init new repo, add remote)
+4. Update DESIGN_STATE.yaml with user's answers
+5. Make initial commit
+6. Transition to discovery phase
+7. Launch parallel A/B/C session workflow
 
 **Entry Point**: See `CLAUDE.md` in project root for how this is triggered.
 
@@ -460,57 +458,9 @@ See the full guide at `.claude/templates/openspec_integration.md` for detailed w
 
 ---
 
-## Claude Cowork Integration
-
-### 11. Cowork Integration (`cowork_integration.md`) - NEW
-
-**Purpose**: Guide for using Claude Cowork with the AI Development Workflow
-
-**What is Claude Cowork**: Anthropic's feature that brings Claude Code's agentic capabilities to non-developers through the Claude Desktop app (macOS). It provides:
-- Direct file access without terminal commands
-- Browser navigation (with Chrome extension)
-- Third-party integrations via Connectors (Asana, Notion, Canva, etc.)
-
-**Availability** (as of January 2026):
-- Claude Max subscribers ($100-200/month)
-- macOS only via Claude Desktop app
-- Research preview (other plans can join waitlist)
-
-**Key Features**:
-- Simplified file operations for non-developers
-- Visual frontend testing via browser
-- Project management tool integration
-- Design file access
-
-**Integration with Sessions**:
-- **A Session**: Browse reference apps, access project management tools, view design files
-- **B Session**: Simplified file editing, browser-based UI testing
-- **C Session**: Visual inspection, design mockup comparison
-
-**Detection**: At session start, check `cowork.current_session.is_cowork` in DESIGN_STATE.yaml
-
-**When to Use Cowork vs Claude Code**:
-| Use Cowork For | Use Claude Code For |
-|----------------|---------------------|
-| File read/write | npm/yarn commands |
-| Visual testing | Database operations |
-| Design reference | Docker/CI-CD |
-| Project mgmt access | Build processes |
-
-**Quick Start**:
-1. Open Claude Desktop on macOS
-2. Enable Cowork feature
-3. Grant folder access to project
-4. (Optional) Install Chrome extension
-5. (Optional) Connect third-party apps
-
-See the full guide at `.claude/templates/cowork_integration.md` for setup and workflow details.
-
----
-
 ## Progressive Testing Strategy
 
-### 12. Progressive Testing (`progressive_testing.md`) - NEW
+### 11. Progressive Testing (`progressive_testing.md`) - NEW
 
 **Purpose**: Guide for practical, staged testing as part of the development workflow
 
@@ -539,9 +489,9 @@ npm run dev
 
 **Frontend Testing Options**:
 - **Quick Smoke Test**: Build succeeds, main page loads
-- **Delegate to Agent**: Vercel Browser Agent, Playwright MCP
+- **MCP/Agent Browser Test**: Playwright MCP or other MCP-compatible agents
 - **Manual User Test**: User tests and reports issues
-- **Detailed Visual**: Full agent-browser testing (mature stage)
+- **Detailed Visual**: Full MCP/agent browser testing (mature stage)
 
 **When to Add More Tests**:
 - **Unit Tests**: Security code, complex logic, after fixing bugs

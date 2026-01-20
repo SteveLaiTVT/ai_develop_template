@@ -1,6 +1,6 @@
-# AI Development Template - Claude Instructions
+# AI Development Template - Assistant Instructions
 
-This file is automatically read by Claude Code and Claude Cowork when opening this project.
+This file is automatically read by the AI assistant when opening this project.
 
 ## Quick Start
 
@@ -24,7 +24,7 @@ initialization:
 ╔══════════════════════════════════════════════════════════════════╗
 ║     🎉 WELCOME TO THE AI DEVELOPMENT TEMPLATE                    ║
 ╠══════════════════════════════════════════════════════════════════╣
-║  I'm Claude, your AI development partner.                        ║
+║  I'm your AI development partner.                                ║
 ║  Let's set up your project! I'll ask a few questions first.      ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
@@ -36,12 +36,9 @@ initialization:
 3. **Project Type**: web-app | mobile-app | api-service | full-stack | other
 4. **Tech Stack**: Your preference or "recommend" for suggestions
 5. **Git Remote** (OPTIONAL): Your repository URL or "skip" for local-only git
-6. **Model Selection** (OPTIONAL): Which Claude model for each session?
-   - Default: A=Opus, B=Sonnet, C=Sonnet (cost-effective)
-   - All Opus: Use Opus 4.5 for all sessions (Claude Max users)
-
-**Also ask about Cowork** (if macOS/Claude Desktop detected):
-- Would you like to enable Claude Cowork integration?
+6. **Model Selection** (OPTIONAL): Which model for each session?
+   - Default: A=Reasoning, B=Fast, C=Fast
+   - Custom: A/B/C set per user's preference
 
 **Then execute initialization:**
 
@@ -92,7 +89,6 @@ Read `workflow_state` and display current status:
 │   └── C_SESSION.md      # Reviewer session instructions
 ├── templates/            # Workflow templates
 │   ├── project_init.md   # Initialization guide
-│   ├── cowork_integration.md  # Cowork setup guide
 │   └── ...               # Other templates
 └── handoffs/             # Task handoff documents
 
@@ -109,25 +105,22 @@ This template uses a three-session model for AI-assisted development:
 
 | Session | Default Model | Role | Responsibilities |
 |---------|---------------|------|------------------|
-| **A Session** | Opus 4.5 | Architect | Design, discovery, task decomposition |
-| **B Session** | Sonnet 4.5* | Implementer | Fill TODOs, self-test, create PRs |
-| **C Session** | Sonnet 4.5* | Reviewer | Code review, constraint validation |
-
-*\*Model configurable - Claude Max users can use Opus 4.5 for all sessions*
+| **A Session** | Reasoning | Architect | Design, discovery, task decomposition |
+| **B Session** | Execution | Implementer | Fill TODOs, self-test, create PRs |
+| **C Session** | Review | Reviewer | Code review, constraint validation |
 
 ### Model Selection
 
 During initialization, you can choose which model to use for each session:
 
-- **Default (Recommended)**: A=Opus, B=Sonnet, C=Sonnet
-  - Cost-effective balance of capability and speed
-  - Opus handles complex architecture decisions
-  - Sonnet efficiently handles implementation and review
+- **Default (Recommended)**: A=Reasoning, B=Fast, C=Fast
+  - Balance of capability and speed
+  - A handles complex architecture decisions
+  - B/C handle implementation and review efficiently
 
-- **All Opus**: Use Opus 4.5 for all sessions
-  - Maximum capability for complex projects
-  - Best for Claude Max subscribers
-  - Ideal when implementation requires deep reasoning
+- **Custom**: Choose any combination of models per session
+  - Use a stronger model for A when decisions are complex
+  - Use faster models for routine implementation/review
 
 Model preferences are stored in `initialization.model_preferences` in DESIGN_STATE.yaml.
 
@@ -166,17 +159,7 @@ main ─────────────────────────
 | "Show my tasks" | Display pending tasks for B Session |
 | "Review the code" | Start C Session code review |
 | "Report a bug" | Create bug report for A Session |
-| "Enable Cowork" | Configure Cowork integration |
-
----
-
-## Cowork Integration
-
-If using Claude Cowork (Claude Desktop on macOS):
-
-- Check `cowork.enabled` in DESIGN_STATE.yaml
-- Cowork provides: file access, browser navigation, third-party connectors
-- See `.claude/templates/cowork_integration.md` for setup
+| "Request MCP test" | Trigger MCP/agent-based frontend testing |
 
 ---
 
@@ -197,6 +180,7 @@ When starting work, read these files in order:
 3. **C Session validates against DESIGN_STATE constraints**
 4. **All sessions display status tip on start**
 5. **B Session must self-test before creating PRs**
+6. **Frontend testing should prefer MCP/agent browser tools**
 6. **Notify user when iteration is ready for testing**
 
 ---

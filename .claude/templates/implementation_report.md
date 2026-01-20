@@ -100,6 +100,18 @@ test_results:
   notes: "[Any notes about testing]"
 
 # ============================================================
+# Deployment & Environment
+# ============================================================
+deployment_notes:
+  docker: "[minimal Docker deployment notes]"
+  vercel: "[preferred Vercel deployment notes if frontend]"
+environment_variables:
+  - name: "DATABASE_URL"
+    required_by: "backend"
+    example: "postgresql://user:pass@localhost:5432/db"
+    notes: "[purpose/constraints]"
+
+# ============================================================
 # Diff Summary (For modified files)
 # ============================================================
 diff_summary:

@@ -204,7 +204,7 @@ B Session documents: "Frontend testing delegated to [agent]"
 - B Session fixes reported bugs
 
 ### Option D: Detailed Visual Testing (Mature Stage)
-- Full agent-browser testing
+- Full MCP/agent browser testing
 - All pages and interactions covered
 - Comprehensive documentation
 

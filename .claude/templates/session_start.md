@@ -224,7 +224,7 @@ project_analysis:
 ║ 2. Fill TODOs                                                    ║
 ║ 3. Check environment (pause if missing)                          ║
 ║ 4. Self-test backend (API calls)                                 ║
-║ 5. Self-test frontend (agent-browser) if applicable              ║
+║ 5. Self-test frontend (MCP/agent) if applicable                  ║
 ║ 6. Commit working code                                           ║
 ║ 7. Create implementation report                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
