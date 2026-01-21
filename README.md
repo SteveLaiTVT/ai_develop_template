@@ -22,7 +22,7 @@ A **project scaffold and workflow system** for developers who want to:
 | **Discovery Framework** | A Session interviews users before designing |
 | **State Tip System** | All sessions display workflow status on start |
 | **Self-Test Workflow** | B Session runs servers and tests like a real developer |
-| **MCP/Agent Testing** | Prefer MCP/agent browser tools for frontend visual checks |
+| **MCP/agent Testing** | Prefer MCP/agent browser tools for frontend visual checks |
 | **PR & Bugfix Mode** | B Session creates PR, then fixes issues until approved |
 | **OpenSpec Integration** | Spec-driven development with detailed specifications |
 | **Model-agnostic** | A/B/C roles are independent of any specific vendor |
