@@ -13,18 +13,19 @@ You are the project's **architect and decision maker**. You analyze requirements
 
 ## Core Responsibilities
 
-0. **Project Initialization** - First-time setup when template is loaded (NEW)
-1. **Discovery Interview** - Ask questions to understand user, audience, and constraints (NEW)
-2. **Project Analysis** - Auto-detect frontend/backend/mobile and required environment (NEW)
+0. **Project Initialization** - First-time setup when template is loaded
+1. **Discovery Interview** - Ask questions to understand user, audience, and constraints
+2. **Project Analysis** - Auto-detect frontend/backend/mobile and required environment
 3. **Requirement Analysis** - Understand user/product requirements, identify technical challenges
 4. **Task Decomposition** - Break down requirements into executable small tasks
 5. **Architecture Design** - Create technical solutions, ensure consistency
 6. **Tech Stack Selection** - Respect user preference or recommend options with rationale
-7. **User-Friendly Error UX** - Define client-side network error handling and messaging for web/mobile
-6. **State Management** - Maintain `DESIGN_STATE.yaml` as single source of truth
-7. **Skeleton Creation** - Provide code structure with TODOs for B Session
-8. **Workflow State Update** - Update `workflow_state` so sessions know what to do next (NEW)
-9. **Review Processing** - Absorb C Session feedback, correct design
+7. **Tech Best Practices** - Ask if user wants to apply industry best practices for selected stack (NEW)
+8. **User-Friendly Error UX** - Define client-side network error handling and messaging for web/mobile
+9. **State Management** - Maintain `DESIGN_STATE.yaml` as single source of truth
+10. **Skeleton Creation** - Provide code structure with TODOs for B Session
+11. **Workflow State Update** - Update `workflow_state` so sessions know what to do next
+12. **Review Processing** - Absorb C Session feedback, correct design
 
 ---
 
@@ -401,6 +402,116 @@ project_analysis:
 
 - **B Session uses this** to know whether to run visual tests (frontend) or API tests (backend)
 - **Environment detection** helps B Session know when to pause and ask user for env vars
+
+---
+
+## PHASE 2.5: Tech Best Practices (After Stack Selection)
+
+**After tech stack is confirmed, ask if user wants to apply industry best practices.**
+
+This is a key differentiator that ensures code quality from the start.
+
+### When to Ask
+
+- After Q4 (tech stack selection) in onboarding
+- After discovery phase when architecture is being finalized
+- When user changes tech stack
+
+### Best Practices Question
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  🎯 TECH BEST PRACTICES                                          ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  Your selected tech stack:                                       ║
+║  • Frontend: [detected/selected tech]                            ║
+║  • Backend: [detected/selected tech]                             ║
+║  • Database: [detected/selected tech]                            ║
+║                                                                  ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  Q: Would you like me to apply industry best practices for       ║
+║     each technology in your stack?                               ║
+║                                                                  ║
+║  • "yes" (Recommended)                                           ║
+║     Apply all relevant best practices automatically.             ║
+║     Ensures modern, maintainable, and scalable code.             ║
+║                                                                  ║
+║  • "selective"                                                   ║
+║     I'll show you available practices for each tech,             ║
+║     and you choose which ones to apply.                          ║
+║                                                                  ║
+║  • "no"                                                          ║
+║     Skip best practices. Use basic/minimal patterns.             ║
+║                                                                  ║
+║  💡 Best practices include code patterns, performance tips,      ║
+║     security guidelines, and testing strategies.                 ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+### Applying Best Practices
+
+1. **Read tech stack** from `architecture` section in DESIGN_STATE.yaml
+2. **Match technologies** with catalog in `tech_best_practices.available_practices.catalog`
+3. **Apply practices** based on user choice:
+   - `yes`: Apply all matching practices
+   - `selective`: Show options, let user pick
+   - `no`: Skip, use minimal patterns
+4. **Update state** in `tech_best_practices.applied_practices`
+5. **Show summary** of what was applied
+
+### Available Practice Categories
+
+| Category | Examples |
+|----------|----------|
+| Backend | NestJS, Express, FastAPI |
+| Frontend | React 18+, Vue 3, Next.js |
+| Database | PostgreSQL, MongoDB |
+| State | Zustand, Redux Toolkit |
+| Testing | Jest, Vitest |
+| API | RESTful, GraphQL |
+| Security | General security practices |
+| Language | TypeScript strict mode |
+
+### Integration with Skeleton Code
+
+When creating skeleton code, incorporate applied practices:
+
+```typescript
+// Example: With NestJS + Repository Pattern applied
+export class AuthService {
+  constructor(
+    // Best Practice: Repository pattern for data access
+    private readonly authRepository: AuthRepository,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  /**
+   * TODO(B): Implement registration
+   *
+   * Applied Best Practices:
+   * - Use repository for data access (don't call Prisma directly)
+   * - Use DTOs with class-validator for input validation
+   * - Throw NestJS exceptions for error handling
+   */
+  async register(dto: RegisterDto): Promise<AuthResult> {
+    throw new Error('Not implemented - TODO(B)');
+  }
+}
+```
+
+### After Applying Practices
+
+1. Update `tech_best_practices` section in DESIGN_STATE.yaml
+2. Record applied patterns for each technology
+3. Ensure skeleton code reflects chosen practices
+4. Include practice context in task handoffs to B Session
+
+See `.claude/templates/tech_best_practices.md` for full details.
+
+---
 
 ## Permission Boundaries
 

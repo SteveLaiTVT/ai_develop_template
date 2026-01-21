@@ -35,21 +35,26 @@ initialization:
 2. **Description**: Briefly describe what you want to build (1-2 sentences)
 3. **Project Type**: web-app | mobile-app | api-service | full-stack | other
 4. **Tech Stack**: Your preference or "recommend" for suggestions
-5. **Git Remote** (OPTIONAL): Your repository URL or "skip" for local-only git
-6. **Model Selection** (OPTIONAL): Which model for each session?
+5. **Tech Best Practices** (Recommended): Apply industry best practices for your stack?
+   - "yes" - Apply all relevant best practices (code patterns, security, testing)
+   - "selective" - Choose which practices to apply
+   - "no" - Skip, use minimal patterns
+6. **Git Remote** (OPTIONAL): Your repository URL or "skip" for local-only git
+7. **Model Selection** (OPTIONAL): Which model for each session?
    - Default: A=Reasoning, B=Fast, C=Fast
    - Custom: A/B/C set per user's preference
 
 **Then execute initialization:**
 
 1. Update `DESIGN_STATE.yaml` with answers
-2. Clear template `.git`: `rm -rf .git`
-3. Create `.gitignore` file
-4. Initialize new repo: `git init && git branch -M main`
-5. Add remote (OPTIONAL - only if user provided URL)
-6. Make initial commit with user's project intent
-7. Set `initialization.initialized: true` and `is_template: false`
-8. Transition to discovery phase
+2. Apply tech best practices if user opted in (update `tech_best_practices` section)
+3. Clear template `.git`: `rm -rf .git`
+4. Create `.gitignore` file
+5. Initialize new repo: `git init && git branch -M main`
+6. Add remote (OPTIONAL - only if user provided URL)
+7. Make initial commit with user's project intent
+8. Set `initialization.initialized: true` and `is_template: false`
+9. Transition to discovery phase
 
 **Git Remote is Optional:** The workflow works entirely locally. User can add a remote later when ready to share.
 
@@ -177,6 +182,8 @@ main ─────────────────────────
 | "Review the code" | Start C Session code review |
 | "Report a bug" | Create bug report for A Session |
 | "Request MCP test" | Trigger MCP/agent-based frontend testing |
+| "Apply best practices" | Apply/re-apply tech best practices for current stack |
+| "Show applied practices" | Display currently applied best practices |
 
 ---
 

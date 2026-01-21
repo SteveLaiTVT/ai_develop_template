@@ -8,9 +8,10 @@ This document describes all templates used in the AI-assisted development workfl
 
 | Template | File | From | To | Purpose |
 |----------|------|------|-----|---------|
-| **Project Init** | `project_init.md` | System | User | First-time project setup (NEW) |
+| **Project Init** | `project_init.md` | System | User | First-time project setup |
 | **Session Start** | `session_start.md` | System | All Sessions | Display workflow state on start |
 | **Discovery Questions** | `discovery_questions.md` | A Session | User | Project discovery interview |
+| **Tech Best Practices** | `tech_best_practices.md` | A Session | All | Apply industry best practices (NEW) |
 | Task Handoff | `task_handoff.md` | A Session | B Session | Assign implementation tasks |
 | Implementation Report | `implementation_report.md` | B Session | C Session | Report completed work |
 | Review Report | `review_report.md` | C Session | A Session | Code review results |
@@ -21,7 +22,7 @@ This document describes all templates used in the AI-assisted development workfl
 | External Review | `external_review.md` | Codex/Gemini | A Session | External AI audit |
 | Git Workflow | `git_workflow.md` | - | All | Version control guide |
 | OpenSpec Integration | `openspec_integration.md` | - | All | Spec-driven development guide |
-| **Progressive Testing** | `progressive_testing.md` | - | B Session | Testing strategy guide (NEW) |
+| **Progressive Testing** | `progressive_testing.md` | - | B Session | Testing strategy guide |
 
 ---
 
@@ -229,6 +230,46 @@ Q5: Git repository URL? (url | skip)
 2. Your technical background? (stack preference, experience)
 3. Product vision? (problem, MVP scope, design style)
 4. Constraints? (budget, compliance, integrations)
+
+---
+
+### 0.6 Tech Best Practices (`tech_best_practices.md`) - NEW
+
+**Purpose**: Apply technology-specific best practices after stack selection
+
+**When to Use**: After Q4 (tech stack selection) in onboarding or discovery
+
+**Key Features**:
+- Asks user if they want to apply best practices ("yes" | "selective" | "no")
+- Matches selected technologies with best practice catalog in DESIGN_STATE.yaml
+- Updates `tech_best_practices.applied_practices` with chosen patterns
+- Integrates practices into skeleton code generation
+
+**Available Practice Categories**:
+| Category | Technologies |
+|----------|--------------|
+| Backend | NestJS, Express, FastAPI |
+| Frontend | React 18+, Vue 3, Next.js |
+| Database | PostgreSQL, MongoDB |
+| State | Zustand, Redux Toolkit |
+| Testing | Jest, Vitest |
+| API | RESTful, GraphQL |
+| Security | General security practices |
+| Language | TypeScript strict mode |
+
+**User Options**:
+- `"yes"`: Apply all relevant best practices automatically
+- `"selective"`: Show options for each tech, user picks which to apply
+- `"no"`: Skip, use minimal patterns
+
+**Integration**:
+- **A Session**: Asks the question, applies practices, incorporates into skeleton
+- **B Session**: Follows applied practices when filling TODOs
+- **C Session**: Validates code against applied practices
+
+**Commands**:
+- "Apply best practices" - Re-apply for current stack
+- "Show applied practices" - Display what's applied
 
 ---
 

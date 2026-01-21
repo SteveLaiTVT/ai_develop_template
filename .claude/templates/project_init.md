@@ -100,6 +100,12 @@ Ask these questions to understand user's intent:
 ║      • "recommend"  - Let me suggest based on your project       ║
 ║      • Or specify   - e.g., "React + Node.js + PostgreSQL"       ║
 ║                                                                  ║
+║  Q4.5: Apply tech best practices? (Recommended)                  ║
+║      • "yes"       - Apply industry best practices for your stack║
+║      • "selective" - Choose which practices to apply             ║
+║      • "no"        - Skip, use minimal patterns                  ║
+║      💡 Includes code patterns, security, testing strategies     ║
+║                                                                  ║
 ║  Q5: Do you have a Git remote repository? (OPTIONAL)             ║
 ║      • Enter URL (e.g., github.com/username/my-project)          ║
 ║      • Or "skip" - we'll use local git only (recommended start)  ║
@@ -127,6 +133,7 @@ initialization:
       project_type: "full-stack"
       git_remote: "github.com/user/task-tracker"
       preferred_stack: "recommend"
+      apply_best_practices: true  # or "selective" or false
 
   # Model preferences (based on user choice)
   model_preferences:
@@ -137,6 +144,13 @@ initialization:
 meta:
   project_name: "task-tracker"
   description: "A simple task management app for teams"
+
+# If apply_best_practices is true or "selective", also update:
+tech_best_practices:
+  enabled: true
+  asked_at: "2026-01-21T10:00:00Z"
+  user_preference:
+    apply_best_practices: true
 ```
 
 ---
