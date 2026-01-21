@@ -273,6 +273,7 @@ Q5: Git repository URL? (url | skip)
 | AI Development | Claude, Gemini, Cursor, OpenAI | Anthropic > Google > Cursor > OpenAI |
 | Mobile (Android) | Jetpack Compose, Kotlin | Google |
 | Mobile (iOS) | SwiftUI, Swift | Apple |
+| Java Ecosystem | Java, Spring Boot, Quarkus, Micronaut | Oracle > Google > Spring Team |
 | Backend | NestJS, Express, FastAPI, Firebase | Framework teams, Google |
 | Database | PostgreSQL, MongoDB | Official docs |
 | Testing | Jest, Vitest, Playwright | Meta, Microsoft |

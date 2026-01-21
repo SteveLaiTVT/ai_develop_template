@@ -384,6 +384,7 @@ tech_best_practices:
       ios: ["Apple"]
       react: ["Vercel Labs Skills", "Meta/React Team"]
       typescript: ["Microsoft"]
+      java: ["Oracle", "Google", "Spring Team (VMware)", "Red Hat", "Oracle Labs"]
       vue: ["Vue Team (Evan You)"]
       node: ["Node.js Foundation", "OpenJS"]
       video: ["Remotion Dev"]
@@ -774,6 +775,118 @@ tech_best_practices:
           - "Proper exception handlers"
           - "SQLAlchemy with async support"
           - "Alembic for migrations"
+
+      # ============================================================
+      # JAVA ECOSYSTEM (Oracle > Google > Spring Team)
+      # ============================================================
+      java_oracle:
+        name: "Java Best Practices (Oracle Official)"
+        category: "language"
+        authority: "Oracle"
+        priority: 1
+        external_reference: "https://docs.oracle.com/javase/tutorial/java/"
+        patterns:
+          - "Follow Java Code Conventions (naming, formatting)"
+          - "Use records for immutable data carriers (Java 16+)"
+          - "Apply sealed classes for controlled inheritance (Java 17+)"
+          - "Use pattern matching for instanceof (Java 16+)"
+          - "Apply switch expressions for cleaner code (Java 14+)"
+          - "Use var for local variable type inference appropriately"
+          - "Implement proper exception handling (checked vs unchecked)"
+          - "Use try-with-resources for AutoCloseable"
+          - "Apply Streams API for collection processing"
+          - "Use Optional to avoid null pointer exceptions"
+          - "Implement equals/hashCode contract correctly"
+          - "Use CompletableFuture for async programming"
+          - "Apply virtual threads for scalability (Java 21+)"
+
+      java_google:
+        name: "Google Java Style Guide"
+        category: "language"
+        authority: "Google"
+        priority: 2
+        external_reference: "https://google.github.io/styleguide/javaguide.html"
+        patterns:
+          - "Use 2-space indentation (Google style)"
+          - "Column limit of 100 characters"
+          - "One statement per line"
+          - "Braces used even for single-statement blocks"
+          - "Package names in lowercase"
+          - "Class names in UpperCamelCase"
+          - "Method names in lowerCamelCase"
+          - "Constant names in UPPER_SNAKE_CASE"
+          - "Avoid wildcard imports"
+          - "Order imports: static, java/javax, third-party, project"
+          - "Use @Override annotation consistently"
+          - "Caught exceptions: never ignore silently"
+          - "Javadoc at minimum for public APIs"
+
+      spring_boot:
+        name: "Spring Boot Best Practices (VMware/Pivotal)"
+        category: "backend"
+        authority: "Spring Team (VMware)"
+        priority: 1
+        external_reference: "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+        patterns:
+          - "Use Spring Boot starters for dependency management"
+          - "Apply layered architecture (Controller → Service → Repository)"
+          - "Use constructor injection over field injection"
+          - "Apply @Transactional at service layer"
+          - "Use Spring Data JPA repositories"
+          - "Implement proper validation with @Valid and Bean Validation"
+          - "Use application.yml/properties for configuration"
+          - "Apply profiles for environment-specific config"
+          - "Use Spring Security for authentication/authorization"
+          - "Implement proper exception handling with @ControllerAdvice"
+          - "Use Actuator for monitoring and health checks"
+          - "Apply caching with @Cacheable"
+          - "Use Lombok to reduce boilerplate (optional)"
+
+      spring_webflux:
+        name: "Spring WebFlux Reactive Best Practices"
+        category: "backend"
+        authority: "Spring Team (VMware)"
+        priority: 2
+        patterns:
+          - "Use Mono for single-value async operations"
+          - "Use Flux for multi-value async streams"
+          - "Never block in reactive pipelines"
+          - "Apply backpressure handling properly"
+          - "Use WebClient instead of RestTemplate"
+          - "Implement functional endpoints when appropriate"
+          - "Apply proper error handling with onErrorResume/onErrorReturn"
+          - "Use R2DBC for reactive database access"
+
+      quarkus:
+        name: "Quarkus Best Practices (Red Hat)"
+        category: "backend"
+        authority: "Red Hat"
+        priority: 2
+        external_reference: "https://quarkus.io/guides/"
+        patterns:
+          - "Use build-time augmentation for fast startup"
+          - "Apply CDI for dependency injection"
+          - "Use Panache for simplified data access"
+          - "Implement native compilation with GraalVM"
+          - "Apply reactive programming with Mutiny"
+          - "Use REST Client for external API calls"
+          - "Implement health checks with SmallRye Health"
+          - "Apply configuration with SmallRye Config"
+
+      micronaut:
+        name: "Micronaut Best Practices (Oracle Labs)"
+        category: "backend"
+        authority: "Oracle Labs / Micronaut Foundation"
+        priority: 2
+        external_reference: "https://docs.micronaut.io/latest/guide/"
+        patterns:
+          - "Use compile-time dependency injection"
+          - "Apply AOP with compile-time processing"
+          - "Use Micronaut Data for data access"
+          - "Implement reactive streams with Reactor/RxJava"
+          - "Apply GraalVM native image support"
+          - "Use declarative HTTP clients"
+          - "Implement proper configuration injection"
 
       # ============================================================
       # VUE ECOSYSTEM

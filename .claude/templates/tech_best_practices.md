@@ -309,6 +309,7 @@ The full catalog is stored in `DESIGN_STATE.yaml` under `tech_best_practices.ava
 | 2 | React | Meta / React Team |
 | 2 | Android | Google (official) |
 | 2 | iOS | Apple (official) |
+| 2 | Java | Oracle > Google > Spring Team (VMware) |
 | 2 | TypeScript | Microsoft |
 | 2 | Vue | Vue Team (Evan You) |
 
@@ -339,6 +340,7 @@ These external skills should be fetched and applied when available:
 | **Frontend (Vue)** | Vue 3, Nuxt 3 | Vue Team |
 | **Mobile (Android)** | Jetpack Compose, Kotlin | Google |
 | **Mobile (iOS)** | SwiftUI, Swift | Apple |
+| **Java Ecosystem** | Java, Spring Boot, Quarkus, Micronaut | Oracle > Google > Spring Team |
 | **Backend** | NestJS, Express, FastAPI, Firebase | Framework teams, Google |
 | **Database** | PostgreSQL, MongoDB | Official docs |
 | **State** | Zustand, Redux Toolkit | Library teams |
