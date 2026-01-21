@@ -383,6 +383,7 @@ tech_best_practices:
       android: ["Google"]
       flutter: ["Google"]
       dart: ["Google"]
+      kotlin: ["Google/JetBrains", "Spring Team", "JetBrains (Ktor)"]
       ios: ["Apple"]
       react: ["Vercel Labs Skills", "Meta/React Team"]
       typescript: ["Microsoft"]
@@ -637,15 +638,70 @@ tech_best_practices:
         category: "language"
         authority: "Google/JetBrains"
         priority: 1
+        external_reference: "https://kotlinlang.org/docs/coding-conventions.html"
         patterns:
           - "Use data classes for DTOs"
           - "Apply sealed classes for state management"
           - "Use extension functions appropriately"
-          - "Implement null safety properly"
+          - "Implement null safety properly (?. ?:  !!)"
           - "Use coroutines for async operations"
           - "Apply Flow for reactive streams"
           - "Use scope functions (let, apply, run, also, with)"
           - "Implement proper exception handling"
+          - "Prefer val over var (immutability)"
+          - "Use when expression instead of if-else chains"
+          - "Apply object for singletons"
+          - "Use companion object for static members"
+
+      kotlin_spring:
+        name: "Kotlin + Spring Boot Best Practices"
+        category: "backend"
+        authority: "Spring Team / JetBrains"
+        priority: 1
+        external_reference: "https://docs.spring.io/spring-framework/reference/languages/kotlin.html"
+        patterns:
+          # 基础配置
+          - "使用 Spring Boot Kotlin 官方 starter"
+          - "启用 kotlin-spring 编译器插件 (自动 open 类)"
+          - "启用 kotlin-jpa 插件 (无参构造函数)"
+          - "配置 Jackson Kotlin 模块支持 data class"
+          # 类和注解
+          - "Controller/Service/Repository 不需要手动加 open"
+          - "使用 data class 作为 DTO/Request/Response"
+          - "使用 @ConfigurationProperties 配合 data class"
+          - "用 lateinit var 注入属性 (或推荐构造器注入)"
+          # Null 安全
+          - "充分利用 Kotlin null safety 减少 @NotNull 注解"
+          - "Repository 返回类型使用 T? 而非 Optional<T>"
+          - "使用 ?.let { } 替代 if (x != null)"
+          # 协程支持
+          - "使用 suspend fun 定义异步 Controller 方法"
+          - "使用 kotlinx-coroutines-reactor 桥接 WebFlux"
+          - "Repository 方法可返回 Flow<T> (响应式)"
+          # DSL 和扩展
+          - "使用 Spring Bean DSL: beans { bean<MyService>() }"
+          - "使用 Router DSL: router { GET(\"/api\") { ... } }"
+          - "编写扩展函数增强 Spring 类型"
+          # 测试
+          - "使用 MockK 替代 Mockito (更好的 Kotlin 支持)"
+          - "使用 kotest 或 JUnit 5 + kotlin-test"
+          - "测试协程使用 runTest { }"
+
+      kotlin_ktor:
+        name: "Ktor Best Practices (JetBrains)"
+        category: "backend"
+        authority: "JetBrains"
+        priority: 2
+        external_reference: "https://ktor.io/docs/"
+        patterns:
+          - "使用 Kotlin DSL 配置应用"
+          - "使用 Routing DSL 定义路由"
+          - "使用 ContentNegotiation 处理 JSON (kotlinx.serialization)"
+          - "使用 Authentication 插件处理认证"
+          - "使用 StatusPages 统一异常处理"
+          - "使用 suspend fun 处理请求 (原生协程支持)"
+          - "使用 Exposed 或 ktorm 进行数据库操作"
+          - "使用 Koin 进行依赖注入"
 
       firebase_google:
         name: "Firebase Best Practices (Google)"

@@ -275,6 +275,7 @@ Q5: Git repository URL? (url | skip)
 | Mobile (Flutter) | Flutter, Dart | Google |
 | Mobile (iOS) | SwiftUI, Swift | Apple |
 | Java Ecosystem | Java, Spring Boot, Dubbo, Nacos, Sentinel | Oracle > Google > Alibaba > Spring |
+| Kotlin Backend | Kotlin + Spring Boot, Ktor | Spring Team / JetBrains |
 | Backend | NestJS, Express, FastAPI, Firebase | Framework teams, Google |
 | Database | PostgreSQL, MongoDB | Official docs |
 | Testing | Jest, Vitest, Playwright | Meta, Microsoft |

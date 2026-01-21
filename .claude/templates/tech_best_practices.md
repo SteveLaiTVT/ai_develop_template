@@ -311,6 +311,7 @@ The full catalog is stored in `DESIGN_STATE.yaml` under `tech_best_practices.ava
 | 2 | Flutter/Dart | Google (official) |
 | 2 | iOS | Apple (official) |
 | 2 | Java | Oracle > Google > Alibaba > Spring Team |
+| 2 | Kotlin Backend | Spring Team / JetBrains (Ktor) |
 | 2 | TypeScript | Microsoft |
 | 2 | Vue | Vue Team (Evan You) |
 
@@ -343,6 +344,7 @@ These external skills should be fetched and applied when available:
 | **Mobile (Flutter)** | Flutter, Dart | Google |
 | **Mobile (iOS)** | SwiftUI, Swift | Apple |
 | **Java Ecosystem** | Java, Spring Boot, Dubbo, Nacos, Sentinel | Oracle > Google > Alibaba > Spring |
+| **Kotlin Backend** | Kotlin + Spring Boot, Ktor | Spring Team / JetBrains |
 | **Backend** | NestJS, Express, FastAPI, Firebase | Framework teams, Google |
 | **Database** | PostgreSQL, MongoDB | Official docs |
 | **State** | Zustand, Redux Toolkit | Library teams |
