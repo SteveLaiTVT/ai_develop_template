@@ -39,9 +39,76 @@ initialization:
       project_type: null           # web-app | mobile-app | api-service | full-stack | other
       git_remote: null             # User's git remote URL (OPTIONAL - can be null/skip)
       preferred_stack: null        # User's tech stack preference or "recommend"
-      # MIGRATION NOTE: The 'use_cowork' field has been removed.
-      # Cowork-specific integration is no longer part of this template.
-      # MCP (Model Context Protocol) is now the preferred approach for browser testing.
+      apply_best_practices: null   # true | false | "selective" - Apply tech best practices?
+      # Package name for Java/Kotlin/Android projects (required if using these)
+      package_name: null           # e.g., "com.example.myapp" - Asked if Java/Kotlin/Android selected
+
+  # Project structure (apps folder layout)
+  # All artifacts are placed in {project}/apps/{module}
+  project_structure:
+    root_folder: "apps"
+    modules:
+      backend: "apps/backend"           # Spring Boot / NestJS / FastAPI / Ktor
+      android: "apps/android"           # Android (Kotlin/Java)
+      ios: "apps/ios"                   # iOS (Swift)
+      user_web: "apps/user-web"         # User-facing web app (Next.js/Vue)
+      admin_web: "apps/admin-web"       # Admin dashboard (Next.js/Vue)
+      shared: "apps/shared"             # Shared code (types, utils)
+    note: "Use official generators to create projects in these folders"
+
+  # Official project generators
+  # Use these to create new projects instead of manual setup
+  project_generators:
+    spring_boot:
+      name: "Spring Initializr"
+      url: "https://start.spring.io"
+      command: "curl https://start.spring.io/starter.zip -d ... -o backend.zip"
+      description: "Official Spring Boot project generator"
+
+    android:
+      name: "Android Studio"
+      url: "https://developer.android.com/studio"
+      description: "Create via Android Studio New Project wizard"
+
+    ios:
+      name: "Xcode"
+      url: "https://developer.apple.com/xcode/"
+      description: "Create via Xcode New Project wizard"
+
+    nextjs:
+      name: "create-next-app"
+      command: "npx create-next-app@latest apps/user-web"
+      url: "https://nextjs.org/docs/getting-started"
+      description: "Official Next.js project generator"
+
+    vite_react:
+      name: "Vite"
+      command: "npm create vite@latest apps/user-web -- --template react-ts"
+      url: "https://vitejs.dev/guide/"
+      description: "Vite React/Vue project generator"
+
+    flutter:
+      name: "Flutter CLI"
+      command: "flutter create apps/mobile"
+      url: "https://docs.flutter.dev/get-started"
+      description: "Official Flutter project generator"
+
+    nestjs:
+      name: "Nest CLI"
+      command: "npx @nestjs/cli new apps/backend"
+      url: "https://docs.nestjs.com/"
+      description: "Official NestJS project generator"
+
+    ktor:
+      name: "Ktor Project Generator"
+      url: "https://start.ktor.io"
+      description: "Official Ktor project generator"
+
+    quarkus:
+      name: "Quarkus CLI"
+      url: "https://code.quarkus.io"
+      command: "quarkus create app apps/backend"
+      description: "Official Quarkus project generator"
 
   # Model preferences for each session (model-agnostic)
   model_preferences:
@@ -247,6 +314,979 @@ architecture:
       status: "planned"
       language: null       # Examples: "Swift", "Objective-C"
       ui: null             # Examples: "SwiftUI", "UIKit"
+
+# ============================================================
+# 1.5 Tech Best Practices (Applied after Tech Selection)
+# ============================================================
+# After tech stack is selected, A Session asks if user wants to apply
+# tech-specific best practices. This ensures modern, maintainable code.
+# ============================================================
+tech_best_practices:
+  enabled: false           # Set to true if user opts in
+  asked_at: null           # Timestamp when user was asked
+
+  # User preference for applying best practices
+  user_preference:
+    apply_best_practices: null  # true | false | "selective"
+    selective_choices: []       # If "selective", list of chosen practices
+
+  # Applied practices per technology (populated by A Session)
+  applied_practices:
+    # AI development practices (Claude > Google > Cursor > OpenAI)
+    ai: []
+    # Example:
+    # - name: "Claude/Anthropic AI Best Practices"
+    #   authority: "Anthropic"
+    #   patterns:
+    #     - "Use system prompts for consistent behavior"
+    #     - "Implement proper context window management"
+    #   applied: true
+
+    # Backend practices
+    backend: []
+    # Example:
+    # - name: "NestJS Best Practices"
+    #   authority: "NestJS Team"
+    #   patterns:
+    #     - "Use DTOs for input validation"
+    #     - "Implement repository pattern"
+    #   applied: true
+
+    # Frontend practices (React: Meta, Next.js: Vercel, Vue: Vue Team)
+    frontend: []
+    # Example:
+    # - name: "Next.js Best Practices (Vercel Official)"
+    #   authority: "Vercel"
+    #   patterns:
+    #     - "Use App Router (recommended)"
+    #     - "Server Components by default"
+    #   applied: true
+
+    # Mobile practices (Android: Google, iOS: Apple)
+    mobile: []
+    # Example:
+    # - name: "Android Best Practices (Google Official)"
+    #   authority: "Google"
+    #   patterns:
+    #     - "Use Jetpack Compose for modern UI"
+    #     - "Implement MVVM with ViewModel"
+    #   applied: true
+
+    # Database practices
+    database: []
+
+    # API practices
+    api: []
+
+    # Testing practices
+    testing: []
+
+    # DevOps/Deployment practices (Vercel for Next.js)
+    devops: []
+
+    # Security practices (OWASP)
+    security: []
+
+    # Language practices (TypeScript: Microsoft, Kotlin: Google/JetBrains, Swift: Apple)
+    language: []
+
+  # Available best practice sets (reference catalog)
+  # PRIORITY ORDER: Prefer practices from the technology creator/authority
+  # - Claude Code Plugin: ALWAYS FIRST (official Anthropic tooling)
+  # - AI: Anthropic (Claude) > Google > Cursor > OpenAI
+  # - Next.js/SSR/Edge: Vercel first
+  # - Android: Google first
+  # - iOS: Apple first
+  # - React: Meta/React Team first
+  # - TypeScript: Microsoft first
+  available_practices:
+    description: "Tech-specific best practices from authoritative sources"
+
+    # External skills references (from skills.sh and official sources)
+    # These should be fetched/applied when available
+    external_skills:
+      - name: "Claude Code Plugin"
+        url: "https://claude.ai/code"
+        authority: "Anthropic"
+        priority: 0  # HIGHEST PRIORITY - always first
+        description: "Official Claude Code CLI and IDE integration best practices"
+
+      - name: "Vercel React Best Practices"
+        url: "https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices"
+        authority: "Vercel Labs"
+        priority: 1
+        description: "Official Vercel React patterns and conventions"
+
+      - name: "Web Design Guidelines"
+        url: "https://skills.sh/vercel-labs/agent-skills/web-design-guidelines"
+        authority: "Vercel Labs"
+        priority: 1
+        description: "Vercel web design system and UI guidelines"
+
+      - name: "Remotion Best Practices"
+        url: "https://skills.sh/remotion-dev/skills/remotion-best-practices"
+        authority: "Remotion Dev"
+        priority: 2
+        description: "Best practices for programmatic video creation with Remotion"
+
+      - name: "Anthropic Frontend Design"
+        url: "https://skills.sh/anthropics/skills/frontend-design"
+        authority: "Anthropic"
+        priority: 1
+        description: "Anthropic's official frontend design patterns"
+
+      - name: "Agent Browser"
+        url: "https://skills.sh/vercel-labs/agent-browser/agent-browser"
+        authority: "Vercel Labs"
+        priority: 1
+        description: "Browser automation patterns for AI agents"
+
+      # Alibaba Java Ecosystem (External Skills)
+      - name: "阿里巴巴 Java 开发手册 (P3C)"
+        url: "https://github.com/alibaba/p3c"
+        authority: "Alibaba"
+        priority: 2
+        description: "Alibaba Java Coding Guidelines - use P3C IDE plugin"
+
+      - name: "Alibaba Cloud Native Stack"
+        url: "https://github.com/alibaba"
+        authority: "Alibaba (Apache)"
+        priority: 2
+        description: "Dubbo, Nacos, Sentinel, Seata, Druid, Arthas"
+        components:
+          - "Dubbo: https://dubbo.apache.org/"
+          - "Nacos: https://nacos.io/"
+          - "Sentinel: https://sentinelguard.io/"
+          - "Seata: https://seata.io/"
+          - "Druid: https://github.com/alibaba/druid"
+          - "Arthas: https://arthas.aliyun.com/"
+
+    priority_sources:
+      claude_code: ["Anthropic (Claude Code Plugin)"]  # ALWAYS FIRST
+      ai_development: ["Anthropic (Claude)", "Google", "Cursor", "OpenAI"]
+      nextjs_ssr: ["Vercel", "Vercel Labs Skills"]
+      web_design: ["Vercel Labs Skills", "Anthropic Skills"]
+      android: ["Google"]
+      flutter: ["Google"]
+      dart: ["Google"]
+      kotlin: ["Google/JetBrains", "Spring Team", "JetBrains (Ktor)"]
+      ios: ["Apple"]
+      react: ["Vercel Labs Skills", "Meta/React Team"]
+      typescript: ["Microsoft"]
+      java: ["Oracle", "Google", "Alibaba", "Spring Team (VMware)", "Red Hat", "Oracle Labs"]
+      vue: ["Vue Team (Evan You)"]
+      node: ["Node.js Foundation", "OpenJS"]
+      video: ["Remotion Dev"]
+      browser_automation: ["Vercel Labs Agent Browser"]
+
+    catalog:
+      # ============================================================
+      # CLAUDE CODE PLUGIN (PRIORITY 0 - ALWAYS FIRST)
+      # ============================================================
+      claude_code_plugin:
+        name: "Claude Code Plugin Best Practices"
+        category: "ai_tooling"
+        authority: "Anthropic"
+        priority: 0  # HIGHEST - always apply first
+        external_skill: "https://claude.ai/code"
+        patterns:
+          - "Use CLAUDE.md for project-specific instructions"
+          - "Leverage three-session workflow (Architect/Implementer/Reviewer)"
+          - "Use TODO(B) markers for implementation handoffs"
+          - "Apply DESIGN_STATE.yaml as single source of truth"
+          - "Use MCP (Model Context Protocol) for tool integration"
+          - "Implement proper context management with file reading"
+          - "Use TodoWrite for task tracking and progress visibility"
+          - "Apply skeleton code pattern with clear TODOs"
+          - "Leverage parallel tool calls for efficiency"
+          - "Use AskUserQuestion for clarification"
+
+      # ============================================================
+      # VERCEL LABS SKILLS (External - from skills.sh)
+      # ============================================================
+      vercel_react_skill:
+        name: "Vercel React Best Practices (External Skill)"
+        category: "frontend"
+        authority: "Vercel Labs"
+        priority: 1
+        external_skill: "https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices"
+        patterns:
+          - "Use App Router with Server Components by default"
+          - "Apply 'use client' directive only when needed"
+          - "Implement proper data fetching in Server Components"
+          - "Use next/image for optimized images"
+          - "Apply Vercel's recommended folder structure"
+          - "Use Server Actions for mutations"
+          - "Implement proper error boundaries"
+          - "Apply streaming with Suspense"
+
+      vercel_web_design_skill:
+        name: "Vercel Web Design Guidelines (External Skill)"
+        category: "design"
+        authority: "Vercel Labs"
+        priority: 1
+        external_skill: "https://skills.sh/vercel-labs/agent-skills/web-design-guidelines"
+        patterns:
+          - "Follow Vercel Design System principles"
+          - "Use consistent spacing and typography"
+          - "Apply dark mode support properly"
+          - "Implement accessible color contrast"
+          - "Use Geist font family"
+          - "Apply responsive design patterns"
+          - "Implement proper loading states"
+          - "Use motion and transitions appropriately"
+
+      agent_browser_skill:
+        name: "Agent Browser Best Practices (External Skill)"
+        category: "browser_automation"
+        authority: "Vercel Labs"
+        priority: 1
+        external_skill: "https://skills.sh/vercel-labs/agent-browser/agent-browser"
+        patterns:
+          - "Use browser automation for visual testing"
+          - "Implement proper element selectors"
+          - "Handle async page loads correctly"
+          - "Apply screenshot comparison patterns"
+          - "Use headless mode for CI/CD"
+          - "Implement proper wait strategies"
+          - "Handle dynamic content properly"
+
+      # ============================================================
+      # ANTHROPIC SKILLS (External - from skills.sh)
+      # ============================================================
+      anthropic_frontend_skill:
+        name: "Anthropic Frontend Design (External Skill)"
+        category: "frontend"
+        authority: "Anthropic"
+        priority: 1
+        external_skill: "https://skills.sh/anthropics/skills/frontend-design"
+        patterns:
+          - "Apply Anthropic's UI/UX principles"
+          - "Use clean, minimal interface design"
+          - "Implement proper form handling"
+          - "Apply accessible design patterns"
+          - "Use appropriate feedback mechanisms"
+          - "Implement proper error states"
+          - "Design for AI interaction patterns"
+
+      # ============================================================
+      # REMOTION SKILLS (External - from skills.sh)
+      # ============================================================
+      remotion_skill:
+        name: "Remotion Best Practices (External Skill)"
+        category: "video"
+        authority: "Remotion Dev"
+        priority: 2
+        external_skill: "https://skills.sh/remotion-dev/skills/remotion-best-practices"
+        patterns:
+          - "Use composition-based video structure"
+          - "Implement proper frame timing"
+          - "Apply spring animations for smooth motion"
+          - "Use Audio and Video components properly"
+          - "Implement proper asset loading"
+          - "Apply render optimization techniques"
+          - "Use sequences for complex timelines"
+          - "Implement proper TypeScript types"
+
+      # ============================================================
+      # AI DEVELOPMENT BEST PRACTICES (Priority: Claude > Google > Cursor > OpenAI)
+      # ============================================================
+      claude_ai:
+        name: "Claude/Anthropic AI Best Practices"
+        category: "ai"
+        authority: "Anthropic"
+        priority: 1
+        patterns:
+          - "Use system prompts for consistent behavior"
+          - "Implement proper context window management"
+          - "Use Claude's XML tag format for structured data"
+          - "Leverage tool use (function calling) for actions"
+          - "Apply constitutional AI principles"
+          - "Handle rate limits with exponential backoff"
+          - "Use streaming for long responses"
+          - "Implement proper error handling for API calls"
+          - "Cache responses when appropriate"
+          - "Use Claude's vision capabilities for images"
+
+      google_ai:
+        name: "Google AI/Gemini Best Practices"
+        category: "ai"
+        authority: "Google"
+        priority: 2
+        patterns:
+          - "Use Gemini API with proper authentication"
+          - "Implement multimodal inputs (text, image, video)"
+          - "Use function calling for structured outputs"
+          - "Apply safety settings appropriately"
+          - "Handle quota limits gracefully"
+          - "Use embeddings for semantic search"
+          - "Implement grounding with Google Search"
+
+      cursor_ai:
+        name: "Cursor AI Development Best Practices"
+        category: "ai"
+        authority: "Cursor"
+        priority: 3
+        patterns:
+          - "Use .cursorrules for project-specific AI behavior"
+          - "Leverage codebase indexing for context"
+          - "Apply composer for multi-file changes"
+          - "Use chat for exploration, composer for implementation"
+          - "Define clear coding standards in rules"
+
+      openai_ai:
+        name: "OpenAI/GPT Best Practices"
+        category: "ai"
+        authority: "OpenAI"
+        priority: 4
+        patterns:
+          - "Use GPT-4 for complex reasoning tasks"
+          - "Implement function calling for structured outputs"
+          - "Apply JSON mode for reliable parsing"
+          - "Use assistants API for stateful conversations"
+          - "Implement proper token counting"
+          - "Handle rate limits with retry logic"
+
+      # ============================================================
+      # VERCEL ECOSYSTEM (SSR, Edge, Deployment)
+      # ============================================================
+      nextjs_vercel:
+        name: "Next.js Best Practices (Vercel Official)"
+        category: "frontend"
+        authority: "Vercel"
+        priority: 1
+        patterns:
+          - "Use App Router (recommended over Pages Router)"
+          - "Server Components by default, Client Components when needed"
+          - "Implement proper data fetching patterns (fetch in Server Components)"
+          - "Use next/image for automatic image optimization"
+          - "Use next/font for zero-layout-shift fonts"
+          - "Implement route handlers for API endpoints"
+          - "Use middleware for auth, redirects, A/B testing"
+          - "Apply ISR (Incremental Static Regeneration) for dynamic content"
+          - "Use Server Actions for form mutations"
+          - "Implement proper metadata API for SEO"
+          - "Use parallel routes and intercepting routes"
+          - "Apply streaming with loading.tsx and Suspense"
+
+      vercel_edge:
+        name: "Vercel Edge Runtime Best Practices"
+        category: "deployment"
+        authority: "Vercel"
+        priority: 1
+        patterns:
+          - "Use Edge Runtime for low-latency global responses"
+          - "Implement Edge Middleware for request modification"
+          - "Apply Edge Config for feature flags"
+          - "Use Vercel KV for edge-compatible Redis"
+          - "Implement Vercel Postgres for edge database"
+          - "Use Vercel Blob for file storage"
+          - "Apply proper caching headers"
+          - "Implement ISR with on-demand revalidation"
+
+      vercel_deployment:
+        name: "Vercel Deployment Best Practices"
+        category: "deployment"
+        authority: "Vercel"
+        priority: 1
+        patterns:
+          - "Use preview deployments for PR reviews"
+          - "Implement environment variables properly"
+          - "Use Vercel Analytics for performance insights"
+          - "Apply Speed Insights for Core Web Vitals"
+          - "Implement proper build caching"
+          - "Use monorepo support with Turborepo"
+
+      # ============================================================
+      # GOOGLE/ANDROID ECOSYSTEM
+      # ============================================================
+      android_google:
+        name: "Android Best Practices (Google Official)"
+        category: "mobile"
+        authority: "Google"
+        priority: 1
+        patterns:
+          - "Use Jetpack Compose for modern UI (recommended)"
+          - "Implement MVVM with ViewModel and StateFlow"
+          - "Use Hilt for dependency injection"
+          - "Apply Navigation Component for app navigation"
+          - "Use Room for local database"
+          - "Implement WorkManager for background tasks"
+          - "Use Retrofit + OkHttp for networking"
+          - "Apply Material Design 3 guidelines"
+          - "Implement proper lifecycle handling"
+          - "Use Coroutines and Flow for async operations"
+          - "Apply App Startup library for initialization"
+          - "Use DataStore for preferences (over SharedPreferences)"
+
+      kotlin_google:
+        name: "Kotlin Best Practices (Google/JetBrains)"
+        category: "language"
+        authority: "Google/JetBrains"
+        priority: 1
+        external_reference: "https://kotlinlang.org/docs/coding-conventions.html"
+        patterns:
+          - "Use data classes for DTOs"
+          - "Apply sealed classes for state management"
+          - "Use extension functions appropriately"
+          - "Implement null safety properly (?. ?:  !!)"
+          - "Use coroutines for async operations"
+          - "Apply Flow for reactive streams"
+          - "Use scope functions (let, apply, run, also, with)"
+          - "Implement proper exception handling"
+          - "Prefer val over var (immutability)"
+          - "Use when expression instead of if-else chains"
+          - "Apply object for singletons"
+          - "Use companion object for static members"
+
+      kotlin_spring:
+        name: "Kotlin + Spring Boot Best Practices"
+        category: "backend"
+        authority: "Spring Team / JetBrains"
+        priority: 1
+        external_reference: "https://docs.spring.io/spring-framework/reference/languages/kotlin.html"
+        patterns:
+          # 基础配置
+          - "使用 Spring Boot Kotlin 官方 starter"
+          - "启用 kotlin-spring 编译器插件 (自动 open 类)"
+          - "启用 kotlin-jpa 插件 (无参构造函数)"
+          - "配置 Jackson Kotlin 模块支持 data class"
+          # 类和注解
+          - "Controller/Service/Repository 不需要手动加 open"
+          - "使用 data class 作为 DTO/Request/Response"
+          - "使用 @ConfigurationProperties 配合 data class"
+          - "用 lateinit var 注入属性 (或推荐构造器注入)"
+          # Null 安全
+          - "充分利用 Kotlin null safety 减少 @NotNull 注解"
+          - "Repository 返回类型使用 T? 而非 Optional<T>"
+          - "使用 ?.let { } 替代 if (x != null)"
+          # 协程支持
+          - "使用 suspend fun 定义异步 Controller 方法"
+          - "使用 kotlinx-coroutines-reactor 桥接 WebFlux"
+          - "Repository 方法可返回 Flow<T> (响应式)"
+          # DSL 和扩展
+          - "使用 Spring Bean DSL: beans { bean<MyService>() }"
+          - "使用 Router DSL: router { GET(\"/api\") { ... } }"
+          - "编写扩展函数增强 Spring 类型"
+          # 测试
+          - "使用 MockK 替代 Mockito (更好的 Kotlin 支持)"
+          - "使用 kotest 或 JUnit 5 + kotlin-test"
+          - "测试协程使用 runTest { }"
+
+      kotlin_ktor:
+        name: "Ktor Best Practices (JetBrains)"
+        category: "backend"
+        authority: "JetBrains"
+        priority: 2
+        external_reference: "https://ktor.io/docs/"
+        patterns:
+          - "使用 Kotlin DSL 配置应用"
+          - "使用 Routing DSL 定义路由"
+          - "使用 ContentNegotiation 处理 JSON (kotlinx.serialization)"
+          - "使用 Authentication 插件处理认证"
+          - "使用 StatusPages 统一异常处理"
+          - "使用 suspend fun 处理请求 (原生协程支持)"
+          - "使用 Exposed 或 ktorm 进行数据库操作"
+          - "使用 Koin 进行依赖注入"
+
+      firebase_google:
+        name: "Firebase Best Practices (Google)"
+        category: "backend"
+        authority: "Google"
+        priority: 1
+        patterns:
+          - "Use Firebase Authentication for auth"
+          - "Implement Firestore with proper data modeling"
+          - "Use Cloud Functions for serverless logic"
+          - "Apply Firebase Security Rules"
+          - "Implement offline persistence"
+          - "Use Firebase Hosting for web apps"
+          - "Apply Analytics for user insights"
+          - "Use Remote Config for feature flags"
+
+      # ============================================================
+      # FLUTTER ECOSYSTEM (Google)
+      # ============================================================
+      flutter_google:
+        name: "Flutter Best Practices (Google Official)"
+        category: "mobile"
+        authority: "Google"
+        priority: 1
+        external_reference: "https://docs.flutter.dev/perf/best-practices"
+        patterns:
+          - "Use StatelessWidget when possible for performance"
+          - "Apply const constructors for immutable widgets"
+          - "Use const keyword for compile-time constants"
+          - "Implement proper state management (Provider, Riverpod, Bloc)"
+          - "Apply widget composition over inheritance"
+          - "Use ListView.builder for long lists"
+          - "Implement proper separation of UI and business logic"
+          - "Use ThemeData for consistent styling"
+          - "Apply proper navigation with Navigator 2.0 or GoRouter"
+          - "Use async/await with FutureBuilder/StreamBuilder"
+          - "Implement proper error handling with try-catch"
+          - "Apply golden tests for widget testing"
+          - "Use integration tests for full app testing"
+
+      flutter_state:
+        name: "Flutter State Management Best Practices"
+        category: "state"
+        authority: "Google / Community"
+        priority: 1
+        patterns:
+          - "Provider: Simple dependency injection and state"
+          - "Riverpod: Type-safe, testable state management"
+          - "Bloc/Cubit: Event-driven state with clear separation"
+          - "GetX: Simple reactive state (use carefully)"
+          - "Avoid setState in large apps"
+          - "Use ChangeNotifier for simple cases"
+          - "Apply proper dispose() for resources"
+          - "Use select() for granular rebuilds"
+
+      dart_google:
+        name: "Dart Best Practices (Google Official)"
+        category: "language"
+        authority: "Google"
+        priority: 1
+        external_reference: "https://dart.dev/effective-dart"
+        patterns:
+          - "Follow Effective Dart style guide"
+          - "Use lowerCamelCase for variables and functions"
+          - "Use UpperCamelCase for classes and types"
+          - "Prefer final over var when possible"
+          - "Use late for lazy initialization"
+          - "Apply null safety properly (? and !)"
+          - "Use extension methods for utility functions"
+          - "Apply mixins for code reuse"
+          - "Use factory constructors appropriately"
+          - "Implement equality with == and hashCode"
+          - "Use async/await over raw Futures"
+          - "Apply proper error handling with Result pattern"
+
+      # ============================================================
+      # APPLE/IOS ECOSYSTEM
+      # ============================================================
+      ios_apple:
+        name: "iOS Best Practices (Apple Official)"
+        category: "mobile"
+        authority: "Apple"
+        priority: 1
+        patterns:
+          - "Use SwiftUI for modern UI (recommended)"
+          - "Implement MVVM with @Observable (iOS 17+)"
+          - "Use Swift Concurrency (async/await, actors)"
+          - "Apply NavigationStack for navigation"
+          - "Use SwiftData for persistence (iOS 17+)"
+          - "Implement proper memory management (ARC)"
+          - "Use Combine for reactive programming"
+          - "Apply Human Interface Guidelines"
+          - "Implement proper App lifecycle handling"
+          - "Use URLSession for networking"
+
+      swift_apple:
+        name: "Swift Best Practices (Apple)"
+        category: "language"
+        authority: "Apple"
+        priority: 1
+        patterns:
+          - "Use value types (structs) over reference types when possible"
+          - "Apply protocol-oriented programming"
+          - "Use Swift Concurrency (async/await)"
+          - "Implement proper error handling with Result type"
+          - "Use property wrappers effectively"
+          - "Apply generics for reusable code"
+          - "Use optionals safely with guard and if-let"
+
+      # ============================================================
+      # REACT ECOSYSTEM (Meta/React Team)
+      # ============================================================
+      react_meta:
+        name: "React Best Practices (Meta Official)"
+        category: "frontend"
+        authority: "Meta/React Team"
+        priority: 1
+        patterns:
+          - "Use functional components with hooks"
+          - "Apply React Server Components when using frameworks"
+          - "Use React.memo for expensive renders"
+          - "Implement useCallback/useMemo appropriately"
+          - "Use Error Boundaries for error handling"
+          - "Apply React.lazy + Suspense for code splitting"
+          - "Use custom hooks for reusable logic"
+          - "Implement proper key props for lists"
+          - "Use useTransition for non-urgent updates"
+          - "Apply useDeferredValue for expensive computations"
+
+      # ============================================================
+      # TYPESCRIPT (Microsoft)
+      # ============================================================
+      typescript_microsoft:
+        name: "TypeScript Best Practices (Microsoft)"
+        category: "language"
+        authority: "Microsoft"
+        priority: 1
+        patterns:
+          - "Enable strict mode in tsconfig"
+          - "Avoid any type, use unknown for dynamic data"
+          - "Use discriminated unions for type narrowing"
+          - "Apply utility types (Partial, Pick, Omit, Record)"
+          - "Use branded types for type safety"
+          - "Implement proper generic constraints"
+          - "Use const assertions for literal types"
+          - "Apply satisfies operator for type checking"
+          - "Use declaration files for untyped libraries"
+          - "Implement proper module resolution"
+
+      # ============================================================
+      # BACKEND FRAMEWORKS
+      # ============================================================
+      nestjs:
+        name: "NestJS Best Practices"
+        category: "backend"
+        authority: "NestJS Team"
+        patterns:
+          - "Modular architecture with feature modules"
+          - "Use DTOs with class-validator for input validation"
+          - "Repository pattern for data access"
+          - "Exception filters for error handling"
+          - "Guards for authentication/authorization"
+          - "Interceptors for logging and transformation"
+          - "Pipes for data transformation"
+          - "ConfigModule for environment variables"
+
+      express:
+        name: "Express.js Best Practices"
+        category: "backend"
+        authority: "OpenJS Foundation"
+        patterns:
+          - "Middleware-based architecture"
+          - "Express Router for route organization"
+          - "Error handling middleware"
+          - "Helmet for security headers"
+          - "Rate limiting for API protection"
+          - "Compression middleware"
+          - "Morgan for request logging"
+
+      fastapi:
+        name: "FastAPI Best Practices"
+        category: "backend"
+        authority: "Tiangolo"
+        patterns:
+          - "Pydantic models for validation"
+          - "Dependency injection pattern"
+          - "Background tasks for async operations"
+          - "Proper exception handlers"
+          - "SQLAlchemy with async support"
+          - "Alembic for migrations"
+
+      # ============================================================
+      # JAVA ECOSYSTEM (Oracle > Google > Spring Team)
+      # ============================================================
+      java_oracle:
+        name: "Java Best Practices (Oracle Official)"
+        category: "language"
+        authority: "Oracle"
+        priority: 1
+        external_reference: "https://docs.oracle.com/javase/tutorial/java/"
+        patterns:
+          - "Follow Java Code Conventions (naming, formatting)"
+          - "Use records for immutable data carriers (Java 16+)"
+          - "Apply sealed classes for controlled inheritance (Java 17+)"
+          - "Use pattern matching for instanceof (Java 16+)"
+          - "Apply switch expressions for cleaner code (Java 14+)"
+          - "Use var for local variable type inference appropriately"
+          - "Implement proper exception handling (checked vs unchecked)"
+          - "Use try-with-resources for AutoCloseable"
+          - "Apply Streams API for collection processing"
+          - "Use Optional to avoid null pointer exceptions"
+          - "Implement equals/hashCode contract correctly"
+          - "Use CompletableFuture for async programming"
+          - "Apply virtual threads for scalability (Java 21+)"
+
+      java_google:
+        name: "Google Java Style Guide"
+        category: "language"
+        authority: "Google"
+        priority: 2
+        external_reference: "https://google.github.io/styleguide/javaguide.html"
+        patterns:
+          - "Use 2-space indentation (Google style)"
+          - "Column limit of 100 characters"
+          - "One statement per line"
+          - "Braces used even for single-statement blocks"
+          - "Package names in lowercase"
+          - "Class names in UpperCamelCase"
+          - "Method names in lowerCamelCase"
+          - "Constant names in UPPER_SNAKE_CASE"
+          - "Avoid wildcard imports"
+          - "Order imports: static, java/javax, third-party, project"
+          - "Use @Override annotation consistently"
+          - "Caught exceptions: never ignore silently"
+          - "Javadoc at minimum for public APIs"
+
+      java_alibaba:
+        name: "阿里巴巴 Java 开发手册 (Alibaba Java Coding Guidelines)"
+        category: "language"
+        authority: "Alibaba"
+        priority: 2
+        external_skill: "https://github.com/alibaba/p3c"
+        description: "Use P3C plugin or refer to Alibaba Java Coding Guidelines"
+        note: "Apply via IDE plugin (P3C-PMD) or fetch from external skill"
+
+      # Alibaba Microservices (External Skills - fetch when needed)
+      alibaba_cloud_native:
+        name: "Alibaba Cloud Native Stack (External Skills)"
+        category: "backend"
+        authority: "Alibaba (Apache)"
+        priority: 2
+        external_skills:
+          - name: "Dubbo"
+            url: "https://dubbo.apache.org/zh-cn/docs/"
+            description: "Microservices RPC framework"
+          - name: "Nacos"
+            url: "https://nacos.io/zh-cn/docs/"
+            description: "Service discovery and config management"
+          - name: "Sentinel"
+            url: "https://sentinelguard.io/zh-cn/docs/"
+            description: "Flow control and circuit breaker"
+          - name: "Seata"
+            url: "https://seata.io/zh-cn/docs/"
+            description: "Distributed transaction"
+          - name: "Druid"
+            url: "https://github.com/alibaba/druid"
+            description: "Database connection pool"
+          - name: "Arthas"
+            url: "https://arthas.aliyun.com/doc/"
+            description: "Java diagnostic tool"
+
+      spring_boot:
+        name: "Spring Boot Best Practices (VMware/Pivotal)"
+        category: "backend"
+        authority: "Spring Team (VMware)"
+        priority: 1
+        external_reference: "https://docs.spring.io/spring-boot/docs/current/reference/html/"
+        patterns:
+          - "Use Spring Boot starters for dependency management"
+          - "Apply layered architecture (Controller → Service → Repository)"
+          - "Use constructor injection over field injection"
+          - "Apply @Transactional at service layer"
+          - "Use Spring Data JPA repositories"
+          - "Implement proper validation with @Valid and Bean Validation"
+          - "Use application.yml/properties for configuration"
+          - "Apply profiles for environment-specific config"
+          - "Use Spring Security for authentication/authorization"
+          - "Implement proper exception handling with @ControllerAdvice"
+          - "Use Actuator for monitoring and health checks"
+          - "Apply caching with @Cacheable"
+          - "Use Lombok to reduce boilerplate (optional)"
+
+      spring_webflux:
+        name: "Spring WebFlux Reactive Best Practices"
+        category: "backend"
+        authority: "Spring Team (VMware)"
+        priority: 2
+        patterns:
+          - "Use Mono for single-value async operations"
+          - "Use Flux for multi-value async streams"
+          - "Never block in reactive pipelines"
+          - "Apply backpressure handling properly"
+          - "Use WebClient instead of RestTemplate"
+          - "Implement functional endpoints when appropriate"
+          - "Apply proper error handling with onErrorResume/onErrorReturn"
+          - "Use R2DBC for reactive database access"
+
+      quarkus:
+        name: "Quarkus Best Practices (Red Hat)"
+        category: "backend"
+        authority: "Red Hat"
+        priority: 2
+        external_reference: "https://quarkus.io/guides/"
+        patterns:
+          - "Use build-time augmentation for fast startup"
+          - "Apply CDI for dependency injection"
+          - "Use Panache for simplified data access"
+          - "Implement native compilation with GraalVM"
+          - "Apply reactive programming with Mutiny"
+          - "Use REST Client for external API calls"
+          - "Implement health checks with SmallRye Health"
+          - "Apply configuration with SmallRye Config"
+
+      micronaut:
+        name: "Micronaut Best Practices (Oracle Labs)"
+        category: "backend"
+        authority: "Oracle Labs / Micronaut Foundation"
+        priority: 2
+        external_reference: "https://docs.micronaut.io/latest/guide/"
+        patterns:
+          - "Use compile-time dependency injection"
+          - "Apply AOP with compile-time processing"
+          - "Use Micronaut Data for data access"
+          - "Implement reactive streams with Reactor/RxJava"
+          - "Apply GraalVM native image support"
+          - "Use declarative HTTP clients"
+          - "Implement proper configuration injection"
+
+      # ============================================================
+      # VUE ECOSYSTEM
+      # ============================================================
+      vue:
+        name: "Vue 3 Best Practices"
+        category: "frontend"
+        authority: "Vue Team (Evan You)"
+        patterns:
+          - "Composition API with script setup"
+          - "Composables for reusable logic"
+          - "Provide/Inject for dependency injection"
+          - "Pinia for state management (official)"
+          - "defineProps/defineEmits for type safety"
+          - "Async components for lazy loading"
+          - "Teleport for portal rendering"
+          - "VueUse for common composables"
+
+      nuxt:
+        name: "Nuxt 3 Best Practices"
+        category: "frontend"
+        authority: "Nuxt Team"
+        patterns:
+          - "Auto-imports for components and composables"
+          - "Use useFetch for data fetching"
+          - "Server routes for API endpoints"
+          - "Nitro server for edge deployment"
+          - "Use Nuxt modules for common features"
+          - "Apply proper SEO with useHead"
+
+      # ============================================================
+      # DATABASES
+      # ============================================================
+      postgresql:
+        name: "PostgreSQL Best Practices"
+        category: "database"
+        authority: "PostgreSQL Global Development Group"
+        patterns:
+          - "Proper indexing (B-tree, GIN, GiST)"
+          - "Connection pooling (PgBouncer)"
+          - "Use migrations (Prisma, Alembic)"
+          - "EXPLAIN ANALYZE for query optimization"
+          - "Proper data types (UUID, JSONB)"
+          - "Partial indexes for filtered queries"
+          - "Row-level security when needed"
+
+      mongodb:
+        name: "MongoDB Best Practices"
+        category: "database"
+        authority: "MongoDB Inc."
+        patterns:
+          - "Schema design with embedding vs referencing"
+          - "Proper indexing strategies"
+          - "Aggregation pipeline optimization"
+          - "Change streams for real-time updates"
+          - "Sharding for horizontal scaling"
+          - "Mongoose schemas with validation"
+
+      # ============================================================
+      # STATE MANAGEMENT
+      # ============================================================
+      zustand:
+        name: "Zustand Best Practices"
+        category: "state"
+        authority: "pmndrs (Poimandres)"
+        patterns:
+          - "Slice pattern for large stores"
+          - "Persist middleware for local storage"
+          - "Devtools middleware for debugging"
+          - "Shallow equality for selectors"
+          - "Immer middleware for immutability"
+
+      redux:
+        name: "Redux Toolkit Best Practices"
+        category: "state"
+        authority: "Redux Team"
+        patterns:
+          - "Use createSlice for reducers"
+          - "RTK Query for data fetching"
+          - "createAsyncThunk for async logic"
+          - "Normalized state shape"
+          - "Redux DevTools integration"
+
+      # ============================================================
+      # TESTING
+      # ============================================================
+      jest:
+        name: "Jest Testing Best Practices"
+        category: "testing"
+        authority: "Meta"
+        patterns:
+          - "Arrange-Act-Assert pattern"
+          - "Mock external dependencies"
+          - "Snapshot testing for UI"
+          - "Test coverage thresholds"
+          - "Describe/It naming conventions"
+
+      vitest:
+        name: "Vitest Testing Best Practices"
+        category: "testing"
+        authority: "Vitest Team"
+        patterns:
+          - "Fast native ESM support"
+          - "In-source testing when appropriate"
+          - "Concurrent test execution"
+          - "Component testing with @testing-library"
+
+      playwright:
+        name: "Playwright E2E Best Practices"
+        category: "testing"
+        authority: "Microsoft"
+        patterns:
+          - "Use page object model for maintainability"
+          - "Implement proper locator strategies"
+          - "Use test fixtures for setup/teardown"
+          - "Apply visual comparison testing"
+          - "Use trace viewer for debugging"
+          - "Implement parallel test execution"
+
+      # ============================================================
+      # API DESIGN
+      # ============================================================
+      restful:
+        name: "RESTful API Best Practices"
+        category: "api"
+        patterns:
+          - "Proper HTTP methods (GET, POST, PUT, DELETE)"
+          - "Meaningful HTTP status codes"
+          - "Consistent error response format"
+          - "API versioning (URL or header)"
+          - "HATEOAS for discoverability"
+          - "Pagination for list endpoints"
+          - "Rate limiting headers"
+
+      graphql:
+        name: "GraphQL Best Practices"
+        category: "api"
+        authority: "GraphQL Foundation"
+        patterns:
+          - "Schema-first design"
+          - "DataLoader for N+1 problem"
+          - "Proper error handling"
+          - "Pagination (Relay-style)"
+          - "Caching strategies"
+          - "Query complexity limits"
+
+      # ============================================================
+      # SECURITY
+      # ============================================================
+      security_general:
+        name: "General Security Best Practices"
+        category: "security"
+        authority: "OWASP"
+        patterns:
+          - "Input validation and sanitization"
+          - "Parameterized queries (SQL injection prevention)"
+          - "HTTPS everywhere"
+          - "Secure session management"
+          - "CORS configuration"
+          - "Content Security Policy headers"
+          - "Rate limiting"
+          - "Dependency vulnerability scanning"
 
 # ============================================================
 # 2. Business Modules

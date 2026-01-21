@@ -8,9 +8,10 @@ This document describes all templates used in the AI-assisted development workfl
 
 | Template | File | From | To | Purpose |
 |----------|------|------|-----|---------|
-| **Project Init** | `project_init.md` | System | User | First-time project setup (NEW) |
+| **Project Init** | `project_init.md` | System | User | First-time project setup |
 | **Session Start** | `session_start.md` | System | All Sessions | Display workflow state on start |
 | **Discovery Questions** | `discovery_questions.md` | A Session | User | Project discovery interview |
+| **Tech Best Practices** | `tech_best_practices.md` | A Session | All | Apply industry best practices (NEW) |
 | Task Handoff | `task_handoff.md` | A Session | B Session | Assign implementation tasks |
 | Implementation Report | `implementation_report.md` | B Session | C Session | Report completed work |
 | Review Report | `review_report.md` | C Session | A Session | Code review results |
@@ -21,7 +22,7 @@ This document describes all templates used in the AI-assisted development workfl
 | External Review | `external_review.md` | Codex/Gemini | A Session | External AI audit |
 | Git Workflow | `git_workflow.md` | - | All | Version control guide |
 | OpenSpec Integration | `openspec_integration.md` | - | All | Spec-driven development guide |
-| **Progressive Testing** | `progressive_testing.md` | - | B Session | Testing strategy guide (NEW) |
+| **Progressive Testing** | `progressive_testing.md` | - | B Session | Testing strategy guide |
 
 ---
 
@@ -229,6 +230,71 @@ Q5: Git repository URL? (url | skip)
 2. Your technical background? (stack preference, experience)
 3. Product vision? (problem, MVP scope, design style)
 4. Constraints? (budget, compliance, integrations)
+
+---
+
+### 0.6 Tech Best Practices (`tech_best_practices.md`) - NEW
+
+**Purpose**: Apply technology-specific best practices after stack selection
+
+**When to Use**: After Q4 (tech stack selection) in onboarding or discovery
+
+**Key Features**:
+- Asks user if they want to apply best practices ("yes" | "selective" | "no")
+- Matches selected technologies with best practice catalog in DESIGN_STATE.yaml
+- Updates `tech_best_practices.applied_practices` with chosen patterns
+- Integrates practices into skeleton code generation
+
+**Priority Order** (Apply in this order):
+
+| Priority | Category | Authority |
+|----------|----------|-----------|
+| **0 (FIRST)** | Claude Code Plugin | Anthropic (ALWAYS FIRST) |
+| 1 | External Skills (skills.sh) | Vercel Labs, Anthropic, Remotion |
+| 2 | AI Development | Anthropic > Google > Cursor > OpenAI |
+| 2 | Other tech-specific | Creator/Authority |
+
+**External Skills** (from skills.sh):
+- Vercel React Best Practices: https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices
+- Web Design Guidelines: https://skills.sh/vercel-labs/agent-skills/web-design-guidelines
+- Anthropic Frontend Design: https://skills.sh/anthropics/skills/frontend-design
+- Agent Browser: https://skills.sh/vercel-labs/agent-browser/agent-browser
+- Remotion Best Practices: https://skills.sh/remotion-dev/skills/remotion-best-practices
+
+**Available Practice Categories**:
+| Category | Technologies | Authority |
+|----------|--------------|-----------|
+| Claude Code Plugin | CLAUDE.md, MCP, Three-Session | Anthropic |
+| Frontend (SSR) | Next.js, Vercel Edge | Vercel, Vercel Labs Skills |
+| Frontend (React) | React 18+ | Meta, Vercel Labs Skills |
+| Web Design | UI/UX, Design Systems | Vercel Labs, Anthropic Skills |
+| Video | Remotion | Remotion Dev Skills |
+| Browser Automation | Agent Browser | Vercel Labs Skills |
+| AI Development | Claude, Gemini, Cursor, OpenAI | Anthropic > Google > Cursor > OpenAI |
+| Mobile (Android) | Jetpack Compose, Kotlin | Google |
+| Mobile (Flutter) | Flutter, Dart | Google |
+| Mobile (iOS) | SwiftUI, Swift | Apple |
+| Java Ecosystem | Java, Spring Boot, Dubbo, Nacos, Sentinel | Oracle > Google > Alibaba > Spring |
+| Kotlin Backend | Kotlin + Spring Boot, Ktor | Spring Team / JetBrains |
+| Backend | NestJS, Express, FastAPI, Firebase | Framework teams, Google |
+| Database | PostgreSQL, MongoDB | Official docs |
+| Testing | Jest, Vitest, Playwright | Meta, Microsoft |
+| Language | TypeScript, Kotlin, Swift | Microsoft, Google/JetBrains, Apple |
+| Security | General practices | OWASP |
+
+**User Options**:
+- `"yes"`: Apply all relevant best practices automatically
+- `"selective"`: Show options for each tech, user picks which to apply
+- `"no"`: Skip, use minimal patterns
+
+**Integration**:
+- **A Session**: Asks the question, applies practices, incorporates into skeleton
+- **B Session**: Follows applied practices when filling TODOs
+- **C Session**: Validates code against applied practices
+
+**Commands**:
+- "Apply best practices" - Re-apply for current stack
+- "Show applied practices" - Display what's applied
 
 ---
 

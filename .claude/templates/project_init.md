@@ -100,6 +100,17 @@ Ask these questions to understand user's intent:
 ║      • "recommend"  - Let me suggest based on your project       ║
 ║      • Or specify   - e.g., "React + Node.js + PostgreSQL"       ║
 ║                                                                  ║
+║  Q4.5: Apply tech best practices? (Recommended)                  ║
+║      • "yes"       - Apply industry best practices for your stack║
+║      • "selective" - Choose which practices to apply             ║
+║      • "no"        - Skip, use minimal patterns                  ║
+║      💡 Includes code patterns, security, testing strategies     ║
+║                                                                  ║
+║  Q4.6: [If Java/Kotlin/Android] What is your package name?       ║
+║      • e.g., "com.example.myapp", "com.company.projectname"      ║
+║      💡 Used for Java/Kotlin package structure and Android apps  ║
+║      💡 Follow reverse domain naming convention                  ║
+║                                                                  ║
 ║  Q5: Do you have a Git remote repository? (OPTIONAL)             ║
 ║      • Enter URL (e.g., github.com/username/my-project)          ║
 ║      • Or "skip" - we'll use local git only (recommended start)  ║
@@ -127,6 +138,19 @@ initialization:
       project_type: "full-stack"
       git_remote: "github.com/user/task-tracker"
       preferred_stack: "recommend"
+      apply_best_practices: true  # or "selective" or false
+      package_name: "com.example.tasktracker"  # Only for Java/Kotlin/Android
+
+  # Project structure (apps folder layout)
+  project_structure:
+    root_folder: "apps"
+    modules:
+      backend: "apps/backend"
+      android: "apps/android"
+      ios: "apps/ios"
+      user_web: "apps/user-web"
+      admin_web: "apps/admin-web"
+      shared: "apps/shared"
 
   # Model preferences (based on user choice)
   model_preferences:
@@ -137,6 +161,13 @@ initialization:
 meta:
   project_name: "task-tracker"
   description: "A simple task management app for teams"
+
+# If apply_best_practices is true or "selective", also update:
+tech_best_practices:
+  enabled: true
+  asked_at: "2026-01-21T10:00:00Z"
+  user_preference:
+    apply_best_practices: true
 ```
 
 ---
@@ -276,6 +307,44 @@ initialization:
     remote_added: false    # true only if user provided remote
     pushed_to_remote: false
 ```
+
+---
+
+## Step 4.5: Create Project Structure with Official Generators
+
+When creating projects, use official generators and place artifacts in the `apps/` folder:
+
+### Apps Folder Structure
+
+```
+{project}/
+└── apps/
+    ├── backend/      # Spring Boot / NestJS / FastAPI / Ktor
+    ├── android/      # Android (Kotlin/Java)
+    ├── ios/          # iOS (Swift)
+    ├── user-web/     # User-facing web (Next.js/Vue)
+    ├── admin-web/    # Admin dashboard (Next.js/Vue)
+    └── shared/       # Shared types, utils
+```
+
+### Official Project Generators
+
+| Technology | Generator | Command/URL |
+|------------|-----------|-------------|
+| Spring Boot | Spring Initializr | https://start.spring.io |
+| NestJS | Nest CLI | `npx @nestjs/cli new apps/backend` |
+| Next.js | create-next-app | `npx create-next-app@latest apps/user-web` |
+| Vite React | Vite | `npm create vite@latest apps/user-web -- --template react-ts` |
+| Flutter | Flutter CLI | `flutter create apps/mobile` |
+| Ktor | Ktor Generator | https://start.ktor.io |
+| Quarkus | Quarkus CLI | https://code.quarkus.io |
+| Android | Android Studio | Create via New Project wizard |
+| iOS | Xcode | Create via New Project wizard |
+
+**Important:**
+- Always use official generators for better project structure and defaults
+- For Java/Kotlin projects, use the user's specified `package_name`
+- Apply selected best practices after project generation
 
 ---
 
