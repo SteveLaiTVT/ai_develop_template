@@ -1,6 +1,6 @@
 # AI-Assisted Development Template
 
-A structured workflow template for building applications with AI pair programming (Claude Opus/Sonnet). Features a multi-session architecture where AI handles design, implementation, and review in separate contexts.
+A structured workflow template for building applications with multi-model AI pair programming. Features a multi-session architecture where AI handles design, implementation, and review in separate contexts.
 
 **[中文文档](README_CN.md)**
 
@@ -22,9 +22,10 @@ A **project scaffold and workflow system** for developers who want to:
 | **Discovery Framework** | A Session interviews users before designing |
 | **State Tip System** | All sessions display workflow status on start |
 | **Self-Test Workflow** | B Session runs servers and tests like a real developer |
-| **agent-browser Integration** | Optional visual testing for frontend (vercel-labs/agent-browser) |
+| **MCP/agent Testing** | Prefer MCP/agent browser tools for frontend visual checks |
 | **PR & Bugfix Mode** | B Session creates PR, then fixes issues until approved |
 | **OpenSpec Integration** | Spec-driven development with detailed specifications |
+| **Model-agnostic** | A/B/C roles are independent of any specific vendor |
 
 ## Architecture
 
@@ -54,7 +55,7 @@ A **project scaffold and workflow system** for developers who want to:
         ▼                       ▼                       ▼
 ┌───────────────┐       ┌───────────────┐       ┌───────────────┐
 │  A SESSION    │       │  B SESSION    │       │  C SESSION    │
-│  (Opus 4.5)   │       │  (Sonnet 4.5) │       │  (Sonnet 4.5) │
+│  (Reasoning)  │       │  (Execution) │       │  (Review)     │
 │               │       │               │       │               │
 │  • Discovery  │──────▶│  • Fill TODOs │──────▶│  • Review     │
 │  • Design     │       │  • Self-Test  │       │  • Validate   │
@@ -67,9 +68,9 @@ A **project scaffold and workflow system** for developers who want to:
 
 | Session | Model | Role | Responsibilities |
 |---------|-------|------|------------------|
-| **A** | Opus 4.5 | Architect | Discovery interview, design, skeleton code with TODOs |
-| **B** | Sonnet 4.5 | Implementer | Fill TODOs, self-test, create PR, bugfix mode |
-| **C** | Sonnet 4.5 | Reviewer | Validate constraints, find issues, approve PR |
+| **A** | Reasoning model | Architect | Discovery interview, design, skeleton code with TODOs, user-friendly error UX |
+| **B** | Execution model | Implementer | Fill TODOs, self-test (incl. invalid inputs), create PR, bugfix mode |
+| **C** | Review model | Reviewer | Validate constraints, find issues, approve PR |
 
 ---
 
@@ -133,7 +134,7 @@ B Session works **like a real developer**:
 │     ↓                                                            │
 │  PHASE 2: Backend Self-Test (run server, test APIs)              │
 │     ↓                                                            │
-│  PHASE 3: Frontend Self-Test (agent-browser) [optional]          │
+│  PHASE 3: Frontend Self-Test (MCP/agent) [preferred]             │
 │     ↓                                                            │
 │  PHASE 4: Commit Working Code                                    │
 │     ↓                                                            │
@@ -169,14 +170,22 @@ If B Session needs environment variables to run:
 ⏸️ PAUSED - Waiting for user to configure environment
 ```
 
-### 5. agent-browser Integration (Optional)
+### 5. MCP/Agent Testing (Required Preference)
 
-For projects with frontend (`project_analysis.has_frontend: true`), B Session can use [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser) for visual testing:
+**MCP (Model Context Protocol)** is a standard protocol that allows AI assistants to interact with external tools and services, including browser automation for testing.
+
+For projects with frontend (`project_analysis.has_frontend: true`), B Session should prefer MCP-compatible browser tooling for visual testing:
 
 - Navigate to pages
 - Fill forms with mock data
 - Click buttons and verify responses
 - Test responsive design (mobile/tablet/desktop)
+
+**Recommended tools:**
+- **Playwright MCP Server** - Browser automation for testing
+- Other MCP-compatible browser agents
+
+**Fallback:** If MCP is unavailable, document the limitation and ask the user to verify manually
 
 ### 6. PR Creation & Bugfix Mode
 
@@ -248,20 +257,20 @@ npm install -g @fission-ai/openspec@latest
 
 ### 4. Start First Iteration
 
-**A Session (Opus 4.5):**
-1. Open new Claude chat
+**A Session (Reasoning model):**
+1. Open a new AI assistant session
 2. Paste content from `.claude/prompts/A_SESSION.md`
 3. A Session displays state tip, runs discovery interview
 4. Creates skeleton with TODOs
 
-**B Session (Sonnet 4.5):**
+**B Session (Execution model):**
 1. Open new chat
 2. Paste content from `.claude/prompts/B_SESSION.md`
 3. B Session displays state tip, fills TODOs
 4. Runs self-test (backend API, frontend visual)
 5. Creates PR, enters bugfix mode
 
-**C Session (Sonnet 4.5):**
+**C Session (Review model):**
 1. Open new chat
 2. Paste content from `.claude/prompts/C_SESSION.md`
 3. Reviews code against constraints
@@ -306,7 +315,29 @@ Fix → Self-test → Push → Repeat until approved.
 
 ---
 
-## Tech Stack (Default)
+## Technology Selection & Maintenance
+
+This template does not lock in any frontend/backend/mobile stack. Instead:
+
+1. **Respect user preference** when specified.
+2. **Recommend (don’t enforce)** 1–2 viable stacks if the user asks for guidance.
+3. **Use latest stable/LTS versions** and follow official best practices.
+4. **Maintain AGENTS.md/AGENT.md** in module directories so other models can collaborate cleanly.
+
+---
+
+## Deployment Expectations
+
+When a feature spans frontend/backend:
+
+1. **Minimum**: Provide Docker deployment guidance (Dockerfile/compose).
+2. **Preferred**: Provide Vercel deployment guidance when a web frontend exists.
+3. **Environment Variables**: Document required env vars for each runtime (local, Docker, Vercel).
+4. **Code Review**: Verify env var list and deployment notes are present before merge.
+
+---
+
+## Tech Stack (Example)
 
 | Layer | Technology |
 |-------|------------|
@@ -316,9 +347,9 @@ Fix → Self-test → Push → Repeat until approved.
 | API Client | TanStack Query |
 | Mobile | Kotlin Compose / SwiftUI |
 | Database | PostgreSQL + Prisma |
-| Visual Testing | agent-browser (optional) |
+| Visual Testing | MCP/agent browser tools (preferred) |
 
-*All choices are customizable in DESIGN_STATE.yaml*
+*All choices are customizable in DESIGN_STATE.yaml.*
 
 ---
 

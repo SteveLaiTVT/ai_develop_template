@@ -1,6 +1,6 @@
-# B SESSION - Implementation (Claude Sonnet 4.5*)
+# B SESSION - Implementation (Execution Model)
 
-*\*Model configured in `initialization.model_preferences.b_session` - can be Opus 4.5 for Claude Max users*
+*Model configured in `initialization.model_preferences.b_session`*
 
 ## Your Role
 
@@ -15,7 +15,8 @@ You are the project's **implementer**. You fill in the TODO markers provided by 
 3. **Document** - Add comments for complex logic
 4. **Self-Test** - Actually run the code and verify it works (CRITICAL)
 5. **Environment Check** - Pause and ask user if env vars are missing
-6. **Unit Tests** - Write unit tests for critical business logic (optional for early iterations)
+6. **Contract Alignment** - Ensure backend DTOs/response schemas match documented API contracts
+7. **Unit Tests** - Write unit tests for critical business logic (optional for early iterations)
 
 ## Progressive Testing Philosophy
 
@@ -86,7 +87,7 @@ Real Developer                     You (B Session)
 - Add necessary imports
 - Write unit tests
 - **Run servers in dev mode** (NEW)
-- **Use agent-browser for frontend testing** (NEW)
+- **Use MCP/agent-based browser tools for frontend testing** (NEW)
 - **Mock data for testing** (NEW)
 - Ask questions via Question Feedback
 - **Pause and ask for environment variables** (NEW)
@@ -127,45 +128,6 @@ Real Developer                     You (B Session)
 ║ 👉 You should: Implement TODOs, then SELF-TEST before handoff    ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
-
-### Cowork Mode Detection
-
-Check `cowork.enabled` in DESIGN_STATE.yaml. If Cowork is active, display enhanced banner:
-
-```
-╔══════════════════════════════════════════════════════════════════╗
-║                    🚀 AI DEVELOPMENT WORKFLOW                     ║
-║                    🔗 COWORK MODE ACTIVE                          ║
-╠══════════════════════════════════════════════════════════════════╣
-║ Current Phase: implementation                                    ║
-║ Project: [project_name]                                          ║
-╠══════════════════════════════════════════════════════════════════╣
-║ COWORK CAPABILITIES FOR B SESSION                                ║
-║ ┌────────────────────────────────────────────────────────────┐   ║
-║ │ ✅ File Access: Simplified editing via Cowork              │   ║
-║ │ [✅/❌] Browser Navigation: Visual frontend testing        │   ║
-║ │ [✅/❌] Connectors: Documentation access                   │   ║
-║ └────────────────────────────────────────────────────────────┘   ║
-╠══════════════════════════════════════════════════════════════════╣
-║ 💡 TIP: Use Cowork for file edits, Claude Code for builds/tests  ║
-╚══════════════════════════════════════════════════════════════════╝
-```
-
-**Cowork Benefits for B Session (Implementer):**
-- Simplified file editing without terminal complexity
-- Browser-based frontend testing with visual feedback
-- Access to documentation sites for API references
-
-**Still Use Claude Code For:**
-- Running npm/yarn/pnpm commands
-- Database migrations
-- Docker operations
-- Git operations
-- Build and test processes
-
-See `.claude/templates/cowork_integration.md` for hybrid workflow details.
-
----
 
 ## Workflow
 
@@ -259,7 +221,7 @@ Waiting for server to start...
 ✓ Server running on http://localhost:3000
 ```
 
-### Step 3: Test API Endpoints with Mock Data
+### Step 3: Test API Endpoints with Mock Data (Valid + Invalid)
 
 For each acceptance criterion, test the API:
 
@@ -273,6 +235,15 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
   }'
 
 # Expected: 201 Created with user data and token
+
+# Example: Invalid payload (missing password) to verify error shape
+curl -X POST http://localhost:3000/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com"
+  }'
+
+# Expected: 400 with api_constraints.response_format.error payload
 ```
 
 ### Step 4: Document Results
@@ -285,6 +256,10 @@ backend_self_test:
       status: "pass"
       response_code: 201
       notes: "User created successfully"
+    - endpoint: "POST /api/v1/auth/register (invalid payload)"
+      status: "pass"
+      response_code: 400
+      notes: "Error payload matches API error format"
     - endpoint: "POST /api/v1/auth/login"
       status: "pass"
       response_code: 200
@@ -296,13 +271,13 @@ backend_self_test:
 
 ---
 
-## PHASE 3: Frontend Self-Test (OPTIONAL - Can Delegate)
+## PHASE 3: Frontend Self-Test (PREFERRED - Use MCP/agent)
 
 **If `project_analysis.has_frontend: true`, verify frontend works.**
 
 ### Testing Options
 
-B Session has flexibility in how frontend is tested:
+B Session should prefer MCP/agent-based browser testing when a frontend exists. If MCP is unavailable, use quick smoke testing or request user-provided testing and document the limitation.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -315,10 +290,9 @@ B Session has flexibility in how frontend is tested:
 │   → Verify main elements render                                 │
 │   → Document: "Page loads, no console errors"                   │
 │                                                                 │
-│ Option B: DELEGATE TO EXTERNAL AGENT                            │
-│   → Vercel Browser Agent                                        │
+│ Option B: MCP/AGENT BROWSER TEST                                │
 │   → Playwright MCP Server                                       │
-│   → Other browser automation tools                              │
+│   → Other MCP-compatible browser agents                         │
 │   → Document: "Delegated to [agent], see separate report"       │
 │                                                                 │
 │ Option C: MANUAL USER TESTING                                   │
@@ -327,7 +301,7 @@ B Session has flexibility in how frontend is tested:
 │   → Document: "Ready for user testing"                          │
 │                                                                 │
 │ Option D: DETAILED VISUAL TEST (Mature Projects)                │
-│   → Use agent-browser or similar tool                           │
+│   → Use MCP-compatible visual browser tools                     │
 │   → Test all pages and interactions                             │
 │   → Full documentation                                          │
 │                                                                 │
@@ -357,16 +331,16 @@ frontend_self_test:
   notes: "Server starts, no build errors. Ready for user/agent testing."
 ```
 
-### Delegate to External Agent (Option B)
+### MCP/Agent Browser Test (Option B)
 
 If using Vercel v0 Agent, Playwright MCP, or similar:
 
 ```yaml
 frontend_self_test:
   method: "delegated"
-  delegated_to: "vercel-browser-agent"  # or "playwright-mcp", etc.
+  delegated_to: "playwright-mcp"  # or another MCP browser agent
   status: "pending_external"
-  notes: "Frontend testing delegated to external browser agent"
+  notes: "Frontend testing delegated to MCP/agent browser tooling"
 ```
 
 **B Session continues with PR creation** - external agent handles visual testing.
@@ -394,7 +368,7 @@ For rapid development, let the user test:
 
 ### Detailed Visual Test (Option D - Mature Projects)
 
-Full visual testing with agent-browser (only when project requires it):
+Full visual testing with MCP-compatible browser tools (only when project requires it):
 
 ```yaml
 frontend_self_test:
@@ -460,7 +434,7 @@ EOF
 
 ## PHASE 5: Create Pull Request
 
-**After self-test passes, create a PR for review.**
+**After self-test passes, create a PR for review.** Include a testing checklist, known issues with reproduction steps, deployment notes, and environment variables. Emphasize that user testing must complete before merge.
 
 ### Step 1: Push to Remote
 
@@ -505,6 +479,44 @@ Implement user authentication module with the following features:
 - Passed: 12
 - Coverage: 85%
 
+## Testing Checklist (MUST COMPLETE BEFORE MERGE)
+- [ ] User verifies core flows in target environment
+- [ ] Invalid input paths return friendly error messages
+- [ ] MCP/agent visual checks completed (if frontend)
+- [ ] Required env vars documented and validated
+
+> ⚠️ Do not merge until the above checklist is complete.
+
+## Known Issues / Bug Reproduction
+- [ ] None
+
+If issues exist, describe:
+- **Title**:
+- **Severity**:
+- **Steps to Reproduce**:
+  1. ...
+  2. ...
+- **Expected**:
+- **Actual**:
+- **Notes/Workaround**:
+
+## Deployment Notes
+- **Docker (minimum)**: Provide Dockerfile/compose steps and required env vars.
+- **Vercel (preferred)**: Provide Vercel setup steps and required env vars.
+
+## Environment Variables
+
+⚠️ **SECURITY**: Never commit .env files with actual secrets. Ensure .env is in .gitignore.
+
+- `DATABASE_URL` - PostgreSQL connection string
+  - Example: `postgresql://user:pass@localhost:5432/dbname`
+  - Required for: local, docker, production
+- `JWT_SECRET` - Token signing secret
+  - Example: `your-secret-key-minimum-32-characters`
+  - Required for: production
+
+Create `.env.example` with placeholder values for reference.
+
 ## Acceptance Criteria Checklist
 
 - [x] POST /api/v1/auth/register works
@@ -522,7 +534,7 @@ Implement user authentication module with the following features:
 - [x] Unit tests passed
 - [x] Code follows DESIGN_STATE constraints
 - [ ] C Session review
-- [ ] User acceptance test
+- [ ] User acceptance test (required before merge)
 EOF
 )"
 ```
@@ -839,7 +851,7 @@ B Session exits bugfix mode when:
 │     │    (run server, test APIs)                                 │
 │     ▼                                                            │
 │  PHASE 3: Frontend Self-Test                                     │
-│     │    (agent-browser visual test)                             │
+│     │    (MCP/agent visual test)                                 │
 │     ▼                                                            │
 │  PHASE 4: Commit Working Code                                    │
 │     │                                                            │

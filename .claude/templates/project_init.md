@@ -1,6 +1,6 @@
 # Project Initialization Template
 
-This template guides the first-time setup when the AI Development Template is loaded in Claude Code or Claude Cowork.
+This template guides the first-time setup when the AI Development Template is loaded in an AI-assisted environment.
 
 ## Initialization Detection
 
@@ -25,22 +25,19 @@ initialization:
 │  Step 2: Onboarding Questions                                    │
 │     └── Ask about project, goals, preferences                    │
 │                                                                  │
-│  Step 3: Cowork Detection (Optional)                             │
-│     └── Ask if user wants Cowork integration                     │
-│                                                                  │
-│  Step 4: Git Setup                                               │
+│  Step 3: Git Setup                                               │
 │     └── Clear template .git, init new repo, set remote           │
 │                                                                  │
-│  Step 5: Project Configuration                                   │
+│  Step 4: Project Configuration                                   │
 │     └── Update DESIGN_STATE.yaml with user's answers             │
 │                                                                  │
-│  Step 6: Initial Commit                                          │
+│  Step 5: Initial Commit                                          │
 │     └── Commit initialized project                               │
 │                                                                  │
-│  Step 7: Launch Sessions                                         │
+│  Step 6: Launch Sessions                                         │
 │     └── Start A/B/C sessions in parallel workflow                │
 │                                                                  │
-│  Step 8: Notify User                                             │
+│  Step 7: Notify User                                             │
 │     └── Tell user to test when first iteration complete          │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
@@ -59,7 +56,7 @@ Display when `initialization.is_template: true`:
 ║                                                                  ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║                                                                  ║
-║  I'm Claude, your AI development partner.                        ║
+║  I'm your AI development partner.                                ║
 ║                                                                  ║
 ║  This template helps you build applications with AI-assisted     ║
 ║  development using a three-session workflow:                     ║
@@ -108,11 +105,10 @@ Ask these questions to understand user's intent:
 ║      • Or "skip" - we'll use local git only (recommended start)  ║
 ║      💡 You can add a remote later when you're ready to share    ║
 ║                                                                  ║
-║  Q6: Which Claude model for each session? (OPTIONAL)             ║
-║      • "default" - A=Opus, B=Sonnet, C=Sonnet (cost-effective)   ║
-║      • "all-opus" - Use Opus 4.5 for all (Claude Max users)      ║
-║      • Or customize - e.g., "A=opus, B=opus, C=sonnet"           ║
-║      💡 Claude Max subscribers can use Opus for all sessions     ║
+║  Q6: Which model for each session? (OPTIONAL)                    ║
+║      • "default" - A=Reasoning, B=Fast, C=Fast                   ║
+║      • Or customize - e.g., "A=reasoning, B=fast, C=fast"        ║
+║      💡 Use a stronger model for A if decisions are complex      ║
 ║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
@@ -129,15 +125,14 @@ initialization:
       project_name: "task-tracker"
       project_description: "A simple task management app for teams"
       project_type: "full-stack"
-      use_cowork: true
       git_remote: "github.com/user/task-tracker"
       preferred_stack: "recommend"
 
   # Model preferences (based on user choice)
   model_preferences:
-    a_session: "opus"     # Always opus for architect
-    b_session: "opus"     # User chose "all-opus"
-    c_session: "opus"     # User chose "all-opus"
+    a_session: "reasoning"
+    b_session: "fast"
+    c_session: "fast"
 
 meta:
   project_name: "task-tracker"
@@ -146,45 +141,18 @@ meta:
 
 ---
 
-## Step 3: Cowork Detection
-
-If running in Claude Cowork environment or user indicates macOS + Claude Desktop:
-
-```
-╔══════════════════════════════════════════════════════════════════╗
-║  🔗 CLAUDE COWORK AVAILABLE                                      ║
-╠══════════════════════════════════════════════════════════════════╣
-║                                                                  ║
-║  I detected you may be using Claude Cowork!                      ║
-║                                                                  ║
-║  Would you like to enable Cowork integration?                    ║
-║                                                                  ║
-║  Benefits:                                                       ║
-║  • Simplified file operations                                    ║
-║  • Browser-based frontend testing                                ║
-║  • Third-party app connections (Asana, Notion, etc.)             ║
-║                                                                  ║
-║  Options:                                                        ║
-║  1. Yes, enable Cowork                                           ║
-║  2. No, use standard Claude Code workflow                        ║
-║                                                                  ║
-╚══════════════════════════════════════════════════════════════════╝
-```
-
----
-
-## Step 4: Git Setup (Local-First)
+## Step 3: Git Setup (Local-First)
 
 **Git remote is OPTIONAL.** We use a local-first approach - you can add a remote later when ready.
 
-### Step 4.1: Clear Template Git
+### Step 3.1: Clear Template Git
 
 ```bash
 # Remove template's git history
 rm -rf .git
 ```
 
-### Step 4.2: Create .gitignore
+### Step 3.2: Create .gitignore
 
 Create a comprehensive `.gitignore` file:
 
@@ -355,7 +323,6 @@ Initialized with AI Development Template:
 - Three-session workflow (Architect/Implementer/Reviewer)
 - DESIGN_STATE.yaml configuration
 - OpenSpec integration
-- Cowork integration: <enabled/disabled>
 
 Ready for discovery phase.
 EOF
@@ -405,7 +372,7 @@ initialization:
 ║  Project: <project_name>                                         ║
 ║  Type: <project_type>                                            ║
 ║  Git: Local repository (remote: <url or "not configured">)       ║
-║  Cowork: <Enabled/Disabled>                                      ║
+║  Tools: MCP/agents for testing as available                      ║
 ║                                                                  ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║                                                                  ║
@@ -576,11 +543,6 @@ When first iteration is complete and ready for testing:
                               │
                               ▼
                     ┌─────────────────────┐
-                    │  Cowork Detection   │
-                    └─────────┬───────────┘
-                              │
-                              ▼
-                    ┌─────────────────────┐
                     │  Git Setup          │
                     │  • Clear .git       │
                     │  • Init new repo    │
@@ -658,7 +620,7 @@ initialization:
   initialized: false
 ```
 
-Then delete `.git` and restart Claude.
+Then delete `.git` and restart the assistant session.
 
 ### Skip Git Setup
 

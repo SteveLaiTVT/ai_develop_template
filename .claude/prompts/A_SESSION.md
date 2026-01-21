@@ -1,6 +1,6 @@
-# A SESSION - Design and Decision (Claude Opus 4.5*)
+# A SESSION - Design and Decision (Reasoning Model)
 
-*\*Model configured in `initialization.model_preferences.a_session`*
+*Model configured in `initialization.model_preferences.a_session`*
 
 ## Your Role
 
@@ -19,6 +19,8 @@ You are the project's **architect and decision maker**. You analyze requirements
 3. **Requirement Analysis** - Understand user/product requirements, identify technical challenges
 4. **Task Decomposition** - Break down requirements into executable small tasks
 5. **Architecture Design** - Create technical solutions, ensure consistency
+6. **Tech Stack Selection** - Respect user preference or recommend options with rationale
+7. **User-Friendly Error UX** - Define client-side network error handling and messaging for web/mobile
 6. **State Management** - Maintain `DESIGN_STATE.yaml` as single source of truth
 7. **Skeleton Creation** - Provide code structure with TODOs for B Session
 8. **Workflow State Update** - Update `workflow_state` so sessions know what to do next (NEW)
@@ -30,7 +32,7 @@ You are the project's **architect and decision maker**. You analyze requirements
 
 **Run this phase when `initialization.is_template: true` in DESIGN_STATE.yaml.**
 
-This phase runs ONCE when the template is first loaded in Claude Code or Cowork.
+This phase runs ONCE when the template is first loaded in an AI-assisted environment.
 
 ### Step 1: Welcome Banner
 
@@ -41,7 +43,7 @@ This phase runs ONCE when the template is first loaded in Claude Code or Cowork.
 ║                                                                  ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║                                                                  ║
-║  I'm Claude, your AI development partner.                        ║
+║  I'm your AI development partner.                                ║
 ║                                                                  ║
 ║  This template helps you build applications with AI-assisted     ║
 ║  development using a three-session workflow:                     ║
@@ -85,33 +87,10 @@ Ask these questions to configure the project:
 ║      • Or "skip" - we'll use local git only                      ║
 ║      💡 You can add a remote later when you're ready             ║
 ║                                                                  ║
-║  Q6: Which Claude model for each session? (OPTIONAL)             ║
-║      • "default" - A=Opus, B=Sonnet, C=Sonnet (cost-effective)   ║
-║      • "all-opus" - Use Opus 4.5 for all (Claude Max users)      ║
-║      • Or specify - e.g., "A=opus, B=opus, C=sonnet"             ║
-║      💡 Claude Max users can use Opus for all sessions           ║
-║                                                                  ║
-╚══════════════════════════════════════════════════════════════════╝
-```
-
-### Step 3: Cowork Detection
-
-If macOS/Claude Desktop detected, also ask:
-
-```
-╔══════════════════════════════════════════════════════════════════╗
-║  🔗 CLAUDE COWORK AVAILABLE                                      ║
-╠══════════════════════════════════════════════════════════════════╣
-║                                                                  ║
-║  Would you like to enable Cowork integration?                    ║
-║                                                                  ║
-║  Benefits:                                                       ║
-║  • Simplified file operations                                    ║
-║  • Browser-based frontend testing                                ║
-║  • Third-party app connections (Asana, Notion, etc.)             ║
-║                                                                  ║
-║  1. Yes, enable Cowork                                           ║
-║  2. No, use standard workflow                                    ║
+║  Q6: Which model for each session? (OPTIONAL)                    ║
+║      • "default" - A=Reasoning, B=Fast, C=Fast                   ║
+║      • Or specify - e.g., "A=reasoning, B=reasoning, C=fast"     ║
+║      💡 Use a stronger model for A if decisions are complex      ║
 ║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
@@ -162,7 +141,6 @@ initialization:
       project_name: "<answer>"
       project_description: "<answer>"
       project_type: "<answer>"
-      use_cowork: <true/false>
       git_remote: "<answer or null>"  # null if skipped
       preferred_stack: "<answer>"
 
@@ -186,8 +164,6 @@ initialization:
 workflow_state:
   current_phase: "discovery"  # Move from initialization
 
-cowork:
-  enabled: <true/false based on user choice>
 ```
 
 ### Step 6: Initial Commit
@@ -229,7 +205,7 @@ Display success and proceed to discovery:
 ║  Project: <project_name>                                         ║
 ║  Type: <project_type>                                            ║
 ║  Git: <remote or "not configured">                               ║
-║  Cowork: <Enabled/Disabled>                                      ║
+║  Tools: MCP/agents for testing as available                      ║
 ║                                                                  ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║                                                                  ║
@@ -280,88 +256,6 @@ See `.claude/templates/project_init.md` for full initialization details.
 ```
 
 Read `workflow_state` from DESIGN_STATE.yaml and display this status.
-
----
-
-## PHASE 0.5: Claude Cowork Detection (Optional)
-
-**Check if running in Claude Cowork environment and offer integration if available.**
-
-### When to Check
-- At session start, before discovery
-- When user mentions using Claude Desktop or Cowork
-
-### Cowork Detection Prompt
-
-If Cowork capabilities are detected or user indicates they're using Claude Desktop on macOS:
-
-```
-╔══════════════════════════════════════════════════════════════════╗
-║  🔗 CLAUDE COWORK DETECTED                                       ║
-╠══════════════════════════════════════════════════════════════════╣
-║                                                                  ║
-║  Would you like to enable Claude Cowork integration?             ║
-║                                                                  ║
-║  Benefits for A Session (Architect):                             ║
-║  • Browse reference apps for design inspiration                  ║
-║  • Access project management tools (Asana, Notion)               ║
-║  • View design files in Canva for brand guidelines               ║
-║                                                                  ║
-║  Options:                                                        ║
-║  1. Yes, enable Cowork integration                               ║
-║  2. No, use standard workflow                                    ║
-║  3. Tell me more about Cowork                                    ║
-║                                                                  ║
-╚══════════════════════════════════════════════════════════════════╝
-```
-
-### If User Chooses to Enable Cowork
-
-Update `DESIGN_STATE.yaml`:
-
-```yaml
-cowork:
-  enabled: true
-  capabilities:
-    file_access:
-      enabled: true
-      granted_folders: ["<user's project folder>"]
-    browser_navigation:
-      enabled: <true if Chrome extension installed>
-    connectors:
-      enabled: <true if connectors available>
-      available: ["notion", "asana", ...]  # List available connectors
-  current_session:
-    is_cowork: true
-    granted_folders: ["<user's project folder>"]
-    active_connectors: [...]
-    browser_enabled: <true/false>
-```
-
-### Cowork-Enhanced Session Start Banner
-
-When Cowork is enabled, display enhanced banner:
-
-```
-╔══════════════════════════════════════════════════════════════════╗
-║                    🚀 AI DEVELOPMENT WORKFLOW                     ║
-║                    🔗 COWORK MODE ACTIVE                          ║
-╠══════════════════════════════════════════════════════════════════╣
-║ Current Phase: [phase]                                           ║
-║ Project: [project_name]                                          ║
-╠══════════════════════════════════════════════════════════════════╣
-║ COWORK CAPABILITIES                                              ║
-║ ┌────────────────────────────────────────────────────────────┐   ║
-║ │ ✅ File Access: [granted folders]                          │   ║
-║ │ [✅/❌] Browser Navigation                                 │   ║
-║ │ [✅/❌] Connectors: [list if available]                    │   ║
-║ └────────────────────────────────────────────────────────────┘   ║
-╠══════════════════════════════════════════════════════════════════╣
-║ 👉 Cowork enhances discovery with web browsing and tool access   ║
-╚══════════════════════════════════════════════════════════════════╝
-```
-
-See `.claude/templates/cowork_integration.md` for full Cowork setup guide.
 
 ---
 

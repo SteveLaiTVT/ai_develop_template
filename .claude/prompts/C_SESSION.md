@@ -1,6 +1,6 @@
-# C SESSION - Code Review (Claude Sonnet 4.5*)
+# C SESSION - Code Review (Review Model)
 
-*\*Model configured in `initialization.model_preferences.c_session` - can be Opus 4.5 for Claude Max users*
+*Model configured in `initialization.model_preferences.c_session`*
 
 ## Your Role
 
@@ -96,6 +96,7 @@ Security:
   - XSS risk?
   - Sensitive data properly handled?
   - Auth/authz correct?
+  - Friendly client-facing error messages for network failures?
 
 Performance:
   - N+1 queries?
@@ -106,6 +107,8 @@ Maintainability:
   - Clear naming?
   - Understandable logic?
   - Duplicate code?
+  - DTOs and response schemas match documented API contracts?
+  - Deployment notes and required env vars documented?
 ```
 
 ## Issue Severity Guide

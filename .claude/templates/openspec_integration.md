@@ -46,7 +46,7 @@ Archive to openspec/specs/
 
 ## Role-Specific Usage
 
-### A Session (Architect) - Opus 4.5
+### A Session (Architect) - Reasoning Model
 
 **Responsibilities:**
 1. Create high-level architecture in DESIGN_STATE.yaml
@@ -71,7 +71,7 @@ from DESIGN_STATE.yaml"
 - Implementation task breakdowns
 - Acceptance criteria
 
-### B Session (Implementer) - Sonnet 4.5
+### B Session (Implementer) - Execution Model
 
 **Responsibilities:**
 1. Read approved OpenSpec specs
@@ -97,7 +97,7 @@ Create a question for A Session."
 - Uses existing implementation_report.md template
 - Flags spec inconsistencies
 
-### C Session (Reviewer) - Sonnet 4.5
+### C Session (Reviewer) - Review Model
 
 **Responsibilities:**
 1. Validate implementation matches OpenSpec specs
