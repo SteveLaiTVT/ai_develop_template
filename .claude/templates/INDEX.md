@@ -23,6 +23,7 @@ This document describes all templates used in the AI-assisted development workfl
 | Git Workflow | `git_workflow.md` | - | All | Version control guide |
 | OpenSpec Integration | `openspec_integration.md` | - | All | Spec-driven development guide |
 | **Progressive Testing** | `progressive_testing.md` | - | B Session | Testing strategy guide |
+| **API Request Export** | `api_request_export.md` | B Session | User | API testing scripts (NEW) |
 
 ---
 
@@ -571,3 +572,65 @@ npm run dev
 - E2E tests are optional until feature matures
 
 See the full guide at `.claude/templates/progressive_testing.md` for detailed decision guides and examples.
+
+---
+
+## API Request Export
+
+### 12. API Request Export (`api_request_export.md`) - NEW
+
+**Purpose**: Export API requests before C Session review for user testing
+
+**CRITICAL**: B Session MUST export all tested API requests before handoff to C Session.
+
+**Why This Matters**:
+- Enables users to quickly test backend APIs themselves
+- Provides rapid feedback loop for API behavior
+- Documents expected request/response formats
+- Reduces back-and-forth in review process
+
+**Export Formats**:
+
+| Format | Location | Required | Tools |
+|--------|----------|----------|-------|
+| Shell Scripts | `tests/http-requests/` | **YES** | bash, curl |
+| Postman | `tests/postman/` | Optional | Postman app |
+| Apifox | `tests/apifox/` | Optional | Apifox app |
+| HTTP Files | `tests/http-requests/*.http` | Optional | VS Code REST Client |
+
+**Shell Scripts (Required)**:
+```
+tests/http-requests/
+├── env.sh                    # Environment variables
+├── README.md                 # Usage instructions
+├── run-all.sh                # Run all tests
+├── auth/
+│   ├── 01-register.sh
+│   ├── 02-login.sh
+│   └── ...
+└── user/
+    └── ...
+```
+
+**Integration with Mock Data**:
+- API request scripts should reference mock data from `tests/mock-data/`
+- Ensures consistency between test data and API tests
+
+**Workflow Integration**:
+- **PHASE 4.5**: Export API requests (after commit, before PR)
+- User can run scripts immediately after PR is created
+- Faster feedback loop, fewer review iterations
+
+**User Commands**:
+```bash
+# Quick test all APIs
+cd tests/http-requests
+source env.sh
+./run-all.sh
+
+# Test specific endpoint
+./auth/01-register.sh
+./auth/02-login.sh
+```
+
+See the full guide at `.claude/templates/api_request_export.md` for templates and examples.
