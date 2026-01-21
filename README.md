@@ -172,13 +172,20 @@ If B Session needs environment variables to run:
 
 ### 5. MCP/Agent Testing (Required Preference)
 
-For projects with frontend (`project_analysis.has_frontend: true`), B Session should prefer MCP/agent browser tooling for visual testing:
+**MCP (Model Context Protocol)** is a standard protocol that allows AI assistants to interact with external tools and services, including browser automation for testing.
+
+For projects with frontend (`project_analysis.has_frontend: true`), B Session should prefer MCP-compatible browser tooling for visual testing:
 
 - Navigate to pages
 - Fill forms with mock data
 - Click buttons and verify responses
 - Test responsive design (mobile/tablet/desktop)
-- If MCP is unavailable, document the limitation and ask the user to verify
+
+**Recommended tools:**
+- **Playwright MCP Server** - Browser automation for testing
+- Other MCP-compatible browser agents
+
+**Fallback:** If MCP is unavailable, document the limitation and ask the user to verify manually
 
 ### 6. PR Creation & Bugfix Mode
 

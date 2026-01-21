@@ -39,6 +39,9 @@ initialization:
       project_type: null           # web-app | mobile-app | api-service | full-stack | other
       git_remote: null             # User's git remote URL (OPTIONAL - can be null/skip)
       preferred_stack: null        # User's tech stack preference or "recommend"
+      # MIGRATION NOTE: The 'use_cowork' field has been removed.
+      # Cowork-specific integration is no longer part of this template.
+      # MCP (Model Context Protocol) is now the preferred approach for browser testing.
 
   # Model preferences for each session (model-agnostic)
   model_preferences:
@@ -208,42 +211,42 @@ architecture:
     - "Record the decision in this file once agreed."
   
   backend:
-    language: null
-    framework: null
-    database: null
-    cache: null
-    orm: null
-    
+    language: null         # Examples: "TypeScript", "Python", "Go", "Rust"
+    framework: null        # Examples: "NestJS", "Express", "FastAPI", "Django"
+    database: null         # Examples: "PostgreSQL", "MySQL", "MongoDB"
+    cache: null            # Examples: "Redis", "Memcached", null
+    orm: null              # Examples: "Prisma", "TypeORM", "SQLAlchemy"
+
   frontend_shared:
-    language: null
-    ui_framework: null
-    state_management: null
-    styling: null
-    api_client: null
-    
+    language: null         # Examples: "TypeScript", "JavaScript"
+    ui_framework: null     # Examples: "React 18", "Vue 3", "Svelte", "Angular"
+    state_management: null # Examples: "Zustand", "Redux", "Pinia", "Jotai"
+    styling: null          # Examples: "Tailwind CSS", "CSS Modules", "Styled Components"
+    api_client: null       # Examples: "TanStack Query + Axios", "SWR", "RTK Query"
+
   admin_web:
-    base: null
-    routing: null
-    ui_library: null
-    
+    base: null             # Usually "frontend_shared"
+    routing: null          # Examples: "React Router", "Next.js Router"
+    ui_library: null       # Examples: "Ant Design", "Material-UI", "Chakra UI"
+
   user_web:
-    base: null
-    routing: null
-    ui_library: null
-    responsive: null
-    breakpoints: null
-    
+    base: null             # Usually "frontend_shared"
+    routing: null          # Examples: "React Router", "Next.js Router"
+    ui_library: null       # Examples: "shadcn/ui", "Material-UI", "Radix UI"
+    responsive: null       # true | false
+    breakpoints: null      # Examples: {mobile: "< 768px", tablet: "768-1024px", desktop: "> 1024px"}
+
   mobile:
     android:
-      language: null
-      ui: null
-      architecture: null
-      di: null
-      networking: null
+      language: null       # Examples: "Kotlin", "Java"
+      ui: null             # Examples: "Jetpack Compose", "XML Views"
+      architecture: null   # Examples: "MVVM + Clean Architecture", "MVI"
+      di: null             # Examples: "Hilt", "Koin", "Dagger"
+      networking: null     # Examples: "Retrofit + OkHttp", "Ktor Client"
     ios:
       status: "planned"
-      language: null
-      ui: null
+      language: null       # Examples: "Swift", "Objective-C"
+      ui: null             # Examples: "SwiftUI", "UIKit"
 
 # ============================================================
 # 2. Business Modules

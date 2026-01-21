@@ -149,6 +149,23 @@ main ─────────────────────────
 
 ---
 
+## Frontend Testing with MCP
+
+**MCP (Model Context Protocol)** is a standard protocol that allows AI assistants to interact with external tools and services. For frontend testing, MCP-compatible browser tools enable:
+
+- Automated visual testing of web interfaces
+- Form interaction and navigation testing
+- Screenshot capture and visual verification
+- Responsive design testing across breakpoints
+
+**Recommended MCP Tools:**
+- **Playwright MCP Server** - Browser automation for testing
+- Other MCP-compatible browser agents
+
+**When MCP is unavailable:** B Session should document the limitation and request user-provided testing for visual validation.
+
+---
+
 ## Key Commands
 
 | User Says | What Happens |

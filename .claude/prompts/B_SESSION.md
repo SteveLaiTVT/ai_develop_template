@@ -271,13 +271,13 @@ backend_self_test:
 
 ---
 
-## PHASE 3: Frontend Self-Test (REQUIRED - Use MCP/Agents)
+## PHASE 3: Frontend Self-Test (PREFERRED - Use MCP/Agents)
 
 **If `project_analysis.has_frontend: true`, verify frontend works.**
 
 ### Testing Options
 
-B Session must use MCP/agent-based browser testing when a frontend exists. If MCP is unavailable, request user-provided testing and document the limitation.
+B Session should prefer MCP/agent-based browser testing when a frontend exists. If MCP is unavailable, use quick smoke testing or request user-provided testing and document the limitation.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -505,8 +505,17 @@ If issues exist, describe:
 - **Vercel (preferred)**: Provide Vercel setup steps and required env vars.
 
 ## Environment Variables
+
+⚠️ **SECURITY**: Never commit .env files with actual secrets. Ensure .env is in .gitignore.
+
 - `DATABASE_URL` - PostgreSQL connection string
+  - Example: `postgresql://user:pass@localhost:5432/dbname`
+  - Required for: local, docker, production
 - `JWT_SECRET` - Token signing secret
+  - Example: `your-secret-key-minimum-32-characters`
+  - Required for: production
+
+Create `.env.example` with placeholder values for reference.
 
 ## Acceptance Criteria Checklist
 

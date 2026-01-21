@@ -103,13 +103,41 @@ test_results:
 # Deployment & Environment
 # ============================================================
 deployment_notes:
-  docker: "[minimal Docker deployment notes]"
-  vercel: "[preferred Vercel deployment notes if frontend]"
+  docker: |
+    # Docker deployment (minimum requirement)
+    # Build: docker build -t [app-name] .
+    # Run: docker-compose up
+    # Requirements: Docker 20+, docker-compose 2+
+    # Network: Expose port [XXXX]
+    # Volumes: [list any persistent volumes needed]
+
+  vercel: |
+    # Vercel deployment (preferred for web frontends)
+    # Framework preset: [Next.js | React | Vue | Other]
+    # Build command: [npm run build]
+    # Output directory: [.next | dist | build]
+    # Install command: [npm install]
+    # Root directory: [apps/web | .]
+    # Environment variables: See below
+
 environment_variables:
+  # SECURITY: Never commit actual secrets. Use .env.example for templates.
+  # Ensure .env is in .gitignore
+
   - name: "DATABASE_URL"
     required_by: "backend"
-    example: "postgresql://user:pass@localhost:5432/db"
-    notes: "[purpose/constraints]"
+    required_for: "local, docker, production"
+    example: "postgresql://user:pass@localhost:5432/dbname"
+    notes: "PostgreSQL connection string. Use environment-specific hosts."
+    sensitive: true
+
+  # Add more environment variables as needed:
+  # - name: "JWT_SECRET"
+  #   required_by: "backend"
+  #   required_for: "production"
+  #   example: "your-secret-key-min-32-chars"
+  #   notes: "Token signing secret. Generate unique for each environment."
+  #   sensitive: true
 
 # ============================================================
 # Diff Summary (For modified files)
