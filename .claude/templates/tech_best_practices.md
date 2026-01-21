@@ -221,6 +221,72 @@ tech_best_practices:
 
 ---
 
+## Step 3.5: Ask Package Name (Java/Kotlin/Android only)
+
+If the user's stack includes Java, Kotlin, or Android, ask for package name:
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  📦 PACKAGE NAME (Java/Kotlin/Android)                           ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  Q: What package name should we use for your project?            ║
+║                                                                  ║
+║  Examples:                                                       ║
+║  • com.example.myapp                                             ║
+║  • com.company.projectname                                       ║
+║  • io.github.username.projectname                                ║
+║                                                                  ║
+║  💡 Follow reverse domain naming convention                      ║
+║  💡 This will be used for Java/Kotlin package structure          ║
+║     and Android applicationId                                    ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## Step 3.6: Project Structure and Official Generators
+
+All project artifacts should be placed in the `apps/` folder structure:
+
+### Apps Folder Layout
+
+```
+{project}/
+└── apps/
+    ├── backend/      # Spring Boot / NestJS / FastAPI / Ktor
+    ├── android/      # Android (Kotlin/Java)
+    ├── ios/          # iOS (Swift)
+    ├── user-web/     # User-facing web (Next.js/Vue)
+    ├── admin-web/    # Admin dashboard (Next.js/Vue)
+    └── shared/       # Shared types, utils
+```
+
+### Use Official Generators
+
+**Always use official project generators** instead of manual setup:
+
+| Technology | Generator | Command/URL |
+|------------|-----------|-------------|
+| **Spring Boot** | Spring Initializr | https://start.spring.io |
+| **NestJS** | Nest CLI | `npx @nestjs/cli new apps/backend` |
+| **Next.js** | create-next-app | `npx create-next-app@latest apps/user-web` |
+| **Vite React** | Vite | `npm create vite@latest apps/user-web -- --template react-ts` |
+| **Flutter** | Flutter CLI | `flutter create apps/mobile` |
+| **Ktor** | Ktor Generator | https://start.ktor.io |
+| **Quarkus** | Quarkus CLI | https://code.quarkus.io |
+| **Android** | Android Studio | Create via New Project wizard |
+| **iOS** | Xcode | Create via New Project wizard |
+
+**Benefits of using official generators:**
+- Correct project structure out of the box
+- Proper dependency versions
+- Best practice configurations included
+- IDE integration setup
+
+---
+
 ## Step 4: Feed Practices to Skeleton Creation
 
 When A Session creates skeleton code, it should incorporate the applied practices.
@@ -315,7 +381,7 @@ The full catalog is stored in `DESIGN_STATE.yaml` under `tech_best_practices.ava
 | 2 | TypeScript | Microsoft |
 | 2 | Vue | Vue Team (Evan You) |
 
-### External Skills (from skills.sh)
+### External Skills (from skills.sh and official sources)
 
 These external skills should be fetched and applied when available:
 
@@ -326,6 +392,8 @@ These external skills should be fetched and applied when available:
 | Remotion Best Practices | https://skills.sh/remotion-dev/skills/remotion-best-practices | Remotion Dev |
 | Anthropic Frontend Design | https://skills.sh/anthropics/skills/frontend-design | Anthropic |
 | Agent Browser | https://skills.sh/vercel-labs/agent-browser/agent-browser | Vercel Labs |
+| 阿里巴巴 Java 开发手册 (P3C) | https://github.com/alibaba/p3c | Alibaba |
+| Alibaba Cloud Native (Dubbo, Nacos, Sentinel) | https://github.com/alibaba | Alibaba (Apache) |
 
 ### Quick Reference
 
