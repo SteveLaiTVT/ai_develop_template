@@ -297,23 +297,45 @@ The full catalog is stored in `DESIGN_STATE.yaml` under `tech_best_practices.ava
 
 **Always prefer practices from the technology creator/authority:**
 
-| Domain | Priority Order |
-|--------|----------------|
-| AI Development | Anthropic (Claude) > Google > Cursor > OpenAI |
-| Next.js / SSR / Edge | Vercel (official) |
-| React | Meta / React Team |
-| Android | Google (official) |
-| iOS | Apple (official) |
-| TypeScript | Microsoft |
-| Vue | Vue Team (Evan You) |
+| Priority | Domain | Source |
+|----------|--------|--------|
+| **0 (FIRST)** | Claude Code Plugin | Anthropic (always apply first) |
+| 1 | Vercel React/Web Design | [skills.sh/vercel-labs](https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices) |
+| 1 | Anthropic Frontend | [skills.sh/anthropics](https://skills.sh/anthropics/skills/frontend-design) |
+| 1 | Agent Browser | [skills.sh/vercel-labs/agent-browser](https://skills.sh/vercel-labs/agent-browser/agent-browser) |
+| 2 | Remotion Video | [skills.sh/remotion-dev](https://skills.sh/remotion-dev/skills/remotion-best-practices) |
+| 2 | AI Development | Anthropic (Claude) > Google > Cursor > OpenAI |
+| 2 | Next.js / SSR / Edge | Vercel (official) |
+| 2 | React | Meta / React Team |
+| 2 | Android | Google (official) |
+| 2 | iOS | Apple (official) |
+| 2 | TypeScript | Microsoft |
+| 2 | Vue | Vue Team (Evan You) |
+
+### External Skills (from skills.sh)
+
+These external skills should be fetched and applied when available:
+
+| Skill | URL | Authority |
+|-------|-----|-----------|
+| Vercel React Best Practices | https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices | Vercel Labs |
+| Web Design Guidelines | https://skills.sh/vercel-labs/agent-skills/web-design-guidelines | Vercel Labs |
+| Remotion Best Practices | https://skills.sh/remotion-dev/skills/remotion-best-practices | Remotion Dev |
+| Anthropic Frontend Design | https://skills.sh/anthropics/skills/frontend-design | Anthropic |
+| Agent Browser | https://skills.sh/vercel-labs/agent-browser/agent-browser | Vercel Labs |
 
 ### Quick Reference
 
 | Category | Technologies | Authority |
 |----------|--------------|-----------|
+| **Claude Code Plugin** | CLAUDE.md, MCP, Three-Session | Anthropic (ALWAYS FIRST) |
+| **External Skills** | Vercel, Anthropic, Remotion | skills.sh |
 | **AI Development** | Claude, Gemini, Cursor, OpenAI | Anthropic, Google, OpenAI |
-| **Frontend (SSR)** | Next.js, Vercel Edge | Vercel |
-| **Frontend (React)** | React 18+ | Meta |
+| **Frontend (SSR)** | Next.js, Vercel Edge | Vercel, Vercel Labs Skills |
+| **Frontend (React)** | React 18+ | Meta, Vercel Labs Skills |
+| **Web Design** | UI/UX, Design Systems | Vercel Labs, Anthropic Skills |
+| **Video** | Remotion | Remotion Dev Skills |
+| **Browser Automation** | Agent Browser | Vercel Labs Skills |
 | **Frontend (Vue)** | Vue 3, Nuxt 3 | Vue Team |
 | **Mobile (Android)** | Jetpack Compose, Kotlin | Google |
 | **Mobile (iOS)** | SwiftUI, Swift | Apple |

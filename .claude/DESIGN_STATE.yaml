@@ -326,6 +326,7 @@ tech_best_practices:
 
   # Available best practice sets (reference catalog)
   # PRIORITY ORDER: Prefer practices from the technology creator/authority
+  # - Claude Code Plugin: ALWAYS FIRST (official Anthropic tooling)
   # - AI: Anthropic (Claude) > Google > Cursor > OpenAI
   # - Next.js/SSR/Edge: Vercel first
   # - Android: Google first
@@ -334,17 +335,169 @@ tech_best_practices:
   # - TypeScript: Microsoft first
   available_practices:
     description: "Tech-specific best practices from authoritative sources"
+
+    # External skills references (from skills.sh and official sources)
+    # These should be fetched/applied when available
+    external_skills:
+      - name: "Claude Code Plugin"
+        url: "https://claude.ai/code"
+        authority: "Anthropic"
+        priority: 0  # HIGHEST PRIORITY - always first
+        description: "Official Claude Code CLI and IDE integration best practices"
+
+      - name: "Vercel React Best Practices"
+        url: "https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices"
+        authority: "Vercel Labs"
+        priority: 1
+        description: "Official Vercel React patterns and conventions"
+
+      - name: "Web Design Guidelines"
+        url: "https://skills.sh/vercel-labs/agent-skills/web-design-guidelines"
+        authority: "Vercel Labs"
+        priority: 1
+        description: "Vercel web design system and UI guidelines"
+
+      - name: "Remotion Best Practices"
+        url: "https://skills.sh/remotion-dev/skills/remotion-best-practices"
+        authority: "Remotion Dev"
+        priority: 2
+        description: "Best practices for programmatic video creation with Remotion"
+
+      - name: "Anthropic Frontend Design"
+        url: "https://skills.sh/anthropics/skills/frontend-design"
+        authority: "Anthropic"
+        priority: 1
+        description: "Anthropic's official frontend design patterns"
+
+      - name: "Agent Browser"
+        url: "https://skills.sh/vercel-labs/agent-browser/agent-browser"
+        authority: "Vercel Labs"
+        priority: 1
+        description: "Browser automation patterns for AI agents"
+
     priority_sources:
+      claude_code: ["Anthropic (Claude Code Plugin)"]  # ALWAYS FIRST
       ai_development: ["Anthropic (Claude)", "Google", "Cursor", "OpenAI"]
-      nextjs_ssr: ["Vercel"]
+      nextjs_ssr: ["Vercel", "Vercel Labs Skills"]
+      web_design: ["Vercel Labs Skills", "Anthropic Skills"]
       android: ["Google"]
       ios: ["Apple"]
-      react: ["Meta/React Team"]
+      react: ["Vercel Labs Skills", "Meta/React Team"]
       typescript: ["Microsoft"]
       vue: ["Vue Team (Evan You)"]
       node: ["Node.js Foundation", "OpenJS"]
+      video: ["Remotion Dev"]
+      browser_automation: ["Vercel Labs Agent Browser"]
 
     catalog:
+      # ============================================================
+      # CLAUDE CODE PLUGIN (PRIORITY 0 - ALWAYS FIRST)
+      # ============================================================
+      claude_code_plugin:
+        name: "Claude Code Plugin Best Practices"
+        category: "ai_tooling"
+        authority: "Anthropic"
+        priority: 0  # HIGHEST - always apply first
+        external_skill: "https://claude.ai/code"
+        patterns:
+          - "Use CLAUDE.md for project-specific instructions"
+          - "Leverage three-session workflow (Architect/Implementer/Reviewer)"
+          - "Use TODO(B) markers for implementation handoffs"
+          - "Apply DESIGN_STATE.yaml as single source of truth"
+          - "Use MCP (Model Context Protocol) for tool integration"
+          - "Implement proper context management with file reading"
+          - "Use TodoWrite for task tracking and progress visibility"
+          - "Apply skeleton code pattern with clear TODOs"
+          - "Leverage parallel tool calls for efficiency"
+          - "Use AskUserQuestion for clarification"
+
+      # ============================================================
+      # VERCEL LABS SKILLS (External - from skills.sh)
+      # ============================================================
+      vercel_react_skill:
+        name: "Vercel React Best Practices (External Skill)"
+        category: "frontend"
+        authority: "Vercel Labs"
+        priority: 1
+        external_skill: "https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices"
+        patterns:
+          - "Use App Router with Server Components by default"
+          - "Apply 'use client' directive only when needed"
+          - "Implement proper data fetching in Server Components"
+          - "Use next/image for optimized images"
+          - "Apply Vercel's recommended folder structure"
+          - "Use Server Actions for mutations"
+          - "Implement proper error boundaries"
+          - "Apply streaming with Suspense"
+
+      vercel_web_design_skill:
+        name: "Vercel Web Design Guidelines (External Skill)"
+        category: "design"
+        authority: "Vercel Labs"
+        priority: 1
+        external_skill: "https://skills.sh/vercel-labs/agent-skills/web-design-guidelines"
+        patterns:
+          - "Follow Vercel Design System principles"
+          - "Use consistent spacing and typography"
+          - "Apply dark mode support properly"
+          - "Implement accessible color contrast"
+          - "Use Geist font family"
+          - "Apply responsive design patterns"
+          - "Implement proper loading states"
+          - "Use motion and transitions appropriately"
+
+      agent_browser_skill:
+        name: "Agent Browser Best Practices (External Skill)"
+        category: "browser_automation"
+        authority: "Vercel Labs"
+        priority: 1
+        external_skill: "https://skills.sh/vercel-labs/agent-browser/agent-browser"
+        patterns:
+          - "Use browser automation for visual testing"
+          - "Implement proper element selectors"
+          - "Handle async page loads correctly"
+          - "Apply screenshot comparison patterns"
+          - "Use headless mode for CI/CD"
+          - "Implement proper wait strategies"
+          - "Handle dynamic content properly"
+
+      # ============================================================
+      # ANTHROPIC SKILLS (External - from skills.sh)
+      # ============================================================
+      anthropic_frontend_skill:
+        name: "Anthropic Frontend Design (External Skill)"
+        category: "frontend"
+        authority: "Anthropic"
+        priority: 1
+        external_skill: "https://skills.sh/anthropics/skills/frontend-design"
+        patterns:
+          - "Apply Anthropic's UI/UX principles"
+          - "Use clean, minimal interface design"
+          - "Implement proper form handling"
+          - "Apply accessible design patterns"
+          - "Use appropriate feedback mechanisms"
+          - "Implement proper error states"
+          - "Design for AI interaction patterns"
+
+      # ============================================================
+      # REMOTION SKILLS (External - from skills.sh)
+      # ============================================================
+      remotion_skill:
+        name: "Remotion Best Practices (External Skill)"
+        category: "video"
+        authority: "Remotion Dev"
+        priority: 2
+        external_skill: "https://skills.sh/remotion-dev/skills/remotion-best-practices"
+        patterns:
+          - "Use composition-based video structure"
+          - "Implement proper frame timing"
+          - "Apply spring animations for smooth motion"
+          - "Use Audio and Video components properly"
+          - "Implement proper asset loading"
+          - "Apply render optimization techniques"
+          - "Use sequences for complex timelines"
+          - "Implement proper TypeScript types"
+
       # ============================================================
       # AI DEVELOPMENT BEST PRACTICES (Priority: Claude > Google > Cursor > OpenAI)
       # ============================================================

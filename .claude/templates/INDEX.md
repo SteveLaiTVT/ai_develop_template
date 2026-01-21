@@ -245,12 +245,32 @@ Q5: Git repository URL? (url | skip)
 - Updates `tech_best_practices.applied_practices` with chosen patterns
 - Integrates practices into skeleton code generation
 
-**Available Practice Categories** (Priority: Creator/Authority First):
+**Priority Order** (Apply in this order):
+
+| Priority | Category | Authority |
+|----------|----------|-----------|
+| **0 (FIRST)** | Claude Code Plugin | Anthropic (ALWAYS FIRST) |
+| 1 | External Skills (skills.sh) | Vercel Labs, Anthropic, Remotion |
+| 2 | AI Development | Anthropic > Google > Cursor > OpenAI |
+| 2 | Other tech-specific | Creator/Authority |
+
+**External Skills** (from skills.sh):
+- Vercel React Best Practices: https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices
+- Web Design Guidelines: https://skills.sh/vercel-labs/agent-skills/web-design-guidelines
+- Anthropic Frontend Design: https://skills.sh/anthropics/skills/frontend-design
+- Agent Browser: https://skills.sh/vercel-labs/agent-browser/agent-browser
+- Remotion Best Practices: https://skills.sh/remotion-dev/skills/remotion-best-practices
+
+**Available Practice Categories**:
 | Category | Technologies | Authority |
 |----------|--------------|-----------|
+| Claude Code Plugin | CLAUDE.md, MCP, Three-Session | Anthropic |
+| Frontend (SSR) | Next.js, Vercel Edge | Vercel, Vercel Labs Skills |
+| Frontend (React) | React 18+ | Meta, Vercel Labs Skills |
+| Web Design | UI/UX, Design Systems | Vercel Labs, Anthropic Skills |
+| Video | Remotion | Remotion Dev Skills |
+| Browser Automation | Agent Browser | Vercel Labs Skills |
 | AI Development | Claude, Gemini, Cursor, OpenAI | Anthropic > Google > Cursor > OpenAI |
-| Frontend (SSR) | Next.js, Vercel Edge | Vercel |
-| Frontend (React) | React 18+ | Meta |
 | Mobile (Android) | Jetpack Compose, Kotlin | Google |
 | Mobile (iOS) | SwiftUI, Swift | Apple |
 | Backend | NestJS, Express, FastAPI, Firebase | Framework teams, Google |
