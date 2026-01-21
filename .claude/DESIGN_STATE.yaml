@@ -386,7 +386,7 @@ tech_best_practices:
       ios: ["Apple"]
       react: ["Vercel Labs Skills", "Meta/React Team"]
       typescript: ["Microsoft"]
-      java: ["Oracle", "Google", "Spring Team (VMware)", "Red Hat", "Oracle Labs"]
+      java: ["Oracle", "Google", "Alibaba", "Spring Team (VMware)", "Red Hat", "Oracle Labs"]
       vue: ["Vue Team (Evan You)"]
       node: ["Node.js Foundation", "OpenJS"]
       video: ["Remotion Dev"]
@@ -881,6 +881,136 @@ tech_best_practices:
           - "Use @Override annotation consistently"
           - "Caught exceptions: never ignore silently"
           - "Javadoc at minimum for public APIs"
+
+      java_alibaba:
+        name: "阿里巴巴 Java 开发手册 (Alibaba Java Coding Guidelines)"
+        category: "language"
+        authority: "Alibaba"
+        priority: 2
+        external_reference: "https://github.com/alibaba/p3c"
+        patterns:
+          # 命名风格
+          - "类名使用 UpperCamelCase，但 DO/BO/DTO/VO/AO/PO 等除外"
+          - "方法名、参数名、变量名使用 lowerCamelCase"
+          - "常量名全部大写，单词间用下划线隔开"
+          - "抽象类命名使用 Abstract 或 Base 开头"
+          - "异常类命名使用 Exception 结尾"
+          - "测试类命名以测试的类名开始，以 Test 结尾"
+          - "POJO 类中布尔类型变量不要加 is 前缀"
+          # OOP 规约
+          - "避免通过对象的引用访问类的静态变量或静态方法"
+          - "所有覆写方法必须加 @Override 注解"
+          - "Object 的 equals 方法容易抛空指针，应使用常量或确定有值的对象来调用"
+          - "所有整型包装类对象值的比较，全部使用 equals 方法"
+          - "浮点数之间的等值判断，基本数据类型不能用 == 比较"
+          - "BigDecimal 的等值比较应使用 compareTo() 而非 equals()"
+          # 集合处理
+          - "ArrayList 的 subList 结果不可强转成 ArrayList"
+          - "使用 Arrays.asList() 把数组转换成集合时，不能使用修改方法"
+          - "不要在 foreach 循环里进行元素的 remove/add 操作"
+          - "使用 entrySet 遍历 Map 而不是 keySet"
+          # 并发处理
+          - "创建线程或线程池时请指定有意义的线程名称"
+          - "线程池不允许使用 Executors 去创建，而是通过 ThreadPoolExecutor"
+          - "SimpleDateFormat 是线程不安全的类，不要定义为 static"
+          - "必须回收自定义的 ThreadLocal 变量"
+          # 控制语句
+          - "switch 块内必须包含 default 语句"
+          - "当 switch 括号内的变量类型为 String 时，必须先进行 null 判断"
+          # 异常日志
+          - "Java 类库中定义的可以通过预检查方式规避的异常，不应该通过 catch 来处理"
+          - "异常不要用来做流程控制、条件控制"
+          - "捕获异常是为了处理它，不要捕获了却什么都不处理"
+          - "应用中不可直接使用日志系统的 API，而应依赖 SLF4J 等日志框架"
+
+      alibaba_dubbo:
+        name: "Dubbo 微服务最佳实践 (阿里巴巴)"
+        category: "backend"
+        authority: "Alibaba (Apache)"
+        priority: 2
+        external_reference: "https://dubbo.apache.org/zh-cn/docs/"
+        patterns:
+          - "服务接口尽量大粒度，每个服务方法应代表一个功能"
+          - "服务接口建议以业务场景为单位划分"
+          - "不建议使用过于抽象的通用接口"
+          - "分包：接口、实现类分离"
+          - "版本号：接口升级时使用不同版本号"
+          - "兼容性：服务增加方法或服务模型增加字段，可向后兼容"
+          - "枚举值：服务接口参数和返回值避免使用枚举"
+          - "序列化：推荐使用 Hessian2、Kryo、FST"
+          - "异常处理：Provider 不应将自定义异常直接抛给 Consumer"
+
+      alibaba_nacos:
+        name: "Nacos 服务发现与配置管理最佳实践"
+        category: "backend"
+        authority: "Alibaba (Apache)"
+        priority: 2
+        external_reference: "https://nacos.io/zh-cn/docs/"
+        patterns:
+          - "使用 Namespace 进行环境隔离 (dev/test/prod)"
+          - "使用 Group 进行项目或业务隔离"
+          - "配置中心：敏感配置使用加密存储"
+          - "服务发现：合理设置心跳间隔和健康检查"
+          - "配置版本管理和回滚"
+          - "配置监听变更自动刷新"
+
+      alibaba_sentinel:
+        name: "Sentinel 流量控制最佳实践"
+        category: "backend"
+        authority: "Alibaba (Apache)"
+        priority: 2
+        external_reference: "https://sentinelguard.io/zh-cn/docs/"
+        patterns:
+          - "定义资源：将需要保护的代码用 Sentinel API 包围"
+          - "流量控制：基于 QPS 或并发线程数"
+          - "熔断降级：慢调用比例、异常比例、异常数"
+          - "热点参数限流：对热点数据进行限流"
+          - "系统自适应保护：根据系统负载动态调整"
+          - "集群限流：分布式系统的全局流控"
+
+      alibaba_seata:
+        name: "Seata 分布式事务最佳实践"
+        category: "backend"
+        authority: "Alibaba (Apache)"
+        priority: 2
+        external_reference: "https://seata.io/zh-cn/docs/"
+        patterns:
+          - "AT 模式：基于本地 ACID 事务的自动补偿"
+          - "TCC 模式：Try-Confirm-Cancel 手动补偿"
+          - "Saga 模式：长事务解决方案"
+          - "XA 模式：强一致性分布式事务"
+          - "选择合适的事务模式根据业务场景"
+          - "合理设置超时时间和重试策略"
+
+      alibaba_druid:
+        name: "Druid 数据库连接池最佳实践"
+        category: "database"
+        authority: "Alibaba"
+        priority: 2
+        external_reference: "https://github.com/alibaba/druid"
+        patterns:
+          - "配置合理的初始连接数和最大连接数"
+          - "启用 SQL 监控和慢查询日志"
+          - "配置 wall 防御 SQL 注入"
+          - "使用 StatFilter 进行统计分析"
+          - "合理配置连接超时和验证查询"
+          - "生产环境关闭 testOnBorrow，使用 testWhileIdle"
+
+      alibaba_arthas:
+        name: "Arthas Java 诊断工具最佳实践"
+        category: "devops"
+        authority: "Alibaba"
+        priority: 2
+        external_reference: "https://arthas.aliyun.com/doc/"
+        patterns:
+          - "dashboard: 查看系统实时数据面板"
+          - "thread: 查看线程堆栈，排查死锁"
+          - "jvm: 查看 JVM 信息"
+          - "sc/sm: 查看类加载信息"
+          - "watch: 观察方法执行数据"
+          - "trace: 方法内部调用路径和耗时"
+          - "stack: 输出方法调用路径"
+          - "tt: 时空隧道，记录方法调用信息"
 
       spring_boot:
         name: "Spring Boot Best Practices (VMware/Pivotal)"
