@@ -143,17 +143,6 @@ project_analysis:
     []
 
 # ============================================================
-# 0.7 Deployment Readiness (Defined by A Session)
-# ============================================================
-deployment:
-  minimum_target: "docker"   # docker | none
-  preferred_target: "vercel" # vercel | cloud_run | aws | none
-  notes:
-    - "Provide Dockerfile/compose for minimal deployment."
-    - "If frontend exists, document Vercel deployment steps."
-    - "List required environment variables for each runtime."
-
-# ============================================================
 # 0.6 Discovery Results (Populated by A Session)
 # ============================================================
 discovery:
@@ -198,6 +187,17 @@ discovery:
     integrations: []             # Existing systems to integrate with
 
   raw_answers: []                # Store original Q&A for reference
+
+# ============================================================
+# 0.7 Deployment Readiness (Defined by A Session)
+# ============================================================
+deployment:
+  minimum_target: "docker"   # docker | none
+  preferred_target: "vercel" # vercel | cloud_run | aws | none
+  notes:
+    - "Provide Dockerfile/compose for minimal deployment."
+    - "If frontend exists, document Vercel deployment steps."
+    - "List required environment variables for each runtime."
 
 # ============================================================
 # 1. Technical Architecture
