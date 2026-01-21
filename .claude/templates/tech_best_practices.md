@@ -293,18 +293,38 @@ export class AuthService {
 
 The full catalog is stored in `DESIGN_STATE.yaml` under `tech_best_practices.available_practices.catalog`.
 
+### Priority Order
+
+**Always prefer practices from the technology creator/authority:**
+
+| Domain | Priority Order |
+|--------|----------------|
+| AI Development | Anthropic (Claude) > Google > Cursor > OpenAI |
+| Next.js / SSR / Edge | Vercel (official) |
+| React | Meta / React Team |
+| Android | Google (official) |
+| iOS | Apple (official) |
+| TypeScript | Microsoft |
+| Vue | Vue Team (Evan You) |
+
 ### Quick Reference
 
-| Category | Technologies |
-|----------|--------------|
-| Backend | NestJS, Express, FastAPI |
-| Frontend | React, Vue, Next.js |
-| Database | PostgreSQL, MongoDB |
-| State | Zustand, Redux Toolkit |
-| Testing | Jest, Vitest |
-| API | RESTful, GraphQL |
-| Security | General security practices |
-| Language | TypeScript |
+| Category | Technologies | Authority |
+|----------|--------------|-----------|
+| **AI Development** | Claude, Gemini, Cursor, OpenAI | Anthropic, Google, OpenAI |
+| **Frontend (SSR)** | Next.js, Vercel Edge | Vercel |
+| **Frontend (React)** | React 18+ | Meta |
+| **Frontend (Vue)** | Vue 3, Nuxt 3 | Vue Team |
+| **Mobile (Android)** | Jetpack Compose, Kotlin | Google |
+| **Mobile (iOS)** | SwiftUI, Swift | Apple |
+| **Backend** | NestJS, Express, FastAPI, Firebase | Framework teams, Google |
+| **Database** | PostgreSQL, MongoDB | Official docs |
+| **State** | Zustand, Redux Toolkit | Library teams |
+| **Testing** | Jest, Vitest, Playwright | Meta, Vitest Team, Microsoft |
+| **Language** | TypeScript, Kotlin, Swift | Microsoft, JetBrains, Apple |
+| **API** | RESTful, GraphQL | GraphQL Foundation |
+| **Security** | General practices | OWASP |
+| **Deployment** | Vercel, Edge Runtime | Vercel |
 
 ---
 

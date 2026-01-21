@@ -245,17 +245,19 @@ Q5: Git repository URL? (url | skip)
 - Updates `tech_best_practices.applied_practices` with chosen patterns
 - Integrates practices into skeleton code generation
 
-**Available Practice Categories**:
-| Category | Technologies |
-|----------|--------------|
-| Backend | NestJS, Express, FastAPI |
-| Frontend | React 18+, Vue 3, Next.js |
-| Database | PostgreSQL, MongoDB |
-| State | Zustand, Redux Toolkit |
-| Testing | Jest, Vitest |
-| API | RESTful, GraphQL |
-| Security | General security practices |
-| Language | TypeScript strict mode |
+**Available Practice Categories** (Priority: Creator/Authority First):
+| Category | Technologies | Authority |
+|----------|--------------|-----------|
+| AI Development | Claude, Gemini, Cursor, OpenAI | Anthropic > Google > Cursor > OpenAI |
+| Frontend (SSR) | Next.js, Vercel Edge | Vercel |
+| Frontend (React) | React 18+ | Meta |
+| Mobile (Android) | Jetpack Compose, Kotlin | Google |
+| Mobile (iOS) | SwiftUI, Swift | Apple |
+| Backend | NestJS, Express, FastAPI, Firebase | Framework teams, Google |
+| Database | PostgreSQL, MongoDB | Official docs |
+| Testing | Jest, Vitest, Playwright | Meta, Microsoft |
+| Language | TypeScript, Kotlin, Swift | Microsoft, Google/JetBrains, Apple |
+| Security | General practices | OWASP |
 
 **User Options**:
 - `"yes"`: Apply all relevant best practices automatically

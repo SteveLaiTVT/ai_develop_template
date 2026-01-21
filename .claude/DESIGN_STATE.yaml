@@ -266,63 +266,327 @@ tech_best_practices:
 
   # Applied practices per technology (populated by A Session)
   applied_practices:
+    # AI development practices (Claude > Google > Cursor > OpenAI)
+    ai: []
+    # Example:
+    # - name: "Claude/Anthropic AI Best Practices"
+    #   authority: "Anthropic"
+    #   patterns:
+    #     - "Use system prompts for consistent behavior"
+    #     - "Implement proper context window management"
+    #   applied: true
+
     # Backend practices
     backend: []
     # Example:
     # - name: "NestJS Best Practices"
+    #   authority: "NestJS Team"
     #   patterns:
     #     - "Use DTOs for input validation"
     #     - "Implement repository pattern"
-    #     - "Use interceptors for logging"
     #   applied: true
 
-    # Frontend practices
+    # Frontend practices (React: Meta, Next.js: Vercel, Vue: Vue Team)
     frontend: []
     # Example:
-    # - name: "React 18+ Best Practices"
+    # - name: "Next.js Best Practices (Vercel Official)"
+    #   authority: "Vercel"
     #   patterns:
-    #     - "Use functional components with hooks"
-    #     - "Implement proper error boundaries"
-    #     - "Use React.lazy for code splitting"
+    #     - "Use App Router (recommended)"
+    #     - "Server Components by default"
+    #   applied: true
+
+    # Mobile practices (Android: Google, iOS: Apple)
+    mobile: []
+    # Example:
+    # - name: "Android Best Practices (Google Official)"
+    #   authority: "Google"
+    #   patterns:
+    #     - "Use Jetpack Compose for modern UI"
+    #     - "Implement MVVM with ViewModel"
     #   applied: true
 
     # Database practices
     database: []
-    # Example:
-    # - name: "PostgreSQL Best Practices"
-    #   patterns:
-    #     - "Use proper indexing strategies"
-    #     - "Implement connection pooling"
-    #     - "Use migrations for schema changes"
-    #   applied: true
 
     # API practices
     api: []
-    # Example:
-    # - name: "RESTful API Best Practices"
-    #   patterns:
-    #     - "Proper HTTP status codes"
-    #     - "Consistent error response format"
-    #     - "API versioning in URL"
-    #   applied: true
 
     # Testing practices
     testing: []
 
-    # DevOps practices
+    # DevOps/Deployment practices (Vercel for Next.js)
     devops: []
 
-    # Security practices
+    # Security practices (OWASP)
     security: []
 
+    # Language practices (TypeScript: Microsoft, Kotlin: Google/JetBrains, Swift: Apple)
+    language: []
+
   # Available best practice sets (reference catalog)
+  # PRIORITY ORDER: Prefer practices from the technology creator/authority
+  # - AI: Anthropic (Claude) > Google > Cursor > OpenAI
+  # - Next.js/SSR/Edge: Vercel first
+  # - Android: Google first
+  # - iOS: Apple first
+  # - React: Meta/React Team first
+  # - TypeScript: Microsoft first
   available_practices:
-    description: "Tech-specific best practices that can be applied"
+    description: "Tech-specific best practices from authoritative sources"
+    priority_sources:
+      ai_development: ["Anthropic (Claude)", "Google", "Cursor", "OpenAI"]
+      nextjs_ssr: ["Vercel"]
+      android: ["Google"]
+      ios: ["Apple"]
+      react: ["Meta/React Team"]
+      typescript: ["Microsoft"]
+      vue: ["Vue Team (Evan You)"]
+      node: ["Node.js Foundation", "OpenJS"]
+
     catalog:
-      # --- Backend Frameworks ---
+      # ============================================================
+      # AI DEVELOPMENT BEST PRACTICES (Priority: Claude > Google > Cursor > OpenAI)
+      # ============================================================
+      claude_ai:
+        name: "Claude/Anthropic AI Best Practices"
+        category: "ai"
+        authority: "Anthropic"
+        priority: 1
+        patterns:
+          - "Use system prompts for consistent behavior"
+          - "Implement proper context window management"
+          - "Use Claude's XML tag format for structured data"
+          - "Leverage tool use (function calling) for actions"
+          - "Apply constitutional AI principles"
+          - "Handle rate limits with exponential backoff"
+          - "Use streaming for long responses"
+          - "Implement proper error handling for API calls"
+          - "Cache responses when appropriate"
+          - "Use Claude's vision capabilities for images"
+
+      google_ai:
+        name: "Google AI/Gemini Best Practices"
+        category: "ai"
+        authority: "Google"
+        priority: 2
+        patterns:
+          - "Use Gemini API with proper authentication"
+          - "Implement multimodal inputs (text, image, video)"
+          - "Use function calling for structured outputs"
+          - "Apply safety settings appropriately"
+          - "Handle quota limits gracefully"
+          - "Use embeddings for semantic search"
+          - "Implement grounding with Google Search"
+
+      cursor_ai:
+        name: "Cursor AI Development Best Practices"
+        category: "ai"
+        authority: "Cursor"
+        priority: 3
+        patterns:
+          - "Use .cursorrules for project-specific AI behavior"
+          - "Leverage codebase indexing for context"
+          - "Apply composer for multi-file changes"
+          - "Use chat for exploration, composer for implementation"
+          - "Define clear coding standards in rules"
+
+      openai_ai:
+        name: "OpenAI/GPT Best Practices"
+        category: "ai"
+        authority: "OpenAI"
+        priority: 4
+        patterns:
+          - "Use GPT-4 for complex reasoning tasks"
+          - "Implement function calling for structured outputs"
+          - "Apply JSON mode for reliable parsing"
+          - "Use assistants API for stateful conversations"
+          - "Implement proper token counting"
+          - "Handle rate limits with retry logic"
+
+      # ============================================================
+      # VERCEL ECOSYSTEM (SSR, Edge, Deployment)
+      # ============================================================
+      nextjs_vercel:
+        name: "Next.js Best Practices (Vercel Official)"
+        category: "frontend"
+        authority: "Vercel"
+        priority: 1
+        patterns:
+          - "Use App Router (recommended over Pages Router)"
+          - "Server Components by default, Client Components when needed"
+          - "Implement proper data fetching patterns (fetch in Server Components)"
+          - "Use next/image for automatic image optimization"
+          - "Use next/font for zero-layout-shift fonts"
+          - "Implement route handlers for API endpoints"
+          - "Use middleware for auth, redirects, A/B testing"
+          - "Apply ISR (Incremental Static Regeneration) for dynamic content"
+          - "Use Server Actions for form mutations"
+          - "Implement proper metadata API for SEO"
+          - "Use parallel routes and intercepting routes"
+          - "Apply streaming with loading.tsx and Suspense"
+
+      vercel_edge:
+        name: "Vercel Edge Runtime Best Practices"
+        category: "deployment"
+        authority: "Vercel"
+        priority: 1
+        patterns:
+          - "Use Edge Runtime for low-latency global responses"
+          - "Implement Edge Middleware for request modification"
+          - "Apply Edge Config for feature flags"
+          - "Use Vercel KV for edge-compatible Redis"
+          - "Implement Vercel Postgres for edge database"
+          - "Use Vercel Blob for file storage"
+          - "Apply proper caching headers"
+          - "Implement ISR with on-demand revalidation"
+
+      vercel_deployment:
+        name: "Vercel Deployment Best Practices"
+        category: "deployment"
+        authority: "Vercel"
+        priority: 1
+        patterns:
+          - "Use preview deployments for PR reviews"
+          - "Implement environment variables properly"
+          - "Use Vercel Analytics for performance insights"
+          - "Apply Speed Insights for Core Web Vitals"
+          - "Implement proper build caching"
+          - "Use monorepo support with Turborepo"
+
+      # ============================================================
+      # GOOGLE/ANDROID ECOSYSTEM
+      # ============================================================
+      android_google:
+        name: "Android Best Practices (Google Official)"
+        category: "mobile"
+        authority: "Google"
+        priority: 1
+        patterns:
+          - "Use Jetpack Compose for modern UI (recommended)"
+          - "Implement MVVM with ViewModel and StateFlow"
+          - "Use Hilt for dependency injection"
+          - "Apply Navigation Component for app navigation"
+          - "Use Room for local database"
+          - "Implement WorkManager for background tasks"
+          - "Use Retrofit + OkHttp for networking"
+          - "Apply Material Design 3 guidelines"
+          - "Implement proper lifecycle handling"
+          - "Use Coroutines and Flow for async operations"
+          - "Apply App Startup library for initialization"
+          - "Use DataStore for preferences (over SharedPreferences)"
+
+      kotlin_google:
+        name: "Kotlin Best Practices (Google/JetBrains)"
+        category: "language"
+        authority: "Google/JetBrains"
+        priority: 1
+        patterns:
+          - "Use data classes for DTOs"
+          - "Apply sealed classes for state management"
+          - "Use extension functions appropriately"
+          - "Implement null safety properly"
+          - "Use coroutines for async operations"
+          - "Apply Flow for reactive streams"
+          - "Use scope functions (let, apply, run, also, with)"
+          - "Implement proper exception handling"
+
+      firebase_google:
+        name: "Firebase Best Practices (Google)"
+        category: "backend"
+        authority: "Google"
+        priority: 1
+        patterns:
+          - "Use Firebase Authentication for auth"
+          - "Implement Firestore with proper data modeling"
+          - "Use Cloud Functions for serverless logic"
+          - "Apply Firebase Security Rules"
+          - "Implement offline persistence"
+          - "Use Firebase Hosting for web apps"
+          - "Apply Analytics for user insights"
+          - "Use Remote Config for feature flags"
+
+      # ============================================================
+      # APPLE/IOS ECOSYSTEM
+      # ============================================================
+      ios_apple:
+        name: "iOS Best Practices (Apple Official)"
+        category: "mobile"
+        authority: "Apple"
+        priority: 1
+        patterns:
+          - "Use SwiftUI for modern UI (recommended)"
+          - "Implement MVVM with @Observable (iOS 17+)"
+          - "Use Swift Concurrency (async/await, actors)"
+          - "Apply NavigationStack for navigation"
+          - "Use SwiftData for persistence (iOS 17+)"
+          - "Implement proper memory management (ARC)"
+          - "Use Combine for reactive programming"
+          - "Apply Human Interface Guidelines"
+          - "Implement proper App lifecycle handling"
+          - "Use URLSession for networking"
+
+      swift_apple:
+        name: "Swift Best Practices (Apple)"
+        category: "language"
+        authority: "Apple"
+        priority: 1
+        patterns:
+          - "Use value types (structs) over reference types when possible"
+          - "Apply protocol-oriented programming"
+          - "Use Swift Concurrency (async/await)"
+          - "Implement proper error handling with Result type"
+          - "Use property wrappers effectively"
+          - "Apply generics for reusable code"
+          - "Use optionals safely with guard and if-let"
+
+      # ============================================================
+      # REACT ECOSYSTEM (Meta/React Team)
+      # ============================================================
+      react_meta:
+        name: "React Best Practices (Meta Official)"
+        category: "frontend"
+        authority: "Meta/React Team"
+        priority: 1
+        patterns:
+          - "Use functional components with hooks"
+          - "Apply React Server Components when using frameworks"
+          - "Use React.memo for expensive renders"
+          - "Implement useCallback/useMemo appropriately"
+          - "Use Error Boundaries for error handling"
+          - "Apply React.lazy + Suspense for code splitting"
+          - "Use custom hooks for reusable logic"
+          - "Implement proper key props for lists"
+          - "Use useTransition for non-urgent updates"
+          - "Apply useDeferredValue for expensive computations"
+
+      # ============================================================
+      # TYPESCRIPT (Microsoft)
+      # ============================================================
+      typescript_microsoft:
+        name: "TypeScript Best Practices (Microsoft)"
+        category: "language"
+        authority: "Microsoft"
+        priority: 1
+        patterns:
+          - "Enable strict mode in tsconfig"
+          - "Avoid any type, use unknown for dynamic data"
+          - "Use discriminated unions for type narrowing"
+          - "Apply utility types (Partial, Pick, Omit, Record)"
+          - "Use branded types for type safety"
+          - "Implement proper generic constraints"
+          - "Use const assertions for literal types"
+          - "Apply satisfies operator for type checking"
+          - "Use declaration files for untyped libraries"
+          - "Implement proper module resolution"
+
+      # ============================================================
+      # BACKEND FRAMEWORKS
+      # ============================================================
       nestjs:
         name: "NestJS Best Practices"
         category: "backend"
+        authority: "NestJS Team"
         patterns:
           - "Modular architecture with feature modules"
           - "Use DTOs with class-validator for input validation"
@@ -336,6 +600,7 @@ tech_best_practices:
       express:
         name: "Express.js Best Practices"
         category: "backend"
+        authority: "OpenJS Foundation"
         patterns:
           - "Middleware-based architecture"
           - "Express Router for route organization"
@@ -348,6 +613,7 @@ tech_best_practices:
       fastapi:
         name: "FastAPI Best Practices"
         category: "backend"
+        authority: "Tiangolo"
         patterns:
           - "Pydantic models for validation"
           - "Dependency injection pattern"
@@ -356,49 +622,42 @@ tech_best_practices:
           - "SQLAlchemy with async support"
           - "Alembic for migrations"
 
-      # --- Frontend Frameworks ---
-      react:
-        name: "React 18+ Best Practices"
-        category: "frontend"
-        patterns:
-          - "Functional components with hooks"
-          - "React.memo for performance optimization"
-          - "useCallback/useMemo for expensive operations"
-          - "Error boundaries for error handling"
-          - "React.lazy + Suspense for code splitting"
-          - "Custom hooks for reusable logic"
-          - "Context API for global state (small apps)"
-          - "Prop drilling avoidance patterns"
-
+      # ============================================================
+      # VUE ECOSYSTEM
+      # ============================================================
       vue:
         name: "Vue 3 Best Practices"
         category: "frontend"
+        authority: "Vue Team (Evan You)"
         patterns:
-          - "Composition API with setup syntax"
+          - "Composition API with script setup"
           - "Composables for reusable logic"
           - "Provide/Inject for dependency injection"
-          - "Pinia for state management"
+          - "Pinia for state management (official)"
           - "defineProps/defineEmits for type safety"
           - "Async components for lazy loading"
           - "Teleport for portal rendering"
+          - "VueUse for common composables"
 
-      nextjs:
-        name: "Next.js Best Practices"
+      nuxt:
+        name: "Nuxt 3 Best Practices"
         category: "frontend"
+        authority: "Nuxt Team"
         patterns:
-          - "App Router (recommended)"
-          - "Server Components by default"
-          - "Use Client Components sparingly"
-          - "Image optimization with next/image"
-          - "Font optimization with next/font"
-          - "API Routes for backend logic"
-          - "Middleware for auth/redirects"
-          - "ISR for static content"
+          - "Auto-imports for components and composables"
+          - "Use useFetch for data fetching"
+          - "Server routes for API endpoints"
+          - "Nitro server for edge deployment"
+          - "Use Nuxt modules for common features"
+          - "Apply proper SEO with useHead"
 
-      # --- Databases ---
+      # ============================================================
+      # DATABASES
+      # ============================================================
       postgresql:
         name: "PostgreSQL Best Practices"
         category: "database"
+        authority: "PostgreSQL Global Development Group"
         patterns:
           - "Proper indexing (B-tree, GIN, GiST)"
           - "Connection pooling (PgBouncer)"
@@ -411,6 +670,7 @@ tech_best_practices:
       mongodb:
         name: "MongoDB Best Practices"
         category: "database"
+        authority: "MongoDB Inc."
         patterns:
           - "Schema design with embedding vs referencing"
           - "Proper indexing strategies"
@@ -419,10 +679,13 @@ tech_best_practices:
           - "Sharding for horizontal scaling"
           - "Mongoose schemas with validation"
 
-      # --- State Management ---
+      # ============================================================
+      # STATE MANAGEMENT
+      # ============================================================
       zustand:
         name: "Zustand Best Practices"
         category: "state"
+        authority: "pmndrs (Poimandres)"
         patterns:
           - "Slice pattern for large stores"
           - "Persist middleware for local storage"
@@ -433,6 +696,7 @@ tech_best_practices:
       redux:
         name: "Redux Toolkit Best Practices"
         category: "state"
+        authority: "Redux Team"
         patterns:
           - "Use createSlice for reducers"
           - "RTK Query for data fetching"
@@ -440,10 +704,13 @@ tech_best_practices:
           - "Normalized state shape"
           - "Redux DevTools integration"
 
-      # --- Testing ---
+      # ============================================================
+      # TESTING
+      # ============================================================
       jest:
         name: "Jest Testing Best Practices"
         category: "testing"
+        authority: "Meta"
         patterns:
           - "Arrange-Act-Assert pattern"
           - "Mock external dependencies"
@@ -454,13 +721,28 @@ tech_best_practices:
       vitest:
         name: "Vitest Testing Best Practices"
         category: "testing"
+        authority: "Vitest Team"
         patterns:
           - "Fast native ESM support"
           - "In-source testing when appropriate"
           - "Concurrent test execution"
           - "Component testing with @testing-library"
 
-      # --- API Design ---
+      playwright:
+        name: "Playwright E2E Best Practices"
+        category: "testing"
+        authority: "Microsoft"
+        patterns:
+          - "Use page object model for maintainability"
+          - "Implement proper locator strategies"
+          - "Use test fixtures for setup/teardown"
+          - "Apply visual comparison testing"
+          - "Use trace viewer for debugging"
+          - "Implement parallel test execution"
+
+      # ============================================================
+      # API DESIGN
+      # ============================================================
       restful:
         name: "RESTful API Best Practices"
         category: "api"
@@ -476,6 +758,7 @@ tech_best_practices:
       graphql:
         name: "GraphQL Best Practices"
         category: "api"
+        authority: "GraphQL Foundation"
         patterns:
           - "Schema-first design"
           - "DataLoader for N+1 problem"
@@ -484,10 +767,13 @@ tech_best_practices:
           - "Caching strategies"
           - "Query complexity limits"
 
-      # --- Security ---
+      # ============================================================
+      # SECURITY
+      # ============================================================
       security_general:
         name: "General Security Best Practices"
         category: "security"
+        authority: "OWASP"
         patterns:
           - "Input validation and sanitization"
           - "Parameterized queries (SQL injection prevention)"
@@ -497,19 +783,6 @@ tech_best_practices:
           - "Content Security Policy headers"
           - "Rate limiting"
           - "Dependency vulnerability scanning"
-
-      # --- TypeScript ---
-      typescript:
-        name: "TypeScript Best Practices"
-        category: "language"
-        patterns:
-          - "Strict mode enabled"
-          - "Avoid any type"
-          - "Use unknown for dynamic data"
-          - "Discriminated unions for state"
-          - "Branded types for type safety"
-          - "Utility types (Partial, Pick, Omit)"
-          - "Declaration files for untyped libs"
 
 # ============================================================
 # 2. Business Modules
