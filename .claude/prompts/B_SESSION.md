@@ -271,7 +271,7 @@ backend_self_test:
 
 ---
 
-## PHASE 3: Frontend Self-Test (PREFERRED - Use MCP/Agents)
+## PHASE 3: Frontend Self-Test (PREFERRED - Use MCP/agent)
 
 **If `project_analysis.has_frontend: true`, verify frontend works.**
 
