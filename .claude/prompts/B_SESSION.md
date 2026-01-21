@@ -14,9 +14,11 @@ You are the project's **implementer**. You fill in the TODO markers provided by 
 2. **Follow Constraints** - Strictly follow `DESIGN_STATE.yaml` constraints
 3. **Document** - Add comments for complex logic
 4. **Self-Test** - Actually run the code and verify it works (CRITICAL)
-5. **Environment Check** - Pause and ask user if env vars are missing
-6. **Contract Alignment** - Ensure backend DTOs/response schemas match documented API contracts
-7. **Unit Tests** - Write unit tests for critical business logic (optional for early iterations)
+5. **Mock Data Testing** - Use mock data for self-testing, document reproduction data for exceptions
+6. **Environment Check** - Pause and ask user if env vars are missing
+7. **Contract Alignment** - Ensure backend DTOs/response schemas match documented API contracts
+8. **API Request Export** - Before C session, export API requests to Postman/Apifox/shell scripts
+9. **Unit Tests** - Write unit tests for critical business logic (optional for early iterations)
 
 ## Progressive Testing Philosophy
 
@@ -61,6 +63,205 @@ E2E Tests:              Skip          Optional      Required
 - E2E tests at project start = time wasted on changing requirements
 - Self-test + unit tests catch 90% of bugs
 - Add E2E when features stabilize
+
+---
+
+## Mock Data Testing Standards
+
+**CRITICAL**: All self-tests MUST use mock data. This ensures reproducible testing and helps users quickly understand API behavior.
+
+### Mock Data Requirements
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ MOCK DATA TESTING STANDARDS                                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│ 1. MOCK DATA FILES                                               │
+│    Location: tests/mock-data/ or __mocks__/                      │
+│    Format: JSON files organized by module                        │
+│    Naming: {module}.{scenario}.json                              │
+│    Example: auth.register-success.json                           │
+│             auth.register-duplicate-email.json                   │
+│                                                                  │
+│ 2. SCENARIO COVERAGE                                             │
+│    ✓ Happy path (valid input, expected output)                   │
+│    ✓ Edge cases (boundary values, empty fields)                  │
+│    ✓ Error cases (invalid input, missing required fields)        │
+│    ✓ Exception scenarios (server errors, timeout simulation)     │
+│                                                                  │
+│ 3. MOCK DATA STRUCTURE                                           │
+│    {                                                             │
+│      "scenario": "register-success",                             │
+│      "description": "Valid user registration",                   │
+│      "request": { ... },                                         │
+│      "expectedResponse": { ... },                                │
+│      "expectedStatusCode": 201                                   │
+│    }                                                             │
+│                                                                  │
+│ 4. EXCEPTION REPRODUCTION DATA                                   │
+│    When an exception occurs during testing:                      │
+│    - Create a mock data file that reproduces the exception       │
+│    - Document the exact steps to reproduce                       │
+│    - Include the error response for verification                 │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Mock Data File Structure
+
+Create mock data files in `tests/mock-data/` directory:
+
+```
+tests/
+└── mock-data/
+    ├── auth/
+    │   ├── register-success.json
+    │   ├── register-duplicate-email.json
+    │   ├── register-invalid-password.json
+    │   ├── login-success.json
+    │   ├── login-wrong-password.json
+    │   └── login-user-not-found.json
+    ├── user/
+    │   ├── get-profile-success.json
+    │   └── update-profile-success.json
+    └── README.md
+```
+
+### Mock Data JSON Template
+
+```json
+{
+  "scenario": "register-success",
+  "description": "Valid user registration with email and password",
+  "module": "auth",
+  "endpoint": "POST /api/v1/auth/register",
+
+  "request": {
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "email": "test@example.com",
+      "password": "SecurePassword123!",
+      "name": "Test User"
+    }
+  },
+
+  "expectedResponse": {
+    "statusCode": 201,
+    "body": {
+      "success": true,
+      "data": {
+        "user": {
+          "id": "{{uuid}}",
+          "email": "test@example.com",
+          "name": "Test User"
+        },
+        "accessToken": "{{jwt}}",
+        "refreshToken": "{{jwt}}"
+      }
+    }
+  },
+
+  "notes": "Use this as the primary test case for registration flow"
+}
+```
+
+### Exception Reproduction Data
+
+**When you encounter an exception during self-test, you MUST create reproduction data:**
+
+```json
+{
+  "scenario": "register-duplicate-email-exception",
+  "description": "Registration fails when email already exists",
+  "module": "auth",
+  "endpoint": "POST /api/v1/auth/register",
+  "type": "exception",
+
+  "preconditions": [
+    "User with email 'existing@example.com' already exists in database"
+  ],
+
+  "setupSteps": [
+    "1. Run: curl -X POST http://localhost:3000/api/v1/auth/register -H 'Content-Type: application/json' -d '{\"email\": \"existing@example.com\", \"password\": \"Test123!\"}'",
+    "2. Verify user created successfully"
+  ],
+
+  "request": {
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "email": "existing@example.com",
+      "password": "AnotherPassword123!"
+    }
+  },
+
+  "expectedResponse": {
+    "statusCode": 409,
+    "body": {
+      "success": false,
+      "error": {
+        "code": "AUTH_002",
+        "message": "Email already registered",
+        "details": {
+          "field": "email",
+          "value": "existing@example.com"
+        }
+      }
+    }
+  },
+
+  "actualResponse": {
+    "statusCode": 409,
+    "body": {
+      "success": false,
+      "error": {
+        "code": "AUTH_002",
+        "message": "Email already registered"
+      }
+    }
+  },
+
+  "reproductionCommand": "curl -X POST http://localhost:3000/api/v1/auth/register -H 'Content-Type: application/json' -d '{\"email\": \"existing@example.com\", \"password\": \"AnotherPassword123!\"}'",
+
+  "notes": "This exception is expected behavior. Verify error response format matches API contract."
+}
+```
+
+### Code Standard: Mock Data Usage
+
+```typescript
+// ✅ GOOD: Use mock data from files
+import registerSuccessMock from '../mock-data/auth/register-success.json';
+import registerDuplicateMock from '../mock-data/auth/register-duplicate-email.json';
+
+describe('AuthService', () => {
+  it('should register user successfully', async () => {
+    const result = await authService.register(registerSuccessMock.request.body);
+    expect(result.statusCode).toBe(registerSuccessMock.expectedResponse.statusCode);
+  });
+
+  it('should reject duplicate email', async () => {
+    // Setup: Create first user
+    await authService.register(registerDuplicateMock.request.body);
+
+    // Test: Try to register again
+    await expect(authService.register(registerDuplicateMock.request.body))
+      .rejects.toThrow('Email already registered');
+  });
+});
+
+// ❌ BAD: Hardcoded test data scattered everywhere
+it('should register user', async () => {
+  const result = await authService.register({
+    email: 'random@test.com',  // Magic values!
+    password: 'test123'        // No documentation!
+  });
+});
+```
 
 ## The Human Developer Workflow
 
@@ -428,6 +629,425 @@ Task: TASK-001
 Design State: v0.2.0
 EOF
 )"
+```
+
+---
+
+## PHASE 4.5: API Request Export (CRITICAL - Before C Session)
+
+**IMPORTANT**: Before handoff to C Session, you MUST export all tested API requests for user verification.
+
+This enables users to:
+- Quickly test backend APIs themselves
+- Provide feedback on API behavior
+- Verify responses match their expectations
+
+### Export Formats (Choose One or More)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ API REQUEST EXPORT OPTIONS                                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│ Option A: SHELL SCRIPTS (Recommended - Always Create)            │
+│   Location: tests/http-requests/                                 │
+│   Format: .sh files with curl commands                           │
+│   Advantage: No tools required, runs anywhere                    │
+│                                                                  │
+│ Option B: POSTMAN COLLECTION                                     │
+│   Location: tests/postman/                                       │
+│   Format: collection.json + environment.json                     │
+│   Advantage: GUI, test scripts, environment variables            │
+│                                                                  │
+│ Option C: APIFOX COLLECTION                                      │
+│   Location: tests/apifox/                                        │
+│   Format: apifox-collection.json                                 │
+│   Advantage: Chinese localization, auto docs                     │
+│                                                                  │
+│ Option D: HTTP FILES (VS Code REST Client)                       │
+│   Location: tests/http-requests/                                 │
+│   Format: .http files                                            │
+│   Advantage: IDE integration, inline results                     │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Shell Script Format (REQUIRED)
+
+Create `tests/http-requests/` directory with organized shell scripts:
+
+```
+tests/
+└── http-requests/
+    ├── README.md                    # Usage instructions
+    ├── env.sh                       # Environment variables
+    ├── auth/
+    │   ├── 01-register.sh           # Register new user
+    │   ├── 02-login.sh              # Login and get token
+    │   ├── 03-refresh-token.sh      # Refresh access token
+    │   └── 04-logout.sh             # Logout user
+    ├── user/
+    │   ├── 01-get-profile.sh        # Get user profile
+    │   └── 02-update-profile.sh     # Update user profile
+    └── run-all.sh                   # Run all requests in sequence
+```
+
+### Shell Script Template
+
+**env.sh** - Environment variables:
+```bash
+#!/bin/bash
+# API Request Environment Variables
+# Usage: source env.sh
+
+export BASE_URL="http://localhost:3000"
+export API_VERSION="v1"
+export API_URL="${BASE_URL}/api/${API_VERSION}"
+
+# Token storage (updated by login script)
+export ACCESS_TOKEN=""
+export REFRESH_TOKEN=""
+
+# Test data
+export TEST_EMAIL="test@example.com"
+export TEST_PASSWORD="SecurePassword123!"
+```
+
+**auth/01-register.sh** - Registration request:
+```bash
+#!/bin/bash
+# Register a new user
+# Usage: ./01-register.sh [email] [password]
+
+source "$(dirname "$0")/../env.sh"
+
+EMAIL="${1:-$TEST_EMAIL}"
+PASSWORD="${2:-$TEST_PASSWORD}"
+
+echo "=== Register User ==="
+echo "Endpoint: POST ${API_URL}/auth/register"
+echo "Email: ${EMAIL}"
+echo ""
+
+RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${API_URL}/auth/register" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"email\": \"${EMAIL}\",
+    \"password\": \"${PASSWORD}\"
+  }")
+
+# Extract body and status code
+HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+BODY=$(echo "$RESPONSE" | sed '$d')
+
+echo "Status Code: ${HTTP_CODE}"
+echo "Response:"
+echo "$BODY" | jq '.' 2>/dev/null || echo "$BODY"
+
+# Verify expected status
+if [ "$HTTP_CODE" -eq 201 ]; then
+  echo ""
+  echo "✅ SUCCESS: User registered"
+else
+  echo ""
+  echo "❌ FAILED: Expected 201, got ${HTTP_CODE}"
+fi
+```
+
+**auth/02-login.sh** - Login and store token:
+```bash
+#!/bin/bash
+# Login and store access token
+# Usage: ./02-login.sh [email] [password]
+
+source "$(dirname "$0")/../env.sh"
+
+EMAIL="${1:-$TEST_EMAIL}"
+PASSWORD="${2:-$TEST_PASSWORD}"
+
+echo "=== Login User ==="
+echo "Endpoint: POST ${API_URL}/auth/login"
+echo "Email: ${EMAIL}"
+echo ""
+
+RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${API_URL}/auth/login" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"email\": \"${EMAIL}\",
+    \"password\": \"${PASSWORD}\"
+  }")
+
+HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+BODY=$(echo "$RESPONSE" | sed '$d')
+
+echo "Status Code: ${HTTP_CODE}"
+echo "Response:"
+echo "$BODY" | jq '.' 2>/dev/null || echo "$BODY"
+
+if [ "$HTTP_CODE" -eq 200 ]; then
+  # Extract and save tokens
+  ACCESS_TOKEN=$(echo "$BODY" | jq -r '.data.accessToken // .accessToken // empty')
+  REFRESH_TOKEN=$(echo "$BODY" | jq -r '.data.refreshToken // .refreshToken // empty')
+
+  if [ -n "$ACCESS_TOKEN" ]; then
+    # Update env.sh with new tokens
+    sed -i "s|^export ACCESS_TOKEN=.*|export ACCESS_TOKEN=\"${ACCESS_TOKEN}\"|" "$(dirname "$0")/../env.sh"
+    sed -i "s|^export REFRESH_TOKEN=.*|export REFRESH_TOKEN=\"${REFRESH_TOKEN}\"|" "$(dirname "$0")/../env.sh"
+    echo ""
+    echo "✅ SUCCESS: Logged in, tokens saved to env.sh"
+  fi
+else
+  echo ""
+  echo "❌ FAILED: Expected 200, got ${HTTP_CODE}"
+fi
+```
+
+### Postman Collection Template
+
+Create `tests/postman/collection.json`:
+
+```json
+{
+  "info": {
+    "name": "{{project_name}} API",
+    "_postman_id": "{{uuid}}",
+    "description": "API requests for {{project_name}}",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/v1"
+    },
+    {
+      "key": "access_token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"SecurePassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Response has success: true', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"SecurePassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.accessToken) {",
+                  "    pm.collectionVariables.set('access_token', jsonData.data.accessToken);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+### HTTP File Format (VS Code REST Client)
+
+Create `tests/http-requests/auth.http`:
+
+```http
+### Environment Variables
+@baseUrl = http://localhost:3000/api/v1
+@contentType = application/json
+
+### Register User
+# @name register
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "password": "SecurePassword123!"
+}
+
+### Login User
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "password": "SecurePassword123!"
+}
+
+### Get Profile (requires login first)
+@accessToken = {{login.response.body.data.accessToken}}
+
+GET {{baseUrl}}/users/profile
+Authorization: Bearer {{accessToken}}
+```
+
+### Export Checklist (Required Before C Session)
+
+```yaml
+api_request_export:
+  shell_scripts:
+    created: true
+    location: "tests/http-requests/"
+    files:
+      - "env.sh"
+      - "auth/01-register.sh"
+      - "auth/02-login.sh"
+    tested: true
+    notes: "All scripts executable and working"
+
+  postman: # Optional
+    created: true
+    location: "tests/postman/collection.json"
+    environment: "tests/postman/environment.json"
+
+  http_files: # Optional
+    created: true
+    location: "tests/http-requests/*.http"
+
+  readme:
+    created: true
+    includes:
+      - "Setup instructions"
+      - "Environment configuration"
+      - "Execution order"
+      - "Expected results"
+```
+
+### README Template for API Requests
+
+Create `tests/http-requests/README.md`:
+
+```markdown
+# API Request Tests
+
+Quick test scripts for verifying API endpoints.
+
+## Prerequisites
+
+- bash
+- curl
+- jq (for JSON formatting)
+
+## Setup
+
+1. Start the backend server:
+   ```bash
+   cd apps/backend && npm run start:dev
+   ```
+
+2. Configure environment:
+   ```bash
+   cd tests/http-requests
+   source env.sh
+   ```
+
+## Running Tests
+
+### Individual Requests
+
+```bash
+# Register a new user
+./auth/01-register.sh
+
+# Login (stores token in env.sh)
+./auth/02-login.sh
+
+# Get profile (uses stored token)
+./user/01-get-profile.sh
+```
+
+### Run All in Sequence
+
+```bash
+./run-all.sh
+```
+
+## Test Data
+
+| Field    | Value                  |
+|----------|------------------------|
+| Email    | test@example.com       |
+| Password | SecurePassword123!     |
+
+## Expected Results
+
+| Endpoint               | Method | Expected Status |
+|------------------------|--------|-----------------|
+| /auth/register         | POST   | 201             |
+| /auth/login            | POST   | 200             |
+| /auth/refresh          | POST   | 200             |
+| /users/profile         | GET    | 200             |
+
+## Troubleshooting
+
+- **401 Unauthorized**: Run login script first to get fresh token
+- **500 Server Error**: Check backend logs
+- **Connection refused**: Ensure backend is running
 ```
 
 ---
@@ -847,14 +1467,18 @@ B Session exits bugfix mode when:
 │  Fill TODOs + Commit WIP                                         │
 │     │                                                            │
 │     ▼                                                            │
-│  PHASE 2: Backend Self-Test                                      │
-│     │    (run server, test APIs)                                 │
+│  PHASE 2: Backend Self-Test (with Mock Data)                     │
+│     │    (run server, test APIs, create exception repro data)    │
 │     ▼                                                            │
 │  PHASE 3: Frontend Self-Test                                     │
 │     │    (MCP/agent visual test)                                 │
 │     ▼                                                            │
 │  PHASE 4: Commit Working Code                                    │
 │     │                                                            │
+│     ▼                                                            │
+│  PHASE 4.5: Export API Requests ◄─── CRITICAL                    │
+│     │    (shell scripts / Postman / Apifox / .http files)        │
+│     │    (enables user to test backend quickly)                  │
 │     ▼                                                            │
 │  PHASE 5: Create Pull Request                                    │
 │     │    (push + gh pr create)                                   │
@@ -1122,10 +1746,28 @@ known_issues:
 - [ ] Sensitive operations logged
 - [ ] Error handling complete
 
+**Mock Data Testing (Required)**:
+- [ ] Mock data files created in `tests/mock-data/`
+- [ ] Happy path scenarios covered
+- [ ] Error/exception scenarios covered
+- [ ] Exception reproduction data documented
+- [ ] Mock data JSON follows standard template
+
 **Self-Test (Required)**:
 - [ ] Backend: Server starts, endpoints respond correctly
 - [ ] Frontend: Build succeeds, main page loads (or delegated to external agent)
 - [ ] Self-test results documented in commit message
+- [ ] All tests use mock data from `tests/mock-data/`
+
+**API Request Export (Required Before C Session)**:
+- [ ] Shell scripts created in `tests/http-requests/`
+- [ ] `env.sh` with environment variables
+- [ ] Individual request scripts (numbered, organized by module)
+- [ ] `README.md` with usage instructions
+- [ ] All scripts tested and working
+- [ ] (Optional) Postman collection exported
+- [ ] (Optional) Apifox collection exported
+- [ ] (Optional) .http files for VS Code REST Client
 
 **Unit Tests (Recommended)**:
 - [ ] Critical security logic tested (password hashing, tokens)
@@ -1136,3 +1778,4 @@ known_issues:
 - [ ] Acceptance criteria self-verified
 - [ ] Implementation report complete
 - [ ] Git commit with proper message and self-test results
+- [ ] API request README updated with new endpoints
