@@ -272,6 +272,7 @@ Q5: Git repository URL? (url | skip)
 | Browser Automation | Agent Browser | Vercel Labs Skills |
 | AI Development | Claude, Gemini, Cursor, OpenAI | Anthropic > Google > Cursor > OpenAI |
 | Mobile (Android) | Jetpack Compose, Kotlin | Google |
+| Mobile (Flutter) | Flutter, Dart | Google |
 | Mobile (iOS) | SwiftUI, Swift | Apple |
 | Java Ecosystem | Java, Spring Boot, Quarkus, Micronaut | Oracle > Google > Spring Team |
 | Backend | NestJS, Express, FastAPI, Firebase | Framework teams, Google |

@@ -381,6 +381,8 @@ tech_best_practices:
       nextjs_ssr: ["Vercel", "Vercel Labs Skills"]
       web_design: ["Vercel Labs Skills", "Anthropic Skills"]
       android: ["Google"]
+      flutter: ["Google"]
+      dart: ["Google"]
       ios: ["Apple"]
       react: ["Vercel Labs Skills", "Meta/React Team"]
       typescript: ["Microsoft"]
@@ -659,6 +661,65 @@ tech_best_practices:
           - "Use Firebase Hosting for web apps"
           - "Apply Analytics for user insights"
           - "Use Remote Config for feature flags"
+
+      # ============================================================
+      # FLUTTER ECOSYSTEM (Google)
+      # ============================================================
+      flutter_google:
+        name: "Flutter Best Practices (Google Official)"
+        category: "mobile"
+        authority: "Google"
+        priority: 1
+        external_reference: "https://docs.flutter.dev/perf/best-practices"
+        patterns:
+          - "Use StatelessWidget when possible for performance"
+          - "Apply const constructors for immutable widgets"
+          - "Use const keyword for compile-time constants"
+          - "Implement proper state management (Provider, Riverpod, Bloc)"
+          - "Apply widget composition over inheritance"
+          - "Use ListView.builder for long lists"
+          - "Implement proper separation of UI and business logic"
+          - "Use ThemeData for consistent styling"
+          - "Apply proper navigation with Navigator 2.0 or GoRouter"
+          - "Use async/await with FutureBuilder/StreamBuilder"
+          - "Implement proper error handling with try-catch"
+          - "Apply golden tests for widget testing"
+          - "Use integration tests for full app testing"
+
+      flutter_state:
+        name: "Flutter State Management Best Practices"
+        category: "state"
+        authority: "Google / Community"
+        priority: 1
+        patterns:
+          - "Provider: Simple dependency injection and state"
+          - "Riverpod: Type-safe, testable state management"
+          - "Bloc/Cubit: Event-driven state with clear separation"
+          - "GetX: Simple reactive state (use carefully)"
+          - "Avoid setState in large apps"
+          - "Use ChangeNotifier for simple cases"
+          - "Apply proper dispose() for resources"
+          - "Use select() for granular rebuilds"
+
+      dart_google:
+        name: "Dart Best Practices (Google Official)"
+        category: "language"
+        authority: "Google"
+        priority: 1
+        external_reference: "https://dart.dev/effective-dart"
+        patterns:
+          - "Follow Effective Dart style guide"
+          - "Use lowerCamelCase for variables and functions"
+          - "Use UpperCamelCase for classes and types"
+          - "Prefer final over var when possible"
+          - "Use late for lazy initialization"
+          - "Apply null safety properly (? and !)"
+          - "Use extension methods for utility functions"
+          - "Apply mixins for code reuse"
+          - "Use factory constructors appropriately"
+          - "Implement equality with == and hashCode"
+          - "Use async/await over raw Futures"
+          - "Apply proper error handling with Result pattern"
 
       # ============================================================
       # APPLE/IOS ECOSYSTEM

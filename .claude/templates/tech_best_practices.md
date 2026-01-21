@@ -308,6 +308,7 @@ The full catalog is stored in `DESIGN_STATE.yaml` under `tech_best_practices.ava
 | 2 | Next.js / SSR / Edge | Vercel (official) |
 | 2 | React | Meta / React Team |
 | 2 | Android | Google (official) |
+| 2 | Flutter/Dart | Google (official) |
 | 2 | iOS | Apple (official) |
 | 2 | Java | Oracle > Google > Spring Team (VMware) |
 | 2 | TypeScript | Microsoft |
@@ -339,6 +340,7 @@ These external skills should be fetched and applied when available:
 | **Browser Automation** | Agent Browser | Vercel Labs Skills |
 | **Frontend (Vue)** | Vue 3, Nuxt 3 | Vue Team |
 | **Mobile (Android)** | Jetpack Compose, Kotlin | Google |
+| **Mobile (Flutter)** | Flutter, Dart | Google |
 | **Mobile (iOS)** | SwiftUI, Swift | Apple |
 | **Java Ecosystem** | Java, Spring Boot, Quarkus, Micronaut | Oracle > Google > Spring Team |
 | **Backend** | NestJS, Express, FastAPI, Firebase | Framework teams, Google |
