@@ -12,6 +12,7 @@ This document describes all templates used in the AI-assisted development workfl
 | **Session Start** | `session_start.md` | System | All Sessions | Display workflow state on start |
 | **Discovery Questions** | `discovery_questions.md` | A Session | User | Project discovery interview |
 | **Tech Best Practices** | `tech_best_practices.md` | A Session | All | Apply industry best practices (NEW) |
+| **Java Backend** | `java_backend_best_practices.md` | A Session | B Session | Java + OpenAPI + Flyway guide |
 | Task Handoff | `task_handoff.md` | A Session | B Session | Assign implementation tasks |
 | Implementation Report | `implementation_report.md` | B Session | C Session | Report completed work |
 | Review Report | `review_report.md` | C Session | A Session | Code review results |
@@ -275,7 +276,7 @@ Q5: Git repository URL? (url | skip)
 | Mobile (Android) | Jetpack Compose, Kotlin | Google |
 | Mobile (Flutter) | Flutter, Dart | Google |
 | Mobile (iOS) | SwiftUI, Swift | Apple |
-| Java Ecosystem | Java, Spring Boot, Dubbo, Nacos, Sentinel | Oracle > Google > Alibaba > Spring |
+| Java Ecosystem | Java, Spring Boot, OpenAPI, Flyway | Oracle > Google > Alibaba > Spring |
 | Kotlin Backend | Kotlin + Spring Boot, Ktor | Spring Team / JetBrains |
 | Backend | NestJS, Express, FastAPI, Firebase | Framework teams, Google |
 | Database | PostgreSQL, MongoDB | Official docs |
@@ -296,6 +297,65 @@ Q5: Git repository URL? (url | skip)
 **Commands**:
 - "Apply best practices" - Re-apply for current stack
 - "Show applied practices" - Display what's applied
+
+---
+
+### 0.7 Java Backend Best Practices (`java_backend_best_practices.md`) - NEW
+
+**Purpose**: Comprehensive guide for Java backend development with OpenAPI and Flyway
+
+**When to Use**: When user selects Java/Spring Boot as their backend stack
+
+**Key Components**:
+
+| Component | Purpose |
+|-----------|---------|
+| **Spring Boot 3.x** | Application framework |
+| **Springdoc OpenAPI** | API documentation (Swagger UI) |
+| **Flyway** | Database version control & migrations |
+| **Spring Data JPA** | Data access layer |
+
+**OpenAPI Features**:
+- Swagger UI at `/swagger-ui.html`
+- OpenAPI JSON/YAML at `/api-docs`
+- JWT Bearer authentication configured
+- Request/response schema documentation
+- Bean Validation integration
+
+**Flyway Features**:
+- SQL-based migrations in `src/main/resources/db/migration/`
+- Naming: `V{version}__{description}.sql`
+- JPA ddl-auto set to `validate` (Flyway manages schema)
+- Repeatable migrations with `R__` prefix
+
+**Project Structure**:
+```
+apps/backend/
+├── src/main/java/com/example/projectname/
+│   ├── config/OpenApiConfig.java
+│   ├── controller/v1/
+│   ├── service/
+│   ├── repository/
+│   ├── entity/
+│   ├── dto/{request,response}/
+│   └── exception/
+└── src/main/resources/
+    ├── application.yml
+    └── db/migration/
+        ├── V1__create_users_table.sql
+        └── V2__add_user_roles.sql
+```
+
+**Spring Initializr Dependencies**:
+- Spring Web
+- Spring Data JPA
+- Spring Security
+- Validation
+- PostgreSQL Driver
+- Flyway Migration
+- Lombok
+
+See full guide at `.claude/templates/java_backend_best_practices.md`.
 
 ---
 

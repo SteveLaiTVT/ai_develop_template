@@ -1127,6 +1127,76 @@ tech_best_practices:
           - "Implement proper configuration injection"
 
       # ============================================================
+      # JAVA OPENAPI INTEGRATION
+      # ============================================================
+      java_openapi:
+        name: "Java OpenAPI/Springdoc Best Practices"
+        category: "api"
+        authority: "OpenAPI Initiative / Springdoc"
+        priority: 1
+        external_reference: "https://springdoc.org/"
+        template: ".claude/templates/java_backend_best_practices.md"
+        patterns:
+          - "Use springdoc-openapi-starter-webmvc-ui for Swagger UI"
+          - "Configure OpenAPI info with @Bean OpenAPI customOpenAPI()"
+          - "Use @Tag annotation for API grouping"
+          - "Use @Operation for endpoint documentation"
+          - "Use @Schema for DTO/model documentation with examples"
+          - "Document all response codes with @ApiResponses"
+          - "Configure JWT bearer auth in OpenAPI security scheme"
+          - "Use Bean Validation annotations (syncs with OpenAPI)"
+          - "Version API with URL prefix (/api/v1/)"
+          - "Standard response wrapper (ApiResponse<T>)"
+          - "Expose /swagger-ui.html and /api-docs endpoints"
+
+      # ============================================================
+      # FLYWAY DATABASE MIGRATIONS
+      # ============================================================
+      flyway:
+        name: "Flyway Database Migration Best Practices"
+        category: "database"
+        authority: "Redgate"
+        priority: 1
+        external_reference: "https://documentation.red-gate.com/flyway"
+        template: ".claude/templates/java_backend_best_practices.md"
+        patterns:
+          - "Use V{version}__{description}.sql naming convention"
+          - "Place migrations in src/main/resources/db/migration/"
+          - "Set JPA ddl-auto to 'validate' (never 'create' or 'update')"
+          - "Use sequential version numbers (V1, V2, V3...)"
+          - "One concern per migration file"
+          - "Never modify migrations after deployment"
+          - "Set clean-disabled: true in production"
+          - "Use baseline-on-migrate for existing databases"
+          - "Document rollback steps for each migration"
+          - "Use R__ prefix for repeatable migrations"
+          - "Create indexes in same migration as table"
+          - "Add COMMENT ON for table/column documentation"
+
+      java_spring_openapi_flyway:
+        name: "Java Spring Boot + OpenAPI + Flyway Stack"
+        category: "backend"
+        authority: "Spring Team / OpenAPI / Redgate"
+        priority: 1
+        template: ".claude/templates/java_backend_best_practices.md"
+        description: "Complete Java backend stack with API documentation and DB migrations"
+        includes:
+          - "spring_boot"
+          - "java_openapi"
+          - "flyway"
+        patterns:
+          - "Layered architecture: Controller → Service → Repository"
+          - "Use Spring Data JPA with Flyway for schema management"
+          - "DTO with @Schema + @Valid annotations"
+          - "Global exception handler with @RestControllerAdvice"
+          - "Standard ApiResponse<T> wrapper for all responses"
+          - "Configure springdoc for OpenAPI documentation"
+          - "Use profiles: application-{dev,prod}.yml"
+          - "JWT authentication with Spring Security"
+          - "Use Lombok for boilerplate reduction"
+          - "Use MapStruct for DTO-Entity mapping"
+
+      # ============================================================
       # VUE ECOSYSTEM
       # ============================================================
       vue:
