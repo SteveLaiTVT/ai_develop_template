@@ -353,41 +353,130 @@ Output: Filled code + Implementation report (with self-test results)
 
 ---
 
-## PHASE 1: Environment Check (CRITICAL)
+## PHASE 1: Environment Check (CRITICAL - MUST SHOW TO USER)
 
-**Before running any server, check if environment is ready.**
+**Before running any server, you MUST read and display .env contents to user.**
 
-### Check Required Environment
+### Step 1: Read .env File and Display to User
 
-Read `project_analysis.required_env` from DESIGN_STATE.yaml.
-
-```bash
-# Check if .env exists
-ls -la .env
-
-# Check if required vars are set
-# For each required_env item, verify it exists
-```
-
-### If Environment Missing - PAUSE
+**ALWAYS read the .env file and show the user what environment variables are configured.**
 
 ```
 ╔══════════════════════════════════════════════════════════════════╗
-║  ⚠️  MISSING ENVIRONMENT VARIABLE - ACTION REQUIRED              ║
+║  🔐 ENVIRONMENT CHECK - Reading .env File                        ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║                                                                  ║
-║  I need the following environment variable to continue:          ║
+║  Reading local development environment from .env...              ║
 ║                                                                  ║
-║  Variable: DATABASE_URL                                          ║
-║  Purpose:  PostgreSQL database connection                        ║
-║  Example:  postgresql://user:password@localhost:5432/mydb        ║
-║                                                                  ║
-║  Please add this to your .env file:                              ║
+║  FOUND VARIABLES:                                                ║
 ║  ┌────────────────────────────────────────────────────────────┐  ║
-║  │ DATABASE_URL=postgresql://user:password@localhost:5432/mydb│  ║
+║  │ DATABASE_URL      = postgresql://user:pass@localhost:5432  │  ║
+║  │ JWT_SECRET        = ******** (masked)                      │  ║
+║  │ REDIS_URL         = redis://localhost:6379                 │  ║
+║  │ NODE_ENV          = development                            │  ║
+║  │ PORT              = 3000                                   │  ║
 ║  └────────────────────────────────────────────────────────────┘  ║
 ║                                                                  ║
-║  Reply "ready" when you've added the variable.                   ║
+║  Note: Sensitive values (SECRET, KEY, PASSWORD, TOKEN) are       ║
+║  masked for security.                                            ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+### Step 2: Check Against Required Variables
+
+Read `project_analysis.required_env` from DESIGN_STATE.yaml and compare:
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  📋 ENVIRONMENT VALIDATION                                       ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  REQUIRED vs FOUND:                                              ║
+║  ┌─────────────────────────┬──────────┬────────────────────────┐ ║
+║  │ Variable                │ Status   │ Notes                  │ ║
+║  ├─────────────────────────┼──────────┼────────────────────────┤ ║
+║  │ DATABASE_URL            │ ✅ Found │                        │ ║
+║  │ JWT_SECRET              │ ✅ Found │                        │ ║
+║  │ STRIPE_SECRET_KEY       │ ⚠️ Missing│ Required for payments  │ ║
+║  └─────────────────────────┴──────────┴────────────────────────┘ ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+### Step 3: Confirm with User Before Proceeding
+
+**ALWAYS ask user to confirm environment is ready:**
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  ❓ CONFIRM ENVIRONMENT                                          ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  I've read your .env file and found the above variables.         ║
+║                                                                  ║
+║  Before I start self-testing, please confirm:                    ║
+║  1. The database is running and accessible                       ║
+║  2. All required services are available                          ║
+║  3. The values shown above are correct for testing               ║
+║                                                                  ║
+║  Reply "ready" to proceed with self-test.                        ║
+║  Reply "update" if you need to modify .env first.                ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+### If .env File Missing
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  ⚠️  NO .env FILE FOUND                                          ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  I couldn't find a .env file in the project root.                ║
+║                                                                  ║
+║  Please create a .env file with the required variables:          ║
+║  ┌────────────────────────────────────────────────────────────┐  ║
+║  │ # Database                                                 │  ║
+║  │ DATABASE_URL=postgresql://user:password@localhost:5432/db  │  ║
+║  │                                                            │  ║
+║  │ # Authentication                                           │  ║
+║  │ JWT_SECRET=your-secret-key-at-least-32-characters          │  ║
+║  │                                                            │  ║
+║  │ # Server                                                   │  ║
+║  │ PORT=3000                                                  │  ║
+║  │ NODE_ENV=development                                       │  ║
+║  └────────────────────────────────────────────────────────────┘  ║
+║                                                                  ║
+║  You can also copy from .env.example if it exists.               ║
+║                                                                  ║
+║  Reply "ready" when you've created the .env file.                ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+⏸️ PAUSED - Waiting for user to create .env file
+```
+
+### If Required Variables Missing - PAUSE
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  ⚠️  MISSING REQUIRED ENVIRONMENT VARIABLES                      ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  The following required variables are missing from .env:         ║
+║                                                                  ║
+║  ┌────────────────────────────────────────────────────────────┐  ║
+║  │ STRIPE_SECRET_KEY                                          │  ║
+║  │   Purpose: Payment processing                              │  ║
+║  │   Example: sk_test_xxxxx                                   │  ║
+║  │                                                            │  ║
+║  │ SENDGRID_API_KEY                                           │  ║
+║  │   Purpose: Email sending                                   │  ║
+║  │   Example: SG.xxxxx                                        │  ║
+║  └────────────────────────────────────────────────────────────┘  ║
+║                                                                  ║
+║  Please add these to your .env file and reply "ready".           ║
 ║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 
@@ -395,6 +484,46 @@ ls -la .env
 ```
 
 **DO NOT proceed until user confirms environment is ready.**
+
+### Environment Check Script
+
+B Session should run this logic to read and display .env:
+
+```bash
+#!/bin/bash
+# Environment check script
+
+ENV_FILE=".env"
+
+echo "=== Environment Check ==="
+
+if [ ! -f "$ENV_FILE" ]; then
+    echo "ERROR: No .env file found!"
+    exit 1
+fi
+
+echo ""
+echo "Found variables in .env:"
+echo "========================"
+
+while IFS='=' read -r key value || [ -n "$key" ]; do
+    # Skip comments and empty lines
+    [[ "$key" =~ ^#.*$ ]] && continue
+    [[ -z "$key" ]] && continue
+
+    # Mask sensitive values
+    if [[ "$key" =~ (SECRET|KEY|PASSWORD|TOKEN|PRIVATE) ]]; then
+        echo "$key = ********"
+    else
+        # Show first 50 chars of value
+        echo "$key = ${value:0:50}"
+    fi
+done < "$ENV_FILE"
+
+echo ""
+echo "========================"
+echo "Please confirm this environment is ready for testing."
+```
 
 ---
 
