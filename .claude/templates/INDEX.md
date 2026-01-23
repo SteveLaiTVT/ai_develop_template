@@ -9,9 +9,10 @@ This document describes all templates used in the AI-assisted development workfl
 | Template | File | From | To | Purpose |
 |----------|------|------|-----|---------|
 | **Project Init** | `project_init.md` | System | User | First-time project setup |
+| **Coordinator Task** | `coordinator_task.md` | Coordinator | All | Linear task orchestration (NEW) |
 | **Session Start** | `session_start.md` | System | All Sessions | Display workflow state on start |
 | **Discovery Questions** | `discovery_questions.md` | A Session | User | Project discovery interview |
-| **Tech Best Practices** | `tech_best_practices.md` | A Session | All | Apply industry best practices (NEW) |
+| **Tech Best Practices** | `tech_best_practices.md` | A Session | All | Apply industry best practices |
 | Task Handoff | `task_handoff.md` | A Session | B Session | Assign implementation tasks |
 | Implementation Report | `implementation_report.md` | B Session | C Session | Report completed work |
 | Review Report | `review_report.md` | C Session | A Session | Code review results |
@@ -21,9 +22,9 @@ This document describes all templates used in the AI-assisted development workfl
 | Iteration Summary | `iteration_summary.md` | A Session | Stakeholders | Version release summary |
 | External Review | `external_review.md` | Codex/Gemini | A Session | External AI audit |
 | Git Workflow | `git_workflow.md` | - | All | Version control guide |
-| OpenSpec Integration | `openspec_integration.md` | - | All | Spec-driven development guide |
+| OpenSpec Integration | `openspec_integration.md` | - | All | Spec-driven development guide (MANDATORY) |
 | **Progressive Testing** | `progressive_testing.md` | - | B Session | Testing strategy guide |
-| **API Request Export** | `api_request_export.md` | B Session | User | API testing scripts (NEW) |
+| **API Request Export** | `api_request_export.md` | B Session | User | API testing scripts |
 
 ---
 
@@ -36,6 +37,8 @@ This document describes all templates used in the AI-assisted development workfl
 │                                                                     │
 │  Sections:                                                          │
 │  • workflow_state    - Current phase & session status               │
+│  • coordinator       - Task queue & linear execution (NEW)          │
+│  • openspec          - Active specs (MANDATORY)                     │
 │  • project_analysis  - Auto-detected frontend/backend/env           │
 │  • discovery         - User interview results                       │
 │  • architecture      - Tech stack decisions                         │
@@ -145,7 +148,7 @@ This document describes all templates used in the AI-assisted development workfl
 
 ## Template Declarations
 
-### -1. Project Initialization (`project_init.md`) - NEW
+### -1. Project Initialization (`project_init.md`)
 
 **Purpose**: First-time setup when the AI Development Template is loaded
 
@@ -158,7 +161,7 @@ This document describes all templates used in the AI-assisted development workfl
 4. Update DESIGN_STATE.yaml with user's answers
 5. Make initial commit
 6. Transition to discovery phase
-7. Launch parallel A/B/C session workflow
+7. Start Coordinator for session orchestration
 
 **Entry Point**: See `CLAUDE.md` in project root for how this is triggered.
 
@@ -175,7 +178,52 @@ Q5: Git repository URL? (url | skip)
 - `initialization.is_template` becomes `false`
 - `initialization.initialized` becomes `true`
 - `workflow_state.current_phase` becomes `"discovery"`
-- A Session automatically starts discovery interview
+- Coordinator begins orchestrating sessions
+
+---
+
+### -0.5. Coordinator Task (`coordinator_task.md`) - NEW
+
+**Purpose**: Linear task orchestration with mandatory OpenSpec workflow
+
+**When to Use**: After project initialization, Coordinator manages all tasks
+
+**Key Features**:
+- **Linear Execution**: One task at a time, blocking until complete
+- **OpenSpec Mandatory**: ALL features must have OpenSpec before implementation
+- **State Tracking**: Tracks each step of the workflow
+- **Session Orchestration**: Calls A/B/C sessions in sequence
+
+**Task Workflow**:
+```
+1. spec_creation   → A Session creates OpenSpec
+2. spec_review     → User approves spec
+3. implementation  → B Session implements (with .env check)
+4. code_review     → C Session reviews
+5. merge           → Merge to main
+6. archive         → Move spec to openspec/specs/
+```
+
+**Task States**:
+- `drafting` → `pending_review` → `approved` → `implementing` → `code_review` → `done`
+
+**Key Rules**:
+- No implementation without approved spec
+- B Session must show .env contents before self-test
+- One task at a time - no parallel execution
+- Failed steps block progress until resolved
+
+**Commands**:
+| Command | Action |
+|---------|--------|
+| `start` | Begin from current state |
+| `status` | Display current task status |
+| `approve [spec]` | Approve spec for implementation |
+| `next` | Execute next step |
+| `pause` | Save state and pause |
+| `resume` | Resume from checkpoint |
+
+See `.claude/templates/coordinator_task.md` for full task record format
 
 ---
 

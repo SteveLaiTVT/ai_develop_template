@@ -60,25 +60,93 @@ initialization:
 
 See `.claude/templates/project_init.md` for full initialization flow.
 
-### Step 3: If Already Initialized → Display Status
+### Step 3: If Already Initialized → Start Coordinator
 
-Read `workflow_state` and display current status:
+Read `workflow_state` and start the **Coordinator** session:
 
 ```
 ╔══════════════════════════════════════════════════════════════════╗
-║                    🚀 AI DEVELOPMENT WORKFLOW                     ║
+║               🎯 COORDINATOR - TASK ORCHESTRATION                 ║
 ╠══════════════════════════════════════════════════════════════════╣
-║ Current Phase: [phase]                                           ║
 ║ Project: [project_name]                                          ║
+║ Current Phase: [phase]                                           ║
+║ Iteration: [current_iteration.id]                                ║
 ╠══════════════════════════════════════════════════════════════════╣
-║ SESSION STATUS                                                   ║
-║ ┌────────────┬────────────┬────────────┐                        ║
-║ │ A Session  │ B Session  │ C Session  │                        ║
-║ │ [status]   │ [status]   │ [status]   │                        ║
-║ └────────────┴────────────┴────────────┘                        ║
+║ WORKFLOW PROGRESS                                                ║
+║ ┌──────────────────────────────────────────────────────────────┐ ║
+║ │ [✓/▶/ ] Initialization                                       │ ║
+║ │ [✓/▶/ ] Discovery                                            │ ║
+║ │ [✓/▶/ ] Design (OpenSpec)                                    │ ║
+║ │ [✓/▶/ ] Implementation                                       │ ║
+║ │ [✓/▶/ ] Review                                               │ ║
+║ │ [✓/▶/ ] Merge                                                │ ║
+║ └──────────────────────────────────────────────────────────────┘ ║
 ╠══════════════════════════════════════════════════════════════════╣
-║ 👉 NEXT: [next_action.description]                               ║
+║ NEXT ACTION: [next_action.description]                           ║
 ╚══════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## Coordinator-Based Workflow (NEW)
+
+**The Coordinator orchestrates all sessions linearly and synchronously.**
+
+### Key Principles
+
+1. **Linear Execution**: One task at a time, blocking until complete
+2. **OpenSpec Mandatory**: ALL features MUST have an OpenSpec before implementation
+3. **Synchronous Flow**: Wait for each session to complete before proceeding
+4. **State Awareness**: Always read current state on startup
+
+### OpenSpec Enforcement
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  MANDATORY OPENSPEC WORKFLOW                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ❌ BEFORE (Not Allowed)                                         │
+│  User: "Add login feature"                                       │
+│  → B Session starts coding immediately                           │
+│                                                                  │
+│  ✅ AFTER (Required)                                             │
+│  User: "Add login feature"                                       │
+│  → Coordinator: "Creating OpenSpec first..."                     │
+│  → A Session: Creates openspec/changes/login/SPEC.md             │
+│  → User: Reviews and approves spec                               │
+│  → B Session: Implements per spec                                │
+│  → C Session: Reviews against spec                               │
+│  → Coordinator: Archives to openspec/specs/                      │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Session Flow
+
+```
+Coordinator
+    │
+    ├──► A Session (Architect)
+    │    └─→ Creates OpenSpec in openspec/changes/
+    │    └─→ Updates DESIGN_STATE.yaml
+    │
+    ├──► User Approval
+    │    └─→ Reviews spec
+    │    └─→ Says "approve" or provides feedback
+    │
+    ├──► B Session (Implementer)
+    │    └─→ Reads .env and confirms environment
+    │    └─→ Implements per OpenSpec
+    │    └─→ Self-tests, creates PR
+    │
+    ├──► C Session (Reviewer)
+    │    └─→ Reviews against OpenSpec
+    │    └─→ Pass/Fail verdict
+    │
+    └──► Coordinator
+         └─→ Archives spec if passed
+         └─→ Moves to next task
 ```
 
 ---
@@ -89,85 +157,88 @@ Read `workflow_state` and display current status:
 .claude/
 ├── DESIGN_STATE.yaml     # Single source of truth - configuration & state
 ├── prompts/
+│   ├── COORDINATOR.md    # Coordinator session instructions (NEW)
 │   ├── A_SESSION.md      # Architect session instructions
 │   ├── B_SESSION.md      # Implementer session instructions
 │   └── C_SESSION.md      # Reviewer session instructions
 ├── templates/            # Workflow templates
 │   ├── project_init.md   # Initialization guide
+│   ├── coordinator_task.md # Task orchestration template (NEW)
 │   └── ...               # Other templates
 └── handoffs/             # Task handoff documents
 
-openspec/                 # Spec-driven development
-├── specs/                # Completed specifications
-└── changes/              # Active proposals
+openspec/                 # Spec-driven development (MANDATORY)
+├── specs/                # Completed specifications (archived)
+├── changes/              # Active proposals (MUST exist before implementation)
+│   └── {feature}/
+│       ├── SPEC.md       # Feature specification
+│       ├── TASKS.md      # Implementation tasks
+│       └── ACCEPTANCE.md # Acceptance criteria
+└── AGENTS.md             # AI agent instructions
 ```
 
 ---
 
-## Three-Session Workflow
+## Four-Session Workflow
 
-This template uses a three-session model for AI-assisted development:
+This template uses a coordinator-based model for AI-assisted development:
 
-| Session | Default Model | Role | Responsibilities |
-|---------|---------------|------|------------------|
-| **A Session** | Reasoning | Architect | Design, discovery, task decomposition |
-| **B Session** | Execution | Implementer | Fill TODOs, self-test, create PRs |
-| **C Session** | Review | Reviewer | Code review, constraint validation |
+| Session | Role | Responsibilities |
+|---------|------|------------------|
+| **Coordinator** | Orchestrator | Linear task execution, state management, OpenSpec enforcement |
+| **A Session** | Architect | Design, discovery, OpenSpec creation, DESIGN_STATE management |
+| **B Session** | Implementer | Fill TODOs, self-test with .env check, create PRs |
+| **C Session** | Reviewer | Code review against OpenSpec, constraint validation |
 
 ### Model Selection
 
 During initialization, you can choose which model to use for each session:
 
 - **Default (Recommended)**: A=Reasoning, B=Fast, C=Fast
-  - Balance of capability and speed
-  - A handles complex architecture decisions
-  - B/C handle implementation and review efficiently
-
-- **Custom**: Choose any combination of models per session
-  - Use a stronger model for A when decisions are complex
-  - Use faster models for routine implementation/review
+- **Custom**: Choose any combination per session
 
 Model preferences are stored in `initialization.model_preferences` in DESIGN_STATE.yaml.
 
 ### Workflow Phases
 
-1. **Initialization** - First-time project setup (this file guides this)
+1. **Initialization** - First-time project setup
 2. **Discovery** - A Session interviews user to understand requirements
-3. **Design** - A Session creates architecture and skeleton code
-4. **Implementation** - B Session fills in TODOs, tests on feature branch
-5. **Review** - C Session validates code against constraints
-6. **Merge** - After C Session approves, merge to main branch locally
-7. **Completed** - Iteration done, ready for user testing
-
-### Git Workflow (Local-First)
-
-```
-main ─────────────────────────────────────────► (stable)
-      │                              │
-      └── feature/task-001 ──────────┘
-          (B implements → C reviews → merge to main)
-```
-
-- B Session creates feature branch: `git checkout -b feature/task-xxx`
-- After C Session approves: `git checkout main && git merge feature/task-xxx`
-- No remote required - push when user is ready
+3. **Design** - A Session creates OpenSpec in `openspec/changes/`
+4. **Spec Review** - User approves spec before implementation (NEW)
+5. **Implementation** - B Session implements per spec, checks .env first
+6. **Review** - C Session validates against spec and constraints
+7. **Merge** - After approval, merge to main
+8. **Archive** - Move spec from `changes/` to `specs/`
+9. **Completed** - Ready for next task
 
 ---
 
-## Frontend Testing with MCP
+## Environment Check (NEW)
 
-**MCP (Model Context Protocol)** is a standard protocol that allows AI assistants to interact with external tools and services. For frontend testing, MCP-compatible browser tools enable:
+**B Session MUST read .env before self-test and inform user.**
 
-- Automated visual testing of web interfaces
-- Form interaction and navigation testing
-- Screenshot capture and visual verification
-- Responsive design testing across breakpoints
-
-**Recommended MCP Tools:**
-- **Playwright MCP Server** - Browser automation for testing
-- Other MCP-compatible browser agents
-
-**When MCP is unavailable:** B Session should document the limitation and request user-provided testing for visual validation.
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  🔐 ENVIRONMENT CHECK - Before Self-Test                         ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  Reading .env file...                                            ║
+║                                                                  ║
+║  FOUND VARIABLES:                                                ║
+║  ┌────────────────────────────────────────────────────────────┐  ║
+║  │ DATABASE_URL      = postgresql://...                       │  ║
+║  │ JWT_SECRET        = ********                               │  ║
+║  └────────────────────────────────────────────────────────────┘  ║
+║                                                                  ║
+║  REQUIRED BUT MISSING:                                           ║
+║  ┌────────────────────────────────────────────────────────────┐  ║
+║  │ ⚠️  STRIPE_KEY - Required for payment processing           │  ║
+║  └────────────────────────────────────────────────────────────┘  ║
+║                                                                  ║
+║  Please confirm environment is ready. Reply "ready" to continue. ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
 
 ---
 
@@ -176,14 +247,15 @@ main ─────────────────────────
 | User Says | What Happens |
 |-----------|--------------|
 | "Initialize project" | Run initialization flow |
-| "Show status" | Display current workflow state |
-| "Start discovery" | Begin A Session discovery interview |
-| "Show my tasks" | Display pending tasks for B Session |
+| "Show status" | Display coordinator status |
+| "Start" or "Next" | Execute next pending action |
+| "Approve [spec-name]" | Approve OpenSpec for implementation |
+| "Create spec for [feature]" | A Session creates new OpenSpec |
+| "Show tasks" | Display pending tasks |
 | "Review the code" | Start C Session code review |
-| "Report a bug" | Create bug report for A Session |
-| "Request MCP test" | Trigger MCP/agent-based frontend testing |
-| "Apply best practices" | Apply/re-apply tech best practices for current stack |
-| "Show applied practices" | Display currently applied best practices |
+| "Report a bug" | Create bug report |
+| "Pause" | Save state and pause orchestration |
+| "Resume" | Resume from saved state |
 
 ---
 
@@ -192,20 +264,23 @@ main ─────────────────────────
 When starting work, read these files in order:
 
 1. `.claude/DESIGN_STATE.yaml` - Current state and configuration
-2. Relevant session prompt (A/B/C_SESSION.md based on current phase)
-3. Current task handoff (in `.claude/handoffs/`)
+2. `.claude/prompts/COORDINATOR.md` - Coordinator instructions
+3. `openspec/changes/` - Active specs being worked on
+4. Relevant session prompt (A/B/C_SESSION.md based on current phase)
+5. Current task handoff (in `.claude/handoffs/`)
 
 ---
 
 ## Rules
 
-1. **Only A Session modifies DESIGN_STATE.yaml**
-2. **B Session follows constraints strictly**
-3. **C Session validates against DESIGN_STATE constraints**
-4. **All sessions display status tip on start**
-5. **B Session must self-test before creating PRs**
-6. **Frontend testing should prefer MCP/agent browser tools**
-7. **Notify user when iteration is ready for testing**
+1. **Coordinator orchestrates all sessions linearly**
+2. **OpenSpec REQUIRED before any implementation**
+3. **Only A Session modifies DESIGN_STATE.yaml**
+4. **B Session MUST check .env and inform user before self-test**
+5. **B Session follows constraints strictly**
+6. **C Session validates against OpenSpec and DESIGN_STATE constraints**
+7. **All sessions display status on start**
+8. **One task at a time - no parallel task execution**
 
 ---
 
@@ -213,4 +288,5 @@ When starting work, read these files in order:
 
 - See `.claude/templates/INDEX.md` for all available templates
 - See `README.md` for full documentation
-- See `.claude/prompts/` for detailed session instructions
+- See `.claude/prompts/COORDINATOR.md` for coordinator details
+- See `.claude/prompts/` for session-specific instructions

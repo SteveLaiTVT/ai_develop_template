@@ -156,11 +156,20 @@ initialization:
 # 0. Workflow State (For Session Status Display)
 # ============================================================
 workflow_state:
-  current_phase: "initialization"  # initialization | discovery | design | implementation | review | completed
+  current_phase: "initialization"  # initialization | discovery | design | spec_review | implementation | review | merge | archive | completed
 
   discovery:
     status: "pending"  # pending | in_progress | completed
     completed_at: null
+
+  # Coordinator manages linear task execution
+  coordinator:
+    enabled: true
+    mode: "linear_sync"            # linear_sync = one task at a time, blocking
+    current_task: null             # Current task being executed
+    task_queue: []                 # Ordered list of pending tasks
+    last_checkpoint: null          # Last saved state for resume
+    last_checkpoint_at: null
 
   sessions:
     a_session:
@@ -176,6 +185,7 @@ workflow_state:
       pending_tasks: []
       blocked_by_env: false
       missing_env_vars: []
+      env_check_completed: false   # NEW: Track if .env was checked
 
     c_session:
       status: "pending"
@@ -1502,29 +1512,39 @@ decision_log:
     rationale: "Provides structured specification management complementing DESIGN_STATE.yaml. Enables detailed API contracts, task breakdowns, and acceptance criteria. Improves AI collaboration with explicit specs before implementation."
 
 # ============================================================
-# 8. OpenSpec Integration (Spec-Driven Development)
+# 8. OpenSpec Integration (Spec-Driven Development) - MANDATORY
+# ============================================================
+# IMPORTANT: OpenSpec is REQUIRED before any implementation.
+# The Coordinator enforces this rule.
 # ============================================================
 openspec:
   enabled: true
+  mandatory: true                # NEW: OpenSpec required before implementation
   version: "1.0.0"
-  description: "OpenSpec provides detailed specifications complementing DESIGN_STATE.yaml"
+  description: "OpenSpec provides detailed specifications - REQUIRED before implementation"
 
   structure:
     specs_dir: "openspec/specs/"        # Completed specifications (archived)
     changes_dir: "openspec/changes/"    # Active change proposals
     agents_file: "openspec/AGENTS.md"   # AI tool instructions
 
+  # MANDATORY workflow - Coordinator enforces this sequence
   workflow:
-    - step: "A Session creates OpenSpec change proposal"
-      description: "Detailed API contracts, tasks, acceptance criteria"
-    - step: "Human + A Session review and refine"
-      description: "Iterate on specification until approved"
-    - step: "B Session implements per specification"
-      description: "Code according to OpenSpec docs"
-    - step: "C Session validates against specification"
-      description: "Check implementation matches spec"
-    - step: "Archive completed change to specs/"
-      description: "Move from changes/ to specs/ when done"
+    - step: "1. A Session creates OpenSpec"
+      description: "Create SPEC.md, TASKS.md, ACCEPTANCE.md in openspec/changes/{feature}/"
+      required: true
+    - step: "2. User reviews and approves spec"
+      description: "User must say 'approve {feature}' before implementation begins"
+      required: true
+    - step: "3. B Session implements per specification"
+      description: "Code ONLY according to OpenSpec - no deviations allowed"
+      required: true
+    - step: "4. C Session validates against specification"
+      description: "Review code against SPEC.md and ACCEPTANCE.md"
+      required: true
+    - step: "5. Archive completed spec"
+      description: "Move from changes/ to specs/ when review passes"
+      required: true
 
   integration_with_design_state:
     design_state_provides:
@@ -1547,13 +1567,21 @@ openspec:
       status: "completed"
       description: "Authentication API with registration, login, refresh"
 
+  # Active specs being worked on
+  # Status values: drafting | pending_review | approved | implementing | code_review | done
   active_changes: []
     # Example:
     # - name: "add-user-profile"
-    #   created: "2026-01-15"
+    #   created_at: "2026-01-23"
     #   owner: "A Session"
-    #   status: "in_progress"
+    #   status: "drafting"         # drafting | pending_review | approved | implementing | code_review | done
+    #   approved_at: null          # Timestamp when user approved
+    #   approved_by: null          # "user" or null
     #   location: "openspec/changes/add-user-profile/"
+    #   files:
+    #     spec: "SPEC.md"
+    #     tasks: "TASKS.md"
+    #     acceptance: "ACCEPTANCE.md"
 
 # ============================================================
 # 9. Review History (Recorded by A Session)
