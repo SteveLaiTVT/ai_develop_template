@@ -266,7 +266,9 @@ async function clickWithRetry(selector: string, maxRetries = 3) {
       return; // Success
     } catch (error) {
       if (attempt === maxRetries) throw error;
-      await browser.wait(1000); // Wait before retry
+      // Exponential backoff: 1s, 2s, 4s...
+      const delay = 1000 * Math.pow(2, attempt - 1);
+      await browser.wait(delay);
     }
   }
 }

@@ -699,7 +699,7 @@ See the full guide at `.claude/templates/api_request_export.md` for templates an
 
 | Skill | File | Priority | Description |
 |-------|------|----------|-------------|
-| **Git Version Control** | `git_skills.md` | **MANDATORY** | Git 版本控制规范 (强制性) |
+| **Git Version Control** | `git_skills.md` | **MANDATORY** | Git 版本控制规范 (强制) |
 | **Frontend Development** | `frontend_skills.md` | Conditional | 前端开发规范 |
 | **Backend Development** | `backend_skills.md` | Conditional | 后端开发规范 |
 | **Agent-Browser** | `agent_browser_skills.md` | Conditional | 浏览器自动化技能 |

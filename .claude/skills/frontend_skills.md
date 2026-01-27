@@ -189,8 +189,13 @@ const { data, isLoading, error } = useQuery({
   Click Me
 </button>
 
-// ❌ Bad: Excessive classes, no organization
-<button className="px-4 py-2 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ease-in-out transform hover:scale-105">
+// ❌ Bad: Excessive classes without organization
+<button className="
+  px-4 py-2 bg-blue-500 text-white font-medium rounded-lg
+  hover:bg-blue-600 hover:shadow-lg hover:scale-105
+  active:bg-blue-700 shadow-md transition-all duration-200
+  ease-in-out transform
+">  {/* Too many classes - extract to component or use @apply */}
 ```
 
 ### Design System Tokens
