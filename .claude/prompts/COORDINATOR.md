@@ -527,6 +527,166 @@ Action: Remind user
 
 ---
 
+## PHASE 8: Tiered Approval System (Enhanced)
+
+**New Enhancement**: Reduce approval bottleneck by using risk-based tiers.
+
+Check `approval_tiers` in DESIGN_STATE.yaml to determine approval flow.
+
+### Approval Tier Detection
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  🎯 APPROVAL TIER DETECTION                                      ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  Analyzing spec: {spec_name}                                     ║
+║                                                                  ║
+║  Risk Factors:                                                   ║
+║  ┌────────────────────────────────────────────────────────────┐  ║
+║  │ Files Changed:        3                                   │  ║
+║  │ Has Schema Changes:   No                                  │  ║
+║  │ Security Keywords:    No                                  │  ║
+║  │ Payment Processing:   No                                  │  ║
+║  │ Auth Changes:         No                                  │  ║
+║  └────────────────────────────────────────────────────────────┘  ║
+║                                                                  ║
+║  📋 DETERMINED TIER: Tier 2 (Fast-Track)                         ║
+║  → 24h auto-approve if no objection                              ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+### Tier Definitions
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    APPROVAL TIERS                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  TIER 1: AUTO-APPROVE (Lowest Risk)                             │
+│  └─→ Bug fixes with tests                                       │
+│  └─→ Documentation updates                                      │
+│  └─→ Code style/refactoring (no logic change)                   │
+│  └─→ Dependency updates (minor versions)                        │
+│  └─→ Files changed: ≤ 3                                         │
+│  ✅ Flow: Auto-approve, notify user after                       │
+│                                                                  │
+│  TIER 2: FAST-TRACK (Low Risk)                                  │
+│  └─→ Small feature additions (< 5 files)                        │
+│  └─→ UI tweaks (no data model changes)                          │
+│  └─→ Performance optimizations                                  │
+│  └─→ Test additions                                             │
+│  ⏱️ Flow: Auto-approve after 24h if no objection                │
+│                                                                  │
+│  TIER 3: STANDARD (Medium Risk)                                 │
+│  └─→ New features (> 5 files)                                   │
+│  └─→ Database schema changes                                    │
+│  └─→ API breaking changes                                       │
+│  └─→ New external dependencies                                  │
+│  🔒 Flow: Explicit user approval required                       │
+│                                                                  │
+│  TIER 4: CRITICAL (Highest Risk)                                │
+│  └─→ Authentication/authorization changes                       │
+│  └─→ Payment processing                                         │
+│  └─→ Data migration scripts                                     │
+│  └─→ Production deployment configs                              │
+│  🚨 Flow: Multi-stakeholder approval + security review          │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Tier Detection Algorithm
+
+```python
+def determine_tier(spec):
+    # Check for critical keywords
+    critical_keywords = ['auth', 'payment', 'security', 'password', 'token', 'migration']
+    if any(kw in spec.name.lower() or kw in spec.description.lower() for kw in critical_keywords):
+        return 'tier_4_critical'
+
+    # Check for schema changes
+    schema_patterns = ['*.prisma', '**/migrations/**', '*.sql']
+    if any(file_matches(spec.files_changed, p) for p in schema_patterns):
+        return 'tier_3_standard'
+
+    # Check file count
+    if len(spec.files_changed) > 5:
+        return 'tier_3_standard'
+
+    # Check for auto-tier-1 patterns
+    auto_tier_1 = ['*.md', '*.txt', '**/__tests__/**', '**/test/**']
+    if all(file_matches(f, auto_tier_1) for f in spec.files_changed):
+        return 'tier_1_auto'
+
+    # Default to fast-track for small changes
+    if len(spec.files_changed) <= 5:
+        return 'tier_2_fast_track'
+
+    return 'tier_3_standard'
+```
+
+### Tier-Based Notifications
+
+**Tier 1 (Auto-Approve)**:
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  ✅ AUTO-APPROVED: {spec_name}                                   ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  This spec was auto-approved (Tier 1: Low Risk)                  ║
+║                                                                  ║
+║  Changes:                                                        ║
+║  • {file_1} - {description}                                      ║
+║  • {file_2} - {description}                                      ║
+║                                                                  ║
+║  📋 B Session will begin implementation.                         ║
+║  ℹ️ You can still request changes by saying "revisit {spec}"     ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+**Tier 2 (Fast-Track)**:
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  ⏱️ FAST-TRACK: {spec_name}                                      ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  This spec qualifies for fast-track approval (Tier 2)            ║
+║                                                                  ║
+║  Will auto-approve in: 24 hours                                  ║
+║  Auto-approve at: {timestamp}                                    ║
+║                                                                  ║
+║  📋 Review: openspec/changes/{spec_name}/SPEC.md                 ║
+║                                                                  ║
+║  Options:                                                        ║
+║  • "approve {spec}" - Approve now                                ║
+║  • "review {spec}" - Request changes                             ║
+║  • (Do nothing) - Auto-approves in 24h                           ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+**Tier 3/4 (Standard/Critical)**:
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  🔒 APPROVAL REQUIRED: {spec_name}                               ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  This spec requires explicit approval (Tier 3/4)                 ║
+║                                                                  ║
+║  Risk Level: {tier_name}                                         ║
+║  Reason: {risk_reason}                                           ║
+║                                                                  ║
+║  📋 Please review: openspec/changes/{spec_name}/                 ║
+║                                                                  ║
+║  Reply "approve {spec_name}" to proceed.                         ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+---
+
 ## Checklist
 
 ### On Startup

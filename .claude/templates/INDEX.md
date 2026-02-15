@@ -25,6 +25,7 @@ This document describes all templates used in the AI-assisted development workfl
 | OpenSpec Integration | `openspec_integration.md` | - | All | Spec-driven development guide (MANDATORY) |
 | **Progressive Testing** | `progressive_testing.md` | - | B Session | Testing strategy guide |
 | **API Request Export** | `api_request_export.md` | B Session | User | API testing scripts |
+| **Agent Skills** | `../skills/INDEX.md` | - | All Sessions | Agent skill specifications (NEW) |
 
 ---
 
@@ -39,11 +40,12 @@ This document describes all templates used in the AI-assisted development workfl
 │  • workflow_state    - Current phase & session status               │
 │  • coordinator       - Task queue & linear execution (NEW)          │
 │  • openspec          - Active specs (MANDATORY)                     │
+│  • skills            - Agent skills configuration (NEW)             │
 │  • project_analysis  - Auto-detected frontend/backend/env           │
 │  • discovery         - User interview results                       │
 │  • architecture      - Tech stack decisions                         │
 │  • current_iteration - Active tasks                                 │
-└───────────────────────────────┬─────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────┬─┘
                                 │
                                 │
     ╔═══════════════════════════╧═══════════════════════════╗
@@ -682,3 +684,39 @@ source env.sh
 ```
 
 See the full guide at `.claude/templates/api_request_export.md` for templates and examples.
+
+---
+
+## Agent Skills
+
+### 13. Agent Skills (`../skills/INDEX.md`) - NEW
+
+**Purpose**: Define skill specifications to help agents perform tasks according to best practices
+
+**Location**: `.claude/skills/` directory
+
+**Available Skills**:
+
+| Skill | File | Priority | Description |
+|-------|------|----------|-------------|
+| **Git Version Control** | `git_skills.md` | **MANDATORY** | Git 版本控制规范 (强制) |
+| **Frontend Development** | `frontend_skills.md` | Conditional | 前端开发规范 |
+| **Backend Development** | `backend_skills.md` | Conditional | 后端开发规范 |
+| **Agent-Browser** | `agent_browser_skills.md` | Conditional | 浏览器自动化技能 |
+| **Testing** | `testing_skills.md` | Conditional | 测试规范与最佳实践 |
+
+**Skill Application by Project Type**:
+
+| Project Type | Applied Skills |
+|--------------|----------------|
+| Web Frontend | Git (mandatory), Frontend, Agent-Browser, Testing |
+| Web Backend | Git (mandatory), Backend, Testing |
+| Full-Stack | Git (mandatory), Frontend, Backend, Agent-Browser, Testing |
+| API Service | Git (mandatory), Backend, Testing |
+
+**Integration with Sessions**:
+- **A Session**: Determines which skills apply based on project type
+- **B Session**: Follows skill guidelines when implementing code
+- **C Session**: Validates code against applicable skills
+
+See the full skills index at `.claude/skills/INDEX.md` for details.
