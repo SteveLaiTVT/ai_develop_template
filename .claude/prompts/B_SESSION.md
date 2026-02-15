@@ -527,6 +527,121 @@ echo "Please confirm this environment is ready for testing."
 
 ---
 
+## PHASE 1.5: Smart Environment Validation (Enhanced)
+
+**New Enhancement**: Instead of always stopping and waiting for user confirmation, use smart validation to reduce interruptions.
+
+Check `environment_validation` in DESIGN_STATE.yaml:
+
+```yaml
+environment_validation:
+  mode: "auto_validate"    # auto_validate | manual_confirm | skip
+```
+
+### Auto-Validate Mode (Recommended)
+
+When `mode: auto_validate`, B Session can proceed without user confirmation if:
+
+1. All required variables are present
+2. All validation rules pass
+3. No production-critical vars are missing
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  ✅ SMART ENVIRONMENT VALIDATION - Auto-Passed                   ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  Environment validated automatically:                            ║
+║                                                                  ║
+║  FOUND VARIABLES (5):                                            ║
+║  ┌────────────────────────────────────────────────────────────┐  ║
+║  │ ✅ DATABASE_URL      = postgresql://localhost:5432/dev     │  ║
+║  │ ✅ JWT_SECRET        = ******** (present, 64 chars)        │  ║
+║  │ ✅ NODE_ENV          = development                         │  ║
+║  │ ✅ PORT              = 3000                                │  ║
+║  │ ✅ REDIS_URL         = redis://localhost:6379              │  ║
+║  └────────────────────────────────────────────────────────────┘  ║
+║                                                                  ║
+║  AUTO-GENERATED FOR DEV (2):                                     ║
+║  ┌────────────────────────────────────────────────────────────┐  ║
+║  │ ⚡ API_KEY            = dev_mock_key_12345 (test only)     │  ║
+║  │ ⚡ SMTP_HOST          = localhost:1025 (mailhog mock)      │  ║
+║  └────────────────────────────────────────────────────────────┘  ║
+║                                                                  ║
+║  📋 All required variables present. Proceeding with self-test.   ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+### Auto-Generate Dev Values
+
+For development environment, auto-generate safe defaults:
+
+| Variable Type | Auto-Generated Value |
+|--------------|---------------------|
+| `*_SECRET` | Random 64-char string |
+| `*_API_KEY` | `dev_mock_key_[random]` |
+| `DATABASE_URL` (missing) | `sqlite://./dev.db` |
+| `SMTP_*` | `localhost:1025` (mailhog) |
+| `STRIPE_*` | `sk_test_mock_[random]` |
+
+### Validation Rules
+
+Check `environment_validation.validation_rules` for custom rules:
+
+```yaml
+validation_rules:
+  - var: "JWT_SECRET"
+    check_format: "string:32+"    # Minimum 32 characters
+    auto_generate_dev: true
+  - var: "DATABASE_URL"
+    check_connectivity: true      # Test actual connection
+    fallback: "sqlite://./dev.db"
+```
+
+### When to Still Pause
+
+Even in auto_validate mode, PAUSE if:
+
+1. **Production stage detected** and critical vars missing
+2. **Database connectivity check fails**
+3. **User explicitly set `manual_confirm` mode**
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  ⚠️  VALIDATION REQUIRES USER INPUT                              ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  Auto-validation cannot proceed because:                         ║
+║                                                                  ║
+║  ❌ DATABASE_URL connectivity check failed:                      ║
+║     Error: Connection refused to postgresql://localhost:5432     ║
+║                                                                  ║
+║  Please ensure PostgreSQL is running and reply "ready".          ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+⏸️ PAUSED - Database connection required
+```
+
+### Update Validation Results
+
+After validation, update `environment_validation.last_validation`:
+
+```yaml
+last_validation:
+  timestamp: "2026-02-15T03:00:00Z"
+  status: "passed_with_warnings"
+  auto_generated_vars:
+    - "API_KEY"
+    - "SMTP_HOST"
+  missing_required: []
+  warnings:
+    - "Using auto-generated API_KEY for development"
+```
+
+---
+
 ## PHASE 2: Backend Self-Test
 
 **If `project_analysis.has_backend: true`, run backend self-test.**

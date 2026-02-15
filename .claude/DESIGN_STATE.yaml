@@ -1596,3 +1596,288 @@ review_history: []
   #       description: "Service directly called Prisma"
   #       resolution: "Extract to Repository"
   #   resolved_in_version: "0.1.1"
+
+# ============================================================
+# 10. Workflow Enhancements (Implemented from Analysis)
+# ============================================================
+# These enhancements improve workflow efficiency and user experience
+# Reference: .claude/WORKFLOW_ENHANCEMENTS.md
+# ============================================================
+
+# ------------------------------------------------------------
+# 10.1 Smart Environment Validation (Enhancement 1)
+# ------------------------------------------------------------
+# Reduces B Session interruptions by auto-validating env vars
+# Instead of manual confirmation, uses smart defaults for dev
+# ------------------------------------------------------------
+environment_validation:
+  enabled: true
+  mode: "auto_validate"    # auto_validate | manual_confirm | skip
+
+  validation_rules: []
+    # Example rules (populated when project analysis detects env needs):
+    # - var: "DATABASE_URL"
+    #   required: true
+    #   check_connectivity: true      # Actually test DB connection
+    #   fallback: "sqlite://./dev.db" # Use for local dev
+    #   stage: "all"                  # all | dev | production
+    #
+    # - var: "JWT_SECRET"
+    #   required: true
+    #   check_format: "string:32+"    # Min 32 chars
+    #   auto_generate_dev: true       # Generate for dev env
+    #   stage: "all"
+    #
+    # - var: "STRIPE_KEY"
+    #   required: false
+    #   stage: "production"           # Only required in production
+    #   dev_value: "sk_test_mock"     # Test key for dev
+
+  on_missing:
+    action: "use_fallback_and_warn"  # use_fallback_and_warn | block | skip
+    notify_user: true                # Always inform user what was auto-generated
+    log_auto_generated: true         # Log all auto-generated values
+
+  # Validation results (populated by B Session)
+  last_validation:
+    timestamp: null
+    status: null                     # passed | passed_with_warnings | failed
+    auto_generated_vars: []
+    missing_required: []
+    warnings: []
+
+# ------------------------------------------------------------
+# 10.2 Tiered Approval System (Enhancement 3)
+# ------------------------------------------------------------
+# Reduces approval bottleneck for low-risk changes
+# Auto-approve or fast-track based on risk assessment
+# ------------------------------------------------------------
+approval_tiers:
+  enabled: true
+
+  tier_1_auto:
+    description: "Auto-approved (low risk)"
+    criteria:
+      - "Bug fixes with tests"
+      - "Documentation updates"
+      - "Code style/refactoring (no logic change)"
+      - "Dependency updates (minor versions)"
+    approval_flow: "auto_approve"
+    notification: "inform_user_after"    # Just notify, don't wait
+    max_files_changed: 3
+
+  tier_2_fast_track:
+    description: "Fast-track (moderate risk)"
+    criteria:
+      - "Small feature additions (< 5 files)"
+      - "UI tweaks (no data model changes)"
+      - "Performance optimizations"
+      - "Test additions"
+    approval_flow: "24h_auto_approve"     # Auto-approve if no objection in 24h
+    notification: "notify_user_immediately"
+    max_files_changed: 5
+
+  tier_3_standard:
+    description: "Standard approval (high risk)"
+    criteria:
+      - "New features (> 5 files)"
+      - "Database schema changes"
+      - "API breaking changes"
+      - "New external dependencies"
+    approval_flow: "explicit_approval_required"
+    notification: "block_until_approved"
+
+  tier_4_critical:
+    description: "Critical review (highest risk)"
+    criteria:
+      - "Authentication/authorization changes"
+      - "Payment processing"
+      - "Data migration scripts"
+      - "Production deployment configs"
+      - "Security-sensitive code"
+    approval_flow: "multi_stakeholder_approval"
+    notification: "escalate_to_team"
+    requires_security_review: true
+
+  # Risk detection rules (used by Coordinator to determine tier)
+  risk_detection:
+    high_risk_keywords:
+      - "auth"
+      - "payment"
+      - "security"
+      - "password"
+      - "token"
+      - "migration"
+      - "production"
+    schema_change_patterns:
+      - "*.prisma"
+      - "**/migrations/**"
+      - "*.sql"
+    auto_tier_1_patterns:
+      - "*.md"
+      - "*.txt"
+      - "**/__tests__/**"
+      - "**/test/**"
+      - "*.test.*"
+      - "*.spec.*"
+
+# ------------------------------------------------------------
+# 10.3 Progressive Mock Data System (Enhancement 7)
+# ------------------------------------------------------------
+# Systematic mock data generation and management
+# Auto-generates realistic data for comprehensive testing
+# ------------------------------------------------------------
+mock_data_system:
+  enabled: true
+  location: "tests/mock-data/"
+
+  generation_strategy:
+    mode: "auto_generate"              # auto_generate | manual | hybrid
+
+    generators:
+      - type: "realistic"
+        library: "faker.js"            # Generate realistic fake data
+        locales: ["en"]                # Add locales as needed: "zh-CN", "ja", etc.
+
+      - type: "edge_cases"
+        library: "manual"              # Manually defined edge cases
+        scenarios:
+          - "boundary_values"
+          - "empty_strings"
+          - "null_values"
+          - "unicode_edge_cases"
+          - "max_length_strings"
+
+      - type: "domain_specific"
+        custom: true                   # Project-specific generators
+
+  coverage_requirements:
+    happy_path: true                   # Must have
+    error_cases: true                  # Must have
+    edge_cases: true                   # Recommended
+    performance_test: false            # Optional
+
+  reuse_strategy:
+    shared_fixtures: "tests/mock-data/fixtures/"
+    test_specific: "tests/mock-data/scenarios/"
+    generators_location: "tests/mock-data/generators/"
+
+  # Structure template for B Session to create
+  directory_structure:
+    - path: "tests/mock-data/fixtures/"
+      description: "Reusable test data (users.json, products.json)"
+    - path: "tests/mock-data/scenarios/"
+      description: "Scenario-specific data organized by feature"
+    - path: "tests/mock-data/generators/"
+      description: "Custom data generators (TypeScript)"
+    - path: "tests/mock-data/index.ts"
+      description: "Export all fixtures and generators"
+
+# ------------------------------------------------------------
+# 10.4 Skill-Driven Code Generation (Enhancement 4 - Preview)
+# ------------------------------------------------------------
+# Skills actively guide skeleton creation and validation
+# Moves from "reference" to "enforcement"
+# ------------------------------------------------------------
+skill_enforcement:
+  enabled: true
+  mode: "guided"                       # guided | strict | passive
+
+  # Applied skills for this project (set during initialization)
+  active_skills:
+    mandatory:
+      - "git_skills"                   # Always required
+    conditional: []                    # Set based on project type
+    # Example: ["frontend_skills", "backend_skills", "testing_skills"]
+
+  # How skills are applied in skeleton generation
+  skeleton_integration:
+    include_skill_comments: true       # Add SKILL() comments in TODOs
+    reference_specific_sections: true  # Point to specific skill sections
+    add_checklist_per_skill: true      # Include skill-specific checklist
+
+  # Example of enhanced TODO with skill guidance:
+  # // TODO(B): Implement login logic
+  # // SKILL(backend_skills): Security considerations
+  # //   - Use bcrypt (cost >= 12)
+  # //   - Rate limit (5 attempts per 15min)
+  # //   - Generic error message
+  # // CHECKLIST:
+  # //   [ ] Password hashing implemented
+  # //   [ ] Rate limiting configured
+  # //   [ ] Error messages are generic
+
+  # C Session validation against skills
+  validation:
+    check_skill_compliance: true
+    report_violations: true
+    block_on_critical_violations: false  # Start with warnings
+
+# ------------------------------------------------------------
+# 10.5 Frontend Testing Automation (Enhancement 2 - Preview)
+# ------------------------------------------------------------
+# MCP/Playwright automated smoke tests for consistent testing
+# ------------------------------------------------------------
+frontend_testing:
+  self_test_automation:
+    enabled: false                     # Enable when ready
+    tool: "mcp_playwright"             # mcp_playwright | manual | skip
+
+    test_scenarios:
+      - name: "smoke_test"
+        description: "Verify app loads without errors"
+        steps:
+          - "npm run build → succeeds"
+          - "npm run dev → server starts"
+          - "Navigate to http://localhost:3000"
+          - "Check: No console errors"
+          - "Check: Page renders (screenshot)"
+        screenshot_on: "completion"
+        required: true
+
+      - name: "critical_paths"
+        description: "Test main user flows"
+        enabled_when: "mvp_complete"   # Only after MVP
+        steps:
+          - "Login flow"
+          - "Main dashboard"
+          - "Critical user actions"
+        screenshot_on: "each_step"
+        required: false
+
+    failure_handling:
+      on_smoke_test_fail: "block_pr"      # Must pass
+      on_critical_path_fail: "warn_only"  # Can be fixed later
+
+    screenshot_output:
+      location: "tests/screenshots/"
+      naming: "{test_name}-{timestamp}.png"
+
+# ------------------------------------------------------------
+# 10.6 Selective Parallelization (Enhancement 5 - Planned)
+# ------------------------------------------------------------
+# Allow specific preparation tasks to run in parallel
+# Feature development remains strictly linear
+# ------------------------------------------------------------
+parallelization:
+  enabled: false                       # Enable when workflow is stable
+  mode: "selective_parallel"           # strict_linear | selective_parallel
+
+  allowed_parallel_tasks:
+    - group: "infrastructure_setup"
+      tasks:
+        - "database_migration"
+        - "environment_config"
+        - "ci_cd_setup"
+      runs_before: "feature_implementation"
+
+    - group: "documentation"
+      tasks:
+        - "api_documentation"
+        - "user_guide"
+        - "deployment_guide"
+      runs_after: "feature_complete"
+
+  feature_development:
+    mode: "strict_linear"              # One feature at a time
+    reason: "Prevents merge conflicts and maintains focus"
