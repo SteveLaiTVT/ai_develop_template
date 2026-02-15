@@ -607,7 +607,7 @@ def determine_tier(spec):
 
     # Check for schema changes
     schema_patterns = ['*.prisma', '**/migrations/**', '*.sql']
-    if any(file_matches(spec.files, p) for p in schema_patterns):
+    if any(file_matches(spec.files_changed, p) for p in schema_patterns):
         return 'tier_3_standard'
 
     # Check file count
