@@ -13,8 +13,23 @@ This project uses a **pre-configured agent team** for AI-assisted development. B
 |------|-----------|----------------|
 | **Coordinator** | [`.ai/agents/coordinator.md`](.ai/agents/coordinator.md) | Orchestrate workflow, manage project plan, enforce spec-first |
 | **Architect** | [`.ai/agents/architect.md`](.ai/agents/architect.md) | Design, plan, create specs, skeleton code |
-| **Developer** | [`.ai/agents/developer.md`](.ai/agents/developer.md) | Implement code per specs, self-test, create PRs |
+| **Developer** | [`.ai/agents/developer.md`](.ai/agents/developer.md) | Base implementation role — see specializations below |
+| **↳ Frontend** | [`.ai/agents/frontend-developer.md`](.ai/agents/frontend-developer.md) | UI, client-side, responsive, accessibility |
+| **↳ Backend** | [`.ai/agents/backend-developer.md`](.ai/agents/backend-developer.md) | APIs, services, databases, security |
+| **↳ Mobile** | [`.ai/agents/mobile-developer.md`](.ai/agents/mobile-developer.md) | iOS, Android, cross-platform apps |
 | **Reviewer** | [`.ai/agents/reviewer.md`](.ai/agents/reviewer.md) | Review code against specs, validate quality |
+
+### Skills
+
+Each developer role declares which skills it requires from `.claude/skills/`:
+
+| Skill | File | Required By |
+|-------|------|-------------|
+| Git | `.claude/skills/git_skills.md` | All developers |
+| Frontend | `.claude/skills/frontend_skills.md` | Frontend Developer |
+| Backend | `.claude/skills/backend_skills.md` | Backend Developer |
+| Testing | `.claude/skills/testing_skills.md` | All developers |
+| Agent-Browser | `.claude/skills/agent_browser_skills.md` | Frontend Developer |
 
 ### Getting Started
 

@@ -229,8 +229,23 @@ B 会话像**真正的开发者**一样工作：
 |------|------|------|
 | **协调者** | `.ai/agents/coordinator.md` | 项目管理、工作流编排 |
 | **架构师** | `.ai/agents/architect.md` | 设计、规范、骨架代码 |
-| **开发者** | `.ai/agents/developer.md` | 实现、测试、PR |
+| **开发者** | `.ai/agents/developer.md` | 基础实现角色 |
+| **↳ 前端开发者** | `.ai/agents/frontend-developer.md` | UI、客户端逻辑、响应式、无障碍 |
+| **↳ 后端开发者** | `.ai/agents/backend-developer.md` | API、服务、数据库、安全 |
+| **↳ 移动端开发者** | `.ai/agents/mobile-developer.md` | iOS、Android、跨平台应用 |
 | **审查者** | `.ai/agents/reviewer.md` | 代码审查、质量验证 |
+
+### 技能声明
+
+每个专业开发者角色声明其需要的技能（`.claude/skills/`）：
+
+| 技能 | 文件 | 适用角色 |
+|------|------|---------|
+| **Git** | `.claude/skills/git_skills.md` | 所有开发者（强制） |
+| **前端开发** | `.claude/skills/frontend_skills.md` | 前端开发者 |
+| **后端开发** | `.claude/skills/backend_skills.md` | 后端开发者 |
+| **测试** | `.claude/skills/testing_skills.md` | 所有开发者（强制） |
+| **Agent 浏览器** | `.claude/skills/agent_browser_skills.md` | 前端开发者 |
 
 ### 项目计划
 
@@ -255,7 +270,10 @@ your-project/
 │   └── agents/                   # Agent 角色定义
 │       ├── coordinator.md        # 项目经理
 │       ├── architect.md          # 架构师
-│       ├── developer.md          # 开发者
+│       ├── developer.md          # 基础开发者（引用专业角色）
+│       ├── frontend-developer.md # 前端专家
+│       ├── backend-developer.md  # 后端专家
+│       ├── mobile-developer.md   # 移动端专家
 │       └── reviewer.md           # 审查者
 │
 ├── .claude/                      # Claude 专用详细工作流

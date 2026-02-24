@@ -8,7 +8,10 @@ This project uses a **pre-configured agent team** that works across multiple AI 
 
 - **Coordinator** ([`.ai/agents/coordinator.md`](.ai/agents/coordinator.md)) — Manages the project plan and orchestrates workflow
 - **Architect** ([`.ai/agents/architect.md`](.ai/agents/architect.md)) — Designs architecture, creates specs, provides skeleton code
-- **Developer** ([`.ai/agents/developer.md`](.ai/agents/developer.md)) — Implements code per specs, self-tests, creates PRs
+- **Developer** ([`.ai/agents/developer.md`](.ai/agents/developer.md)) — Base implementation role with specializations:
+  - **Frontend Developer** ([`.ai/agents/frontend-developer.md`](.ai/agents/frontend-developer.md)) — UI, client-side logic, accessibility
+  - **Backend Developer** ([`.ai/agents/backend-developer.md`](.ai/agents/backend-developer.md)) — APIs, services, databases, security
+  - **Mobile Developer** ([`.ai/agents/mobile-developer.md`](.ai/agents/mobile-developer.md)) — iOS, Android, cross-platform apps
 - **Reviewer** ([`.ai/agents/reviewer.md`](.ai/agents/reviewer.md)) — Reviews code against specs and constraints
 
 For an overview, see [`.ai/README.md`](.ai/README.md). For the global project plan, see [`.ai/project-plan.md`](.ai/project-plan.md).
@@ -173,7 +176,10 @@ Coordinator
 └── agents/
     ├── coordinator.md        # Project Manager role
     ├── architect.md          # Architect/Designer role
-    ├── developer.md          # Developer/Implementer role
+    ├── developer.md          # Base Developer role (references specializations)
+    ├── frontend-developer.md # Frontend specialist (skills: frontend, testing, agent-browser)
+    ├── backend-developer.md  # Backend specialist (skills: backend, testing)
+    ├── mobile-developer.md   # Mobile specialist (skills: testing)
     └── reviewer.md           # Reviewer/QA role
 
 .claude/

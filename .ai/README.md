@@ -32,8 +32,36 @@ This directory defines **pre-configured agent roles** that any AI tool can read 
 |------|------|----------------|
 | **Coordinator** | [`agents/coordinator.md`](agents/coordinator.md) | Orchestrates workflow, manages the global project plan, enforces spec-first development |
 | **Architect** | [`agents/architect.md`](agents/architect.md) | Discovery, design, architecture decisions, creates specs and skeleton code |
-| **Developer** | [`agents/developer.md`](agents/developer.md) | Implements code per specs, self-tests, follows constraints, creates PRs |
+| **Developer** | [`agents/developer.md`](agents/developer.md) | Base implementation role — see specialized roles below |
+| **↳ Frontend Developer** | [`agents/frontend-developer.md`](agents/frontend-developer.md) | UI components, client-side logic, responsive design, accessibility |
+| **↳ Backend Developer** | [`agents/backend-developer.md`](agents/backend-developer.md) | APIs, services, databases, security, server-side logic |
+| **↳ Mobile Developer** | [`agents/mobile-developer.md`](agents/mobile-developer.md) | iOS, Android, cross-platform mobile apps |
 | **Reviewer** | [`agents/reviewer.md`](agents/reviewer.md) | Reviews code against specs and constraints, validates quality |
+
+### Choosing a Developer Role
+
+The Coordinator or Architect assigns tasks to the appropriate specialized developer:
+
+| Project Type | Developer Role | Skills Applied |
+|--------------|----------------|----------------|
+| Web Frontend | Frontend Developer | git, frontend, testing, agent-browser |
+| Web Backend / API | Backend Developer | git, backend, testing |
+| Full-Stack Web | Frontend + Backend Developer | git, frontend, backend, testing, agent-browser |
+| Mobile App | Mobile Developer | git, testing |
+
+## Skills System
+
+Each agent role declares which **skills** it requires. Skills are detailed specifications that define coding standards and best practices:
+
+| Skill | File | Used By |
+|-------|------|---------|
+| **Git Version Control** | `.claude/skills/git_skills.md` | All developers (MANDATORY) |
+| **Frontend Development** | `.claude/skills/frontend_skills.md` | Frontend Developer |
+| **Backend Development** | `.claude/skills/backend_skills.md` | Backend Developer |
+| **Testing** | `.claude/skills/testing_skills.md` | All developers (MANDATORY) |
+| **Agent-Browser** | `.claude/skills/agent_browser_skills.md` | Frontend Developer |
+
+See [`.claude/skills/INDEX.md`](.claude/../.claude/skills/INDEX.md) for the full skill catalog and guidelines on adding new skills.
 
 ## How It Works
 
@@ -108,7 +136,10 @@ This agent team system is designed to work with any AI coding tool:
 └── agents/
     ├── coordinator.md     # Project Manager role
     ├── architect.md       # Architect/Designer role
-    ├── developer.md       # Developer/Implementer role
+    ├── developer.md       # Base Developer role (references specializations)
+    ├── frontend-developer.md  # Frontend specialist (skills: frontend, testing, agent-browser)
+    ├── backend-developer.md   # Backend specialist (skills: backend, testing)
+    ├── mobile-developer.md    # Mobile specialist (skills: testing)
     └── reviewer.md        # Reviewer/QA role
 ```
 

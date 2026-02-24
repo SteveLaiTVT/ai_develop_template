@@ -218,8 +218,23 @@ This template includes a **tool-agnostic agent team system** in `.ai/` that work
 |------|------|----------------|
 | **Coordinator** | `.ai/agents/coordinator.md` | Project management, workflow orchestration |
 | **Architect** | `.ai/agents/architect.md` | Design, specs, skeleton code |
-| **Developer** | `.ai/agents/developer.md` | Implementation, testing, PRs |
+| **Developer** | `.ai/agents/developer.md` | Base implementation role |
+| **↳ Frontend Developer** | `.ai/agents/frontend-developer.md` | UI, client-side, responsive, accessibility |
+| **↳ Backend Developer** | `.ai/agents/backend-developer.md` | APIs, services, databases, security |
+| **↳ Mobile Developer** | `.ai/agents/mobile-developer.md` | iOS, Android, cross-platform apps |
 | **Reviewer** | `.ai/agents/reviewer.md` | Code review, quality validation |
+
+### Skills Declaration
+
+Each specialized developer declares which skills it requires from `.claude/skills/`:
+
+| Skill | File | Required By |
+|-------|------|-------------|
+| **Git** | `.claude/skills/git_skills.md` | All developers (mandatory) |
+| **Frontend** | `.claude/skills/frontend_skills.md` | Frontend Developer |
+| **Backend** | `.claude/skills/backend_skills.md` | Backend Developer |
+| **Testing** | `.claude/skills/testing_skills.md` | All developers (mandatory) |
+| **Agent-Browser** | `.claude/skills/agent_browser_skills.md` | Frontend Developer |
 
 ### Project Plan
 
@@ -244,7 +259,10 @@ your-project/
 │   └── agents/                   # Agent role definitions
 │       ├── coordinator.md        # Project Manager
 │       ├── architect.md          # Architect
-│       ├── developer.md          # Developer
+│       ├── developer.md          # Base Developer (references specializations)
+│       ├── frontend-developer.md # Frontend specialist
+│       ├── backend-developer.md  # Backend specialist
+│       ├── mobile-developer.md   # Mobile specialist
 │       └── reviewer.md           # Reviewer
 │
 ├── .claude/                      # Claude-specific detailed workflow

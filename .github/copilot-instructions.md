@@ -8,8 +8,18 @@ This project uses a pre-configured AI agent team for development. Read the role 
 
 - **Coordinator** (`.ai/agents/coordinator.md`) — Manages project plan and workflow
 - **Architect** (`.ai/agents/architect.md`) — Designs architecture and creates specs
-- **Developer** (`.ai/agents/developer.md`) — Implements code per specs, self-tests
+- **Developer** (`.ai/agents/developer.md`) — Base implementation role with specializations:
+  - **Frontend Developer** (`.ai/agents/frontend-developer.md`) — UI, client-side, accessibility
+  - **Backend Developer** (`.ai/agents/backend-developer.md`) — APIs, services, databases
+  - **Mobile Developer** (`.ai/agents/mobile-developer.md`) — iOS, Android, cross-platform
 - **Reviewer** (`.ai/agents/reviewer.md`) — Reviews code against specs and constraints
+
+### Skills
+
+Each developer role declares required skills from `.claude/skills/`:
+- **All developers**: `git_skills.md` (mandatory), `testing_skills.md` (mandatory)
+- **Frontend Developer**: + `frontend_skills.md`, `agent_browser_skills.md`
+- **Backend Developer**: + `backend_skills.md`
 
 ### Key Rules
 
