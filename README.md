@@ -19,6 +19,8 @@ A **project scaffold and workflow system** for developers who want to:
 | Feature | Description |
 |---------|-------------|
 | **Three-Session Model** | A (Architect) → B (Implementer) → C (Reviewer) |
+| **Multi-Tool Agent Team** | Pre-configured roles for Claude, Codex, Copilot, Cursor, Windsurf |
+| **Project Plan Management** | Global project plan with milestones, tasks, and tracking |
 | **Discovery Framework** | A Session interviews users before designing |
 | **State Tip System** | All sessions display workflow status on start |
 | **Self-Test Workflow** | B Session runs servers and tests like a real developer |
@@ -197,11 +199,55 @@ After self-test passes, B Session:
 
 ---
 
+## Multi-Tool Agent Team Support
+
+This template includes a **tool-agnostic agent team system** in `.ai/` that works with any AI coding assistant:
+
+| AI Tool | Entry Point | How It Works |
+|---------|-------------|--------------|
+| **Claude Code** | `CLAUDE.md` | Full workflow integration via `.claude/` + `.ai/` agents |
+| **OpenAI Codex** | `AGENTS.md` | Reads `.ai/agents/` role definitions directly |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | References `.ai/agents/` for context |
+| **Cursor** | `.cursorrules` | References `.ai/agents/` for guidance |
+| **Windsurf** | `.windsurfrules` | References `.ai/agents/` for guidance |
+| **Any other tool** | `.ai/README.md` | Reads `.ai/` directory directly |
+
+### Agent Roles
+
+| Role | File | Responsibility |
+|------|------|----------------|
+| **Coordinator** | `.ai/agents/coordinator.md` | Project management, workflow orchestration |
+| **Architect** | `.ai/agents/architect.md` | Design, specs, skeleton code |
+| **Developer** | `.ai/agents/developer.md` | Implementation, testing, PRs |
+| **Reviewer** | `.ai/agents/reviewer.md` | Code review, quality validation |
+
+### Project Plan
+
+The global project plan (`.ai/project-plan.md`) serves as a project management hub:
+- **Milestones** — High-level project goals and deadlines
+- **Tasks** — Current iteration work items with assignments and status
+- **Backlog** — Future tasks and ideas
+- **Decisions Log** — Important decisions and rationale
+- **Blockers** — Issues needing resolution
+
+The Coordinator maintains the project plan. The Architect updates it during design. The Developer reads it to understand priorities.
+
+---
+
 ## Project Structure
 
 ```
 your-project/
-├── .claude/                      # AI Collaboration Hub
+├── .ai/                          # Tool-agnostic agent team (NEW)
+│   ├── README.md                 # Agent team overview
+│   ├── project-plan.md           # Global project plan
+│   └── agents/                   # Agent role definitions
+│       ├── coordinator.md        # Project Manager
+│       ├── architect.md          # Architect
+│       ├── developer.md          # Developer
+│       └── reviewer.md           # Reviewer
+│
+├── .claude/                      # Claude-specific detailed workflow
 │   ├── DESIGN_STATE.yaml         # Single source of truth
 │   ├── prompts/                  # Session system prompts
 │   │   ├── A_SESSION.md          # Discovery + Design
@@ -216,6 +262,11 @@ your-project/
 │   │   ├── review_report.md
 │   │   └── ...
 │   └── handoffs/                 # Active iteration docs
+│
+├── AGENTS.md                     # Entry point for Codex (NEW)
+├── .github/copilot-instructions.md  # Entry point for Copilot (NEW)
+├── .cursorrules                  # Entry point for Cursor (NEW)
+├── .windsurfrules                # Entry point for Windsurf (NEW)
 │
 ├── openspec/                     # Spec-driven development
 │   ├── specs/                    # Completed specifications
@@ -255,7 +306,19 @@ Edit `.claude/DESIGN_STATE.yaml` with your project details.
 npm install -g @fission-ai/openspec@latest
 ```
 
-### 4. Start First Iteration
+### 4. Start with Any AI Tool
+
+The agent team works with any AI coding assistant. Just open the project and the tool will read its entry point file:
+
+| If you use... | It reads... | Then follows... |
+|---------------|-------------|-----------------|
+| Claude Code | `CLAUDE.md` | `.ai/agents/` + `.claude/prompts/` |
+| OpenAI Codex | `AGENTS.md` | `.ai/agents/` |
+| GitHub Copilot | `.github/copilot-instructions.md` | `.ai/agents/` |
+| Cursor | `.cursorrules` | `.ai/agents/` |
+| Windsurf | `.windsurfrules` | `.ai/agents/` |
+
+Or manually start with the three-session model:
 
 **A Session (Reasoning model):**
 1. Open a new AI assistant session
@@ -355,6 +418,8 @@ When a feature spans frontend/backend:
 
 ## Documentation
 
+- [Agent Team Overview](.ai/README.md) - Multi-tool agent system
+- [Project Plan](.ai/project-plan.md) - Global project management
 - [Templates INDEX](.claude/templates/INDEX.md) - All templates explained
 - [Session Start](.claude/templates/session_start.md) - State tip template
 - [Discovery Questions](.claude/templates/discovery_questions.md) - Interview framework

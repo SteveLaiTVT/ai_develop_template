@@ -19,6 +19,8 @@
 | 功能 | 描述 |
 |------|------|
 | **三会话模型** | A（架构师）→ B（实现者）→ C（审查者）|
+| **多工具 Agent 团队** | 预配置角色，支持 Claude、Codex、Copilot、Cursor、Windsurf |
+| **项目计划管理** | 全局项目计划，含里程碑、任务和进度追踪 |
 | **需求发现框架** | A 会话在设计前先访谈用户 |
 | **状态提示系统** | 所有会话启动时显示工作流状态 |
 | **自测试工作流** | B 会话像真正的开发者一样运行服务器和测试 |
@@ -208,11 +210,55 @@ B 会话像**真正的开发者**一样工作：
 
 ---
 
+## 多工具 Agent 团队支持
+
+本模板在 `.ai/` 目录下包含了一套**工具无关的 Agent 团队系统**，可与任何 AI 编程助手配合使用：
+
+| AI 工具 | 入口文件 | 工作方式 |
+|---------|---------|---------|
+| **Claude Code** | `CLAUDE.md` | 通过 `.claude/` + `.ai/agents/` 完整集成 |
+| **OpenAI Codex** | `AGENTS.md` | 直接读取 `.ai/agents/` 角色定义 |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | 引用 `.ai/agents/` 获取上下文 |
+| **Cursor** | `.cursorrules` | 引用 `.ai/agents/` 获取指引 |
+| **Windsurf** | `.windsurfrules` | 引用 `.ai/agents/` 获取指引 |
+| **其他工具** | `.ai/README.md` | 任何工具均可直接读取 `.ai/` 目录 |
+
+### Agent 角色
+
+| 角色 | 文件 | 职责 |
+|------|------|------|
+| **协调者** | `.ai/agents/coordinator.md` | 项目管理、工作流编排 |
+| **架构师** | `.ai/agents/architect.md` | 设计、规范、骨架代码 |
+| **开发者** | `.ai/agents/developer.md` | 实现、测试、PR |
+| **审查者** | `.ai/agents/reviewer.md` | 代码审查、质量验证 |
+
+### 项目计划
+
+全局项目计划（`.ai/project-plan.md`）作为项目管理中心：
+- **里程碑** — 高层项目目标和截止日期
+- **任务** — 当前迭代的工作项，含分配和状态
+- **待办** — 未来的任务和想法
+- **决策日志** — 重要决策及其理由
+- **阻塞项** — 需要解决的问题
+
+协调者维护项目计划。架构师在设计阶段更新它。开发者阅读它以了解优先级。
+
+---
+
 ## 项目结构
 
 ```
 your-project/
-├── .claude/                      # AI 协作中心
+├── .ai/                          # 工具无关的 Agent 团队（新增）
+│   ├── README.md                 # Agent 团队概述
+│   ├── project-plan.md           # 全局项目计划
+│   └── agents/                   # Agent 角色定义
+│       ├── coordinator.md        # 项目经理
+│       ├── architect.md          # 架构师
+│       ├── developer.md          # 开发者
+│       └── reviewer.md           # 审查者
+│
+├── .claude/                      # Claude 专用详细工作流
 │   ├── DESIGN_STATE.yaml         # 单一事实来源
 │   ├── prompts/                  # 会话系统提示词
 │   │   ├── A_SESSION.md          # 需求发现 + 设计
@@ -227,6 +273,11 @@ your-project/
 │   │   ├── review_report.md
 │   │   └── ...
 │   └── handoffs/                 # 活跃的迭代文档
+│
+├── AGENTS.md                     # Codex 入口（新增）
+├── .github/copilot-instructions.md  # Copilot 入口（新增）
+├── .cursorrules                  # Cursor 入口（新增）
+├── .windsurfrules                # Windsurf 入口（新增）
 │
 ├── openspec/                     # 规范驱动开发
 │   ├── specs/                    # 已完成的规范
@@ -266,7 +317,19 @@ pnpm install
 npm install -g @fission-ai/openspec@latest
 ```
 
-### 4. 开始第一次迭代
+### 4. 使用任意 AI 工具开始
+
+Agent 团队可与任何 AI 编程助手配合使用。打开项目后，工具会自动读取其入口文件：
+
+| 使用工具 | 读取文件 | 然后遵循 |
+|---------|---------|---------|
+| Claude Code | `CLAUDE.md` | `.ai/agents/` + `.claude/prompts/` |
+| OpenAI Codex | `AGENTS.md` | `.ai/agents/` |
+| GitHub Copilot | `.github/copilot-instructions.md` | `.ai/agents/` |
+| Cursor | `.cursorrules` | `.ai/agents/` |
+| Windsurf | `.windsurfrules` | `.ai/agents/` |
+
+或手动使用三会话模型：
 
 **A 会话（强推理模型）：**
 1. 打开新的 AI 助手对话
@@ -355,6 +418,8 @@ B 会话在缺少环境变量时会暂停并询问用户。
 
 ## 文档
 
+- [Agent 团队概述](.ai/README.md) - 多工具 Agent 系统
+- [项目计划](.ai/project-plan.md) - 全局项目管理
 - [模板索引](.claude/templates/INDEX.md) - 所有模板说明
 - [会话启动](.claude/templates/session_start.md) - 状态提示模板
 - [需求发现问题](.claude/templates/discovery_questions.md) - 访谈框架
