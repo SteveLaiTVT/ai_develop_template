@@ -203,8 +203,8 @@ After self-test passes, B Session:
 
 This template includes a **tool-agnostic agent team system** in `.ai/` that works with any AI coding assistant:
 
-| AI Tool | Entry Point | How It Works |
-|---------|-------------|--------------|
+| AI Tool | Entry Point | Integration |
+|---------|-------------|-------------|
 | **Claude Code** | `CLAUDE.md` | Full workflow integration via `.claude/` + `.ai/` agents |
 | **OpenAI Codex** | `AGENTS.md` | Reads `.ai/agents/` role definitions directly |
 | **GitHub Copilot** | `.github/copilot-instructions.md` | References `.ai/agents/` for context |
