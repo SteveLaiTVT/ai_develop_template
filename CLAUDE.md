@@ -2,6 +2,22 @@
 
 This file is automatically read by the AI assistant when opening this project.
 
+## Agent Team System
+
+This project uses a **pre-configured agent team** that works across multiple AI tools. The shared agent role definitions are in `.ai/agents/`:
+
+- **Coordinator** ([`.ai/agents/coordinator.md`](.ai/agents/coordinator.md)) — Manages the project plan and orchestrates workflow
+- **Architect** ([`.ai/agents/architect.md`](.ai/agents/architect.md)) — Designs architecture, creates specs, provides skeleton code
+- **Developer** ([`.ai/agents/developer.md`](.ai/agents/developer.md)) — Base implementation role with specializations:
+  - **Frontend Developer** ([`.ai/agents/frontend-developer.md`](.ai/agents/frontend-developer.md)) — UI, client-side logic, accessibility
+  - **Backend Developer** ([`.ai/agents/backend-developer.md`](.ai/agents/backend-developer.md)) — APIs, services, databases, security
+  - **Mobile Developer** ([`.ai/agents/mobile-developer.md`](.ai/agents/mobile-developer.md)) — iOS, Android, cross-platform apps
+- **Reviewer** ([`.ai/agents/reviewer.md`](.ai/agents/reviewer.md)) — Reviews code against specs and constraints
+
+For an overview, see [`.ai/README.md`](.ai/README.md). For the global project plan, see [`.ai/project-plan.md`](.ai/project-plan.md).
+
+> **Note**: The `.ai/` directory contains tool-agnostic agent definitions shared across Claude Code, Codex, Copilot, Cursor, and Windsurf. The `.claude/` directory below provides Claude-specific detailed workflow integration.
+
 ## Quick Start
 
 When you open this project, follow these steps:
@@ -154,6 +170,18 @@ Coordinator
 ## Project Structure
 
 ```
+.ai/                          # Tool-agnostic agent team definitions
+├── README.md                 # Agent team overview and usage guide
+├── project-plan.md           # Global project plan (project management)
+└── agents/
+    ├── coordinator.md        # Project Manager role
+    ├── architect.md          # Architect/Designer role
+    ├── developer.md          # Base Developer role (references specializations)
+    ├── frontend-developer.md # Frontend specialist (skills: frontend, testing, agent-browser)
+    ├── backend-developer.md  # Backend specialist (skills: backend, testing)
+    ├── mobile-developer.md   # Mobile specialist (skills: testing)
+    └── reviewer.md           # Reviewer/QA role
+
 .claude/
 ├── DESIGN_STATE.yaml     # Single source of truth - configuration & state
 ├── prompts/
@@ -263,11 +291,13 @@ Model preferences are stored in `initialization.model_preferences` in DESIGN_STA
 
 When starting work, read these files in order:
 
-1. `.claude/DESIGN_STATE.yaml` - Current state and configuration
-2. `.claude/prompts/COORDINATOR.md` - Coordinator instructions
-3. `openspec/changes/` - Active specs being worked on
-4. Relevant session prompt (A/B/C_SESSION.md based on current phase)
-5. Current task handoff (in `.claude/handoffs/`)
+1. `.ai/README.md` - Agent team overview (tool-agnostic)
+2. `.ai/project-plan.md` - Global project plan and task status
+3. `.claude/DESIGN_STATE.yaml` - Current state and configuration
+4. `.claude/prompts/COORDINATOR.md` - Coordinator instructions
+5. `openspec/changes/` - Active specs being worked on
+6. Relevant session prompt (A/B/C_SESSION.md based on current phase)
+7. Current task handoff (in `.claude/handoffs/`)
 
 ---
 
@@ -286,6 +316,9 @@ When starting work, read these files in order:
 
 ## Getting Help
 
+- See `.ai/README.md` for agent team overview (works with any AI tool)
+- See `.ai/agents/` for agent role definitions
+- See `.ai/project-plan.md` for the global project plan
 - See `.claude/templates/INDEX.md` for all available templates
 - See `README.md` for full documentation
 - See `.claude/prompts/COORDINATOR.md` for coordinator details

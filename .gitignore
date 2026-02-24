@@ -99,6 +99,11 @@ generated/
 # The .claude directory contains essential AI workflow files
 # and should be committed to the repository
 
+# !.ai/
+# !.ai/**
+# The .ai directory contains tool-agnostic agent team definitions
+# and should be committed to the repository
+
 # ================================
 # OpenSpec - Spec-driven development
 # ================================

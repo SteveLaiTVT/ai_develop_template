@@ -1,0 +1,47 @@
+# Cursor Rules — AI Agent Team
+
+# This project uses a pre-configured AI agent team for development.
+# Read the role definitions in .ai/agents/ to understand the workflow.
+
+# AGENT ROLES
+# - Coordinator (.ai/agents/coordinator.md) — Manages project plan and workflow
+# - Architect (.ai/agents/architect.md) — Designs architecture and creates specs
+# - Developer (.ai/agents/developer.md) — Base implementation role with specializations:
+#   - Frontend Developer (.ai/agents/frontend-developer.md) — UI, client-side, accessibility
+#   - Backend Developer (.ai/agents/backend-developer.md) — APIs, services, databases
+#   - Mobile Developer (.ai/agents/mobile-developer.md) — iOS, Android, cross-platform
+# - Reviewer (.ai/agents/reviewer.md) — Reviews code against specs and constraints
+
+# SKILLS (declared per developer role, see .claude/skills/)
+# - All developers: git_skills.md (mandatory), testing_skills.md (mandatory)
+# - Frontend Developer: + frontend_skills.md, agent_browser_skills.md
+# - Backend Developer: + backend_skills.md
+
+# KEY RULES
+# 1. Read your role from .ai/agents/ before starting work
+# 2. Spec before code — features need an approved spec in openspec/changes/
+# 3. Follow constraints from .claude/DESIGN_STATE.yaml
+# 4. Self-test before committing (run servers, test APIs, verify builds)
+# 5. Check .ai/project-plan.md for current priorities
+
+# PROJECT STATE
+# - Project plan: .ai/project-plan.md
+# - Design state: .claude/DESIGN_STATE.yaml
+# - Active specs: openspec/changes/
+# - Completed specs: openspec/specs/
+
+# WORKFLOW
+# User Request
+#   → Coordinator: Updates project plan
+#   → Architect: Creates spec in openspec/changes/
+#   → User: Approves spec
+#   → Developer: Implements and self-tests
+#   → Reviewer: Validates against spec
+#   → Coordinator: Archives spec, updates plan
+
+# COMMIT MESSAGES
+# Use Conventional Commits: <type>(<scope>): <subject>
+# Types: feat, fix, docs, style, refactor, test, chore, perf
+
+# For detailed role definitions, read .ai/README.md
+# For project state, read .claude/DESIGN_STATE.yaml
